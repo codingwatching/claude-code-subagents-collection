@@ -1,0 +1,34 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Edit|MultiEdit|Write",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook auto-git-add"
+        }
+      ],
+      "_comment": "auto-git-add: Automatically stage modified files with git add after editing"
+    },
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook git-add-changes"
+        }
+      ],
+      "_comment": "git-add-changes: Automatically stage changes in git after file modifications for easier commit workflow"
+    },
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook smart-commit"
+        }
+      ],
+      "_comment": "smart-commit: Intelligent git commit creation with automatic message generation and validation"
+    }
+  ]
+}

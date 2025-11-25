@@ -1,0 +1,46 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Edit|MultiEdit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook change-tracker"
+        }
+      ],
+      "_comment": "change-tracker: Track file changes in a simple log"
+    },
+    {
+      "matcher": "Edit|MultiEdit|Write",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook lint-on-save"
+        }
+      ],
+      "_comment": "lint-on-save: Automatically run linting tools after file modifications"
+    },
+    {
+      "matcher": "Edit|MultiEdit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook smart-formatting"
+        }
+      ],
+      "_comment": "smart-formatting: Smart code formatting based on file type"
+    }
+  ],
+  "PreToolUse": [
+    {
+      "matcher": "Edit|MultiEdit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook file-backup"
+        }
+      ],
+      "_comment": "file-backup: Automatically backup files before editing"
+    }
+  ]
+}

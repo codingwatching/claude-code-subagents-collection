@@ -1,0 +1,36 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook build-on-change"
+        }
+      ],
+      "_comment": "build-on-change: Automatically trigger build processes when source files change"
+    },
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook dependency-checker"
+        }
+      ],
+      "_comment": "dependency-checker: Monitor and audit dependencies for security vulnerabilities and updates"
+    }
+  ],
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook slack-notifications"
+        }
+      ],
+      "_comment": "slack-notifications: Send Slack notifications when Claude Code finishes working"
+    }
+  ]
+}

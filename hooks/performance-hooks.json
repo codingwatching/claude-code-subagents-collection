@@ -1,0 +1,14 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook performance-monitor"
+        }
+      ],
+      "_comment": "performance-monitor: Monitor system performance during Claude Code operations"
+    }
+  ]
+}

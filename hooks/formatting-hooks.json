@@ -1,0 +1,24 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook format-javascript-files"
+        }
+      ],
+      "_comment": "format-javascript-files: Automatically format JavaScript/TypeScript files after any Edit operation using prettier"
+    },
+    {
+      "matcher": "Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bwc add --hook format-python-files"
+        }
+      ],
+      "_comment": "format-python-files: Automatically format Python files after any Edit operation using black formatter"
+    }
+  ]
+}

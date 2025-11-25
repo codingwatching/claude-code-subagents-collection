@@ -8,7 +8,57 @@
 
 A comprehensive collection of specialized AI subagents and slash commands for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), designed to enhance development workflows with domain-specific expertise and powerful automation.
 
-## 🌐 Now with a Web UI and CLI Tool!
+## 🎉 NEW: Claude Code Plugin Marketplace Support!
+
+This collection is now available as an official **Claude Code Plugin Marketplace**! Install plugins directly using Claude Code's built-in plugin system:
+
+```bash
+# Add the marketplace
+/plugin marketplace add davepoon/claude-code-subagents-collection
+
+# Install individual plugins by category
+/plugin install agents-python-expert@davepoon
+/plugin install commands-version-control-git@davepoon
+/plugin install hooks-notifications@davepoon
+
+# Or install complete bundles
+/plugin install all-agents@davepoon      # All 117 agents
+/plugin install all-commands@davepoon    # All 174 commands
+/plugin install all-hooks@davepoon       # All 28 hooks
+
+# Verify installation
+/help
+```
+
+### Available Plugin Categories
+
+**Agent Plugins (117 agents in 11 categories):**
+- `agents-development-architecture` - Backend, frontend, mobile, GraphQL experts
+- `agents-language-specialists` - Python, Go, Rust, TypeScript, C/C++ experts
+- `agents-quality-security` - Code review, security audit, debugging
+- `agents-data-ai` - ML, data engineering, AI development
+- `agents-infrastructure-operations` - DevOps, cloud, database optimization
+- [View all categories on buildwithclaude.com](https://www.buildwithclaude.com/browse)
+
+**Command Plugins (174 commands in 22 categories):**
+- `commands-version-control-git` - Commit, PR, branch management
+- `commands-code-analysis-testing` - Code review, testing, analysis
+- `commands-ci-deployment` - CI/CD, containerization, deployment
+- `commands-documentation-changelogs` - Docs, changelogs, API docs
+- [View all categories on buildwithclaude.com](https://www.buildwithclaude.com/commands)
+
+**Hook Plugins (28 hooks in 8 categories):**
+- `hooks-notifications` - Slack, Discord, Telegram notifications
+- `hooks-git` - Auto-staging, smart commits
+- `hooks-development` - Lint on save, auto-format
+- `hooks-security` - File protection, security scanning
+
+**MCP Servers (199 Docker-based servers):**
+- `mcp-servers-docker` - All Docker MCP servers from the official registry
+
+---
+
+## 🌐 Also Available: Web UI and CLI Tool!
 
 Browse, search, and install both subagents and commands instantly at [buildwithclaude.com](https://www.buildwithclaude.com)
 
@@ -112,9 +162,10 @@ Learn more: [buildwithclaude.com/mcp-servers](https://www.buildwithclaude.com/mc
 ## Overview
 
 This repository contains:
-- **43+ Specialized Subagents**: AI experts in specific domains, automatically invoked based on context or explicitly called when needed
-- **39+ Slash Commands**: Community-contributed commands for automating tasks, managing projects, and enhancing workflows
-- **100+ MCP Servers**: Secure connections to databases, APIs, and external tools via Docker containers
+- **117 Specialized Subagents**: AI experts in specific domains across 11 categories, automatically invoked based on context or explicitly called when needed
+- **174 Slash Commands**: Community-contributed commands across 22 categories for automating tasks, managing projects, and enhancing workflows
+- **28 Automation Hooks**: Event-driven hooks for notifications, formatting, security, and git automation
+- **199 MCP Servers**: Secure connections to databases, APIs, and external tools via Docker containers
 
 ## Quick Start
 
@@ -420,7 +471,7 @@ Claude: [Generates documentation based on project structure]
 - `/create-prd` - Create product requirement documents
 - `/create-jtbd` - Create Jobs-to-be-Done documentation
 
-[View all 39+ commands on the Web UI](https://www.buildwithclaude.com/commands)
+[View all 174 commands on the Web UI](https://www.buildwithclaude.com/commands)
 
 ## Subagent Format
 
@@ -610,7 +661,9 @@ Claude Code can use multiple subagents in sequence:
 ## Learn More
 
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Plugin Marketplaces Documentation](https://code.claude.com/docs/en/plugin-marketplaces)
 - [Subagents Documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents)
+- [Hooks Documentation](https://docs.anthropic.com/en/docs/claude-code/hooks)
 - [Claude Code GitHub](https://github.com/anthropics/claude-code)
 
 ## License
