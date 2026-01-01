@@ -100,3 +100,17 @@ export function getMarketplaceAddCommand(): string {
 export function getMCPInstallCommand(): string {
   return `/plugin install mcp-servers-docker@${MARKETPLACE_NAME}`
 }
+
+/**
+ * Get Claude CLI command to add an individual MCP server
+ */
+export function getClaudeMCPAddCommand(serverName: string): string {
+  return `claude mcp add ${serverName}`
+}
+
+/**
+ * Get Docker MCP command to enable a server
+ */
+export function getDockerMCPEnableCommand(serverName: string): string {
+  return `docker mcp server enable ${serverName}`
+}

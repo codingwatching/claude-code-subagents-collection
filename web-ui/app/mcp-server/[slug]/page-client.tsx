@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, Copy, Check, ExternalLink, Github, Box, Package } from 'lucide-react'
+import { ArrowLeft, Copy, Check, ExternalLink, Github, Box, Package, Terminal } from 'lucide-react'
 import { HiMiniCheckBadge } from 'react-icons/hi2'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -17,6 +17,7 @@ import {
   getMCPCategoryDisplayName,
   getMCPCategoryIcon
 } from '@/lib/mcp-types'
+import { getClaudeMCPAddCommand, getDockerMCPEnableCommand } from '@/lib/bwc-utils'
 
 interface MCPServerPageClientProps {
   server: MCPServer
@@ -269,112 +270,103 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
         {/* Installation Methods */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Installation Methods</CardTitle>
+            <CardTitle>Installation</CardTitle>
             <CardDescription>
               Choose your preferred installation method below
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue={server.installation_methods[0]?.type}>
-              <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${server.installation_methods.length}, 1fr)` }}>
-                {server.installation_methods.map((method) => (
-                  <TabsTrigger key={method.type} value={method.type}>
-                    {method.type === 'bwc' ? 'BWC CLI' : method.type.charAt(0).toUpperCase() + method.type.slice(1)}
-                    {method.recommended && ' ⭐'}
-                  </TabsTrigger>
-                ))}
+            <Tabs defaultValue="claude">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="claude" className="flex items-center gap-2">
+                  <Terminal className="h-4 w-4" />
+                  Claude CLI
+                </TabsTrigger>
+                <TabsTrigger value="docker" className="flex items-center gap-2">
+                  <Terminal className="h-4 w-4" />
+                  Docker MCP
+                </TabsTrigger>
               </TabsList>
 
-              {server.installation_methods.map((method) => {
-                // Add --docker-mcp flag for Docker-sourced servers with BWC installation
-                const displayCommand = method.type === 'bwc' && server.source_registry?.type === 'docker' 
-                  ? `${method.command} --docker-mcp`
-                  : method.command;
-                
-                return (
-                  <TabsContent key={method.type} value={method.type} className="space-y-4">
-                    {method.command && (
-                      <div>
-                        <h4 className="font-semibold mb-2">Installation Command:</h4>
-                        <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-center justify-between">
-                          <code>{displayCommand}</code>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleCopyCommand(method.type, displayCommand!)}
-                            className="ml-2 flex-shrink-0"
-                          >
-                            {copiedCommand === method.type ? (
-                              <Check className="h-4 w-4 text-green-600" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  
+              <TabsContent value="claude" className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Install using Claude Code CLI <span className="text-primary font-medium">(Recommended)</span>:
+                  </p>
+                  <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-center justify-between">
+                    <code className="font-mono">{getClaudeMCPAddCommand(server.name)}</code>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleCopyCommand('claude', getClaudeMCPAddCommand(server.name))}
+                      className="ml-2 flex-shrink-0"
+                    >
+                      {copiedCommand === 'claude' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
 
-                  {method.type === 'bwc' && (
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground">This command will:</p>
-                      <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
-                        <li>Enable the MCP server in Docker MCP Toolkit</li>
-                        <li>Make it available through the Docker MCP gateway</li>
-                        <li>Allow Claude Code to access the server</li>
-                      </ul>
-                    </div>
-                  )}
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">This command will:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
+                    <li>Add the MCP server to your Claude Code configuration</li>
+                    <li>Configure it with default settings</li>
+                    <li>Make it available in Claude Code immediately</li>
+                  </ul>
+                </div>
 
-                  {method.config_example && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Configuration:</h4>
-                      <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-start justify-between">
-                        <code className="whitespace-pre">{method.config_example}</code>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleCopyConfig(method.type, method.config_example!)}
-                          className="ml-2 flex-shrink-0"
-                        >
-                          {copiedConfig === method.type ? (
-                            <Check className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+                <div className="p-3 bg-secondary/50 rounded-lg text-sm">
+                  <p className="font-semibold mb-2 text-foreground">Prerequisites:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                    <li>Claude Code CLI must be installed</li>
+                    <li>Docker Desktop must be installed and running</li>
+                  </ul>
+                </div>
+              </TabsContent>
 
-                  {method.steps && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Manual Installation Steps:</h4>
-                      <ol className="list-decimal list-inside space-y-2">
-                        {method.steps.map((step, idx) => (
-                          <li key={idx} className="text-muted-foreground">
-                            {step}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
+              <TabsContent value="docker" className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Enable using Docker MCP Toolkit:
+                  </p>
+                  <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-center justify-between">
+                    <code className="font-mono">{getDockerMCPEnableCommand(server.name)}</code>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleCopyCommand('docker', getDockerMCPEnableCommand(server.name))}
+                      className="ml-2 flex-shrink-0"
+                    >
+                      {copiedCommand === 'docker' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
 
-                  {method.requirements && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Requirements:</h4>
-                      <ul className="list-disc list-inside space-y-1">
-                        {method.requirements.map((req, idx) => (
-                          <li key={idx} className="text-muted-foreground">
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </TabsContent>
-                )
-              })}
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">This command will:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
+                    <li>Enable the MCP server in Docker MCP Toolkit</li>
+                    <li>Configure it with default settings</li>
+                    <li>Make it available through the Docker MCP gateway</li>
+                  </ul>
+                </div>
+
+                <div className="p-3 bg-secondary/50 rounded-lg text-sm">
+                  <p className="font-semibold mb-2 text-foreground">Prerequisites:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                    <li>Docker Desktop must be installed and running</li>
+                    <li>Docker MCP Toolkit must be enabled</li>
+                  </ul>
+                </div>
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>

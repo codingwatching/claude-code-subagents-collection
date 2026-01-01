@@ -10,15 +10,15 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Copy, Check, Puzzle, Terminal } from 'lucide-react'
-import { getMarketplaceAddCommand, getMCPInstallCommand } from '@/lib/bwc-utils'
+import { Copy, Check, Terminal } from 'lucide-react'
+import { getClaudeMCPAddCommand, getDockerMCPEnableCommand } from '@/lib/bwc-utils'
 
 interface MCPInstallationModalProps {
   isOpen: boolean
   onClose: () => void
   serverName: string
   displayName: string
-  jsonConfig: string
+  jsonConfig?: string
   claudeCommand?: string
   serverType?: string
   dockerHubUrl?: string
@@ -29,29 +29,17 @@ export function MCPInstallationModal({
   onClose,
   serverName,
   displayName,
-  jsonConfig,
-  claudeCommand,
-  serverType,
-  dockerHubUrl
 }: MCPInstallationModalProps) {
-  const [copiedMarketplace, setCopiedMarketplace] = useState(false)
-  const [copiedPlugin, setCopiedPlugin] = useState(false)
+  const [copiedClaude, setCopiedClaude] = useState(false)
   const [copiedDocker, setCopiedDocker] = useState(false)
 
-  const marketplaceCommand = getMarketplaceAddCommand()
-  const pluginCommand = getMCPInstallCommand()
-  const dockerCommand = `docker mcp server enable ${serverName}`
+  const claudeCommand = getClaudeMCPAddCommand(serverName)
+  const dockerCommand = getDockerMCPEnableCommand(serverName)
 
-  const handleCopyMarketplace = async () => {
-    await navigator.clipboard.writeText(marketplaceCommand)
-    setCopiedMarketplace(true)
-    setTimeout(() => setCopiedMarketplace(false), 2000)
-  }
-
-  const handleCopyPlugin = async () => {
-    await navigator.clipboard.writeText(pluginCommand)
-    setCopiedPlugin(true)
-    setTimeout(() => setCopiedPlugin(false), 2000)
+  const handleCopyClaude = async () => {
+    await navigator.clipboard.writeText(claudeCommand)
+    setCopiedClaude(true)
+    setTimeout(() => setCopiedClaude(false), 2000)
   }
 
   const handleCopyDocker = async () => {
@@ -70,11 +58,11 @@ export function MCPInstallationModal({
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="plugin" className="flex-1 flex flex-col">
+        <Tabs defaultValue="claude" className="flex-1 flex flex-col">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="plugin" className="flex items-center gap-2">
-              <Puzzle className="h-4 w-4" />
-              Plugin Install
+            <TabsTrigger value="claude" className="flex items-center gap-2">
+              <Terminal className="h-4 w-4" />
+              Claude CLI
             </TabsTrigger>
             <TabsTrigger value="docker" className="flex items-center gap-2">
               <Terminal className="h-4 w-4" />
@@ -82,24 +70,22 @@ export function MCPInstallationModal({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="plugin" className="flex-1 overflow-auto space-y-4">
+          <TabsContent value="claude" className="flex-1 overflow-auto space-y-4">
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Install all MCP servers using Claude Code&apos;s plugin system:
+                Install this MCP server using Claude Code CLI <span className="text-primary font-medium">(Recommended)</span>:
               </p>
 
-              {/* Step 1: Add marketplace */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold">Step 1: Add the marketplace (one-time)</h4>
                 <div className="flex items-center justify-between p-3 bg-muted rounded-lg font-mono text-sm">
-                  <span className="break-all">{marketplaceCommand}</span>
+                  <span className="break-all">{claudeCommand}</span>
                   <Button
                     size="sm"
                     variant="ghost"
                     className="ml-2 shrink-0"
-                    onClick={handleCopyMarketplace}
+                    onClick={handleCopyClaude}
                   >
-                    {copiedMarketplace ? (
+                    {copiedClaude ? (
                       <Check className="h-4 w-4 text-green-600" />
                     ) : (
                       <Copy className="h-4 w-4" />
@@ -108,34 +94,20 @@ export function MCPInstallationModal({
                 </div>
               </div>
 
-              {/* Step 2: Install MCP servers plugin */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold">Step 2: Install MCP Servers</h4>
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg font-mono text-sm">
-                  <span className="break-all">{pluginCommand}</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="ml-2 shrink-0"
-                    onClick={handleCopyPlugin}
-                  >
-                    {copiedPlugin ? (
-                      <Check className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <div className="text-xs text-muted-foreground pl-1">
-                  This installs all 199 Docker MCP servers including <strong>{displayName}</strong>
-                </div>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <p>This command will:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Add the MCP server to your Claude Code configuration</li>
+                  <li>Configure it with default settings</li>
+                  <li>Make it available in Claude Code immediately</li>
+                </ul>
               </div>
 
               <div className="mt-4 p-3 bg-secondary/50 rounded-lg text-sm">
                 <p className="font-semibold mb-2 text-foreground">Prerequisites:</p>
                 <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                  <li>Claude Code CLI must be installed</li>
                   <li>Docker Desktop must be installed and running</li>
-                  <li>Docker MCP Toolkit must be enabled</li>
                 </ul>
               </div>
             </div>
@@ -143,31 +115,26 @@ export function MCPInstallationModal({
 
           <TabsContent value="docker" className="flex-1 overflow-auto space-y-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Enable this specific server using Docker MCP Toolkit:
-                </p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleCopyDocker}
-                  className="gap-2"
-                >
-                  {copiedDocker ? (
-                    <>
-                      <Check className="h-4 w-4 text-green-600" />
-                      Copied!
-                    </>
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Enable this server using Docker MCP Toolkit:
+              </p>
 
-              <div className="relative">
-                <pre className="p-4 bg-muted rounded-lg overflow-auto">
-                  <code className="text-sm font-mono">{dockerCommand}</code>
-                </pre>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg font-mono text-sm">
+                  <span className="break-all">{dockerCommand}</span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="ml-2 shrink-0"
+                    onClick={handleCopyDocker}
+                  >
+                    {copiedDocker ? (
+                      <Check className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
 
               <div className="space-y-2 text-xs text-muted-foreground">
@@ -176,7 +143,6 @@ export function MCPInstallationModal({
                   <li>Enable the MCP server in Docker MCP Toolkit</li>
                   <li>Configure it with default settings</li>
                   <li>Make it available through the Docker MCP gateway</li>
-                  <li>Allow Claude Code to access the server</li>
                 </ul>
               </div>
 

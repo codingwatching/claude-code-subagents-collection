@@ -1,7 +1,7 @@
 {
   "$schema": "https://buildwithclaude.com/schema/registry.json",
   "version": "1.0.0",
-  "lastUpdated": "2026-01-01T03:23:22.323Z",
+  "lastUpdated": "2026-01-01T04:02:58.936Z",
   "subagents": [
     {
       "name": "academic-research-synthesizer",
@@ -3303,7 +3303,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/302_sandbox",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:37.723Z"
+        "last_fetched": "2026-01-01T03:58:14.242Z"
       },
       "installation_methods": [
         {
@@ -3376,7 +3376,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/3d-printer",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:36.159Z"
+        "last_fetched": "2026-01-01T03:58:12.683Z"
       },
       "installation_methods": [
         {
@@ -3436,7 +3436,7 @@
         "repository": "https://github.com/domdomegg"
       },
       "stats": {
-        "docker_pulls": 3706,
+        "docker_pulls": 3708,
         "docker_stars": 1,
         "last_updated": "2025-12-02T00:09:56.871061Z"
       },
@@ -3449,7 +3449,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/airtable-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:06.029Z"
+        "last_fetched": "2026-01-01T03:58:42.746Z"
       },
       "installation_methods": [
         {
@@ -3522,7 +3522,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aks",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:57.855Z"
+        "last_fetched": "2026-01-01T03:58:34.546Z"
       },
       "installation_methods": [
         {
@@ -3595,7 +3595,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/amazon-bedrock-agentcore-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:11.040Z"
+        "last_fetched": "2026-01-01T03:58:47.795Z"
       },
       "installation_methods": [
         {
@@ -3666,7 +3666,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/amazon-kendra-index-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:10.814Z"
+        "last_fetched": "2026-01-01T03:58:47.570Z"
       },
       "installation_methods": [
         {
@@ -3739,7 +3739,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/amazon-neptune-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:10.584Z"
+        "last_fetched": "2026-01-01T03:58:47.351Z"
       },
       "installation_methods": [
         {
@@ -3813,7 +3813,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/amazon-qbusiness-anonymous-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:11.265Z"
+        "last_fetched": "2026-01-01T03:58:48.015Z"
       },
       "installation_methods": [
         {
@@ -3873,7 +3873,7 @@
         "repository": "https://github.com/rflpazini"
       },
       "stats": {
-        "docker_pulls": 8812,
+        "docker_pulls": 8814,
         "docker_stars": 6,
         "last_updated": "2025-06-16T19:26:56.066981Z"
       },
@@ -3886,7 +3886,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/api-gateway",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:47.404Z"
+        "last_fetched": "2026-01-01T03:58:24.212Z"
       },
       "installation_methods": [
         {
@@ -3959,7 +3959,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/api-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:56.042Z"
+        "last_fetched": "2026-01-01T03:58:32.759Z"
       },
       "installation_methods": [
         {
@@ -4032,7 +4032,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/apify-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:58.549Z"
+        "last_fetched": "2026-01-01T03:58:35.226Z"
       },
       "installation_methods": [
         {
@@ -4092,7 +4092,7 @@
         "repository": "https://github.com/jasonleinart"
       },
       "stats": {
-        "docker_pulls": 20296,
+        "docker_pulls": 20299,
         "docker_stars": 2,
         "last_updated": "2025-08-21T06:15:38.548038Z"
       },
@@ -4105,7 +4105,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/arxiv-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.058Z"
+        "last_fetched": "2026-01-01T03:58:29.817Z"
       },
       "installation_methods": [
         {
@@ -4166,7 +4166,7 @@
         "repository": "https://github.com/dgageot"
       },
       "stats": {
-        "docker_pulls": 14928,
+        "docker_pulls": 14933,
         "docker_stars": 2,
         "last_updated": "2025-10-03T20:24:37.112298Z"
       },
@@ -4179,7 +4179,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/ast-grep",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:01.330Z"
+        "last_fetched": "2026-01-01T03:58:37.947Z"
       },
       "installation_methods": [
         {
@@ -4252,7 +4252,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/astra-db",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:33.887Z"
+        "last_fetched": "2026-01-01T03:58:10.403Z"
       },
       "installation_methods": [
         {
@@ -4325,7 +4325,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/atlan",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.300Z"
+        "last_fetched": "2026-01-01T03:58:30.065Z"
       },
       "installation_methods": [
         {
@@ -4398,7 +4398,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/atlan-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:50.592Z"
+        "last_fetched": "2026-01-01T03:58:27.365Z"
       },
       "installation_methods": [
         {
@@ -4471,7 +4471,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/atlas-docs",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:25.862Z"
+        "last_fetched": "2026-01-01T03:58:02.429Z"
       },
       "installation_methods": [
         {
@@ -4542,7 +4542,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/atlassian",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:24.521Z"
+        "last_fetched": "2026-01-01T03:58:01.084Z"
       },
       "installation_methods": [
         {
@@ -4613,7 +4613,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/audiense-insights",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.082Z"
+        "last_fetched": "2026-01-01T03:58:02.667Z"
       },
       "installation_methods": [
         {
@@ -4684,7 +4684,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-api-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:11.946Z"
+        "last_fetched": "2026-01-01T03:58:48.689Z"
       },
       "installation_methods": [
         {
@@ -4758,7 +4758,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-appsync-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:11.486Z"
+        "last_fetched": "2026-01-01T03:58:48.240Z"
       },
       "installation_methods": [
         {
@@ -4831,7 +4831,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-bedrock-custom-model-import-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:11.716Z"
+        "last_fetched": "2026-01-01T03:58:48.464Z"
       },
       "installation_methods": [
         {
@@ -4904,7 +4904,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-bedrock-data-automation-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:12.174Z"
+        "last_fetched": "2026-01-01T03:58:48.914Z"
       },
       "installation_methods": [
         {
@@ -4977,7 +4977,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-cdk-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:44.228Z"
+        "last_fetched": "2026-01-01T03:58:21.036Z"
       },
       "installation_methods": [
         {
@@ -5051,7 +5051,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-core-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:44.671Z"
+        "last_fetched": "2026-01-01T03:58:21.487Z"
       },
       "installation_methods": [
         {
@@ -5124,7 +5124,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-dataprocessing-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:12.401Z"
+        "last_fetched": "2026-01-01T03:58:49.143Z"
       },
       "installation_methods": [
         {
@@ -5197,7 +5197,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-diagram",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:43.552Z"
+        "last_fetched": "2026-01-01T03:58:19.951Z"
       },
       "installation_methods": [
         {
@@ -5271,7 +5271,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-documentation",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:43.782Z"
+        "last_fetched": "2026-01-01T03:58:20.183Z"
       },
       "installation_methods": [
         {
@@ -5345,7 +5345,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-healthomics-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:13.095Z"
+        "last_fetched": "2026-01-01T03:58:49.821Z"
       },
       "installation_methods": [
         {
@@ -5418,7 +5418,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-iot-sitewise-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:12.646Z"
+        "last_fetched": "2026-01-01T03:58:49.367Z"
       },
       "installation_methods": [
         {
@@ -5491,7 +5491,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-kb-retrieval-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:20.447Z"
+        "last_fetched": "2026-01-01T03:57:56.978Z"
       },
       "installation_methods": [
         {
@@ -5564,7 +5564,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-location-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:12.874Z"
+        "last_fetched": "2026-01-01T03:58:49.593Z"
       },
       "installation_methods": [
         {
@@ -5638,7 +5638,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-msk-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:13.323Z"
+        "last_fetched": "2026-01-01T03:58:50.040Z"
       },
       "installation_methods": [
         {
@@ -5711,7 +5711,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-pricing-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:13.564Z"
+        "last_fetched": "2026-01-01T03:58:50.261Z"
       },
       "installation_methods": [
         {
@@ -5784,7 +5784,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/aws-terraform",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:45.607Z"
+        "last_fetched": "2026-01-01T03:58:22.398Z"
       },
       "installation_methods": [
         {
@@ -5845,7 +5845,7 @@
         "repository": "https://github.com/Azure"
       },
       "stats": {
-        "docker_pulls": 36051,
+        "docker_pulls": 36052,
         "docker_stars": 11,
         "last_updated": "2025-06-16T19:18:03.418293Z"
       },
@@ -5858,7 +5858,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/azure",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:38.842Z"
+        "last_fetched": "2026-01-01T03:58:15.382Z"
       },
       "installation_methods": [
         {
@@ -5929,7 +5929,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/basic-memory",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.095Z"
+        "last_fetched": "2026-01-01T03:58:02.676Z"
       },
       "installation_methods": [
         {
@@ -6000,7 +6000,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/beagle-security-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:51.706Z"
+        "last_fetched": "2026-01-01T03:58:28.474Z"
       },
       "installation_methods": [
         {
@@ -6073,7 +6073,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/billing-cost-management-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:14.029Z"
+        "last_fetched": "2026-01-01T03:58:50.715Z"
       },
       "installation_methods": [
         {
@@ -6144,7 +6144,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/bitrefill",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.543Z"
+        "last_fetched": "2026-01-01T03:58:03.122Z"
       },
       "installation_methods": [
         {
@@ -6219,7 +6219,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/box",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:33.215Z"
+        "last_fetched": "2026-01-01T03:58:09.731Z"
       },
       "installation_methods": [
         {
@@ -6279,7 +6279,7 @@
         "repository": "https://github.com/brave"
       },
       "stats": {
-        "docker_pulls": 87658,
+        "docker_pulls": 87668,
         "docker_stars": 23,
         "last_updated": "2025-12-02T00:20:43.947679Z"
       },
@@ -6292,7 +6292,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/brave-search",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:20.675Z"
+        "last_fetched": "2026-01-01T03:57:57.206Z"
       },
       "installation_methods": [
         {
@@ -6366,7 +6366,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/browserbase",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:08.508Z"
+        "last_fetched": "2026-01-01T03:58:45.230Z"
       },
       "installation_methods": [
         {
@@ -6439,7 +6439,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/buildkite",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.758Z"
+        "last_fetched": "2026-01-01T03:58:30.523Z"
       },
       "installation_methods": [
         {
@@ -6510,7 +6510,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/buildkite-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.524Z"
+        "last_fetched": "2026-01-01T03:58:30.287Z"
       },
       "installation_methods": [
         {
@@ -6581,7 +6581,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/camunda",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:59.230Z"
+        "last_fetched": "2026-01-01T03:58:35.919Z"
       },
       "installation_methods": [
         {
@@ -6651,7 +6651,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/catalog",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:57.629Z"
+        "last_fetched": "2026-01-01T03:58:34.314Z"
       },
       "installation_methods": [
         {
@@ -6721,7 +6721,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/ccapi-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:14.470Z"
+        "last_fetched": "2026-01-01T03:58:51.160Z"
       },
       "installation_methods": [
         {
@@ -6795,7 +6795,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cdata-connectcloud",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:44.905Z"
+        "last_fetched": "2026-01-01T03:58:21.710Z"
       },
       "installation_methods": [
         {
@@ -6866,7 +6866,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cfn-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:14.917Z"
+        "last_fetched": "2026-01-01T03:58:51.602Z"
       },
       "installation_methods": [
         {
@@ -6939,7 +6939,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/charmhealth-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:01.773Z"
+        "last_fetched": "2026-01-01T03:58:38.394Z"
       },
       "installation_methods": [
         {
@@ -7010,7 +7010,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/chroma",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:28.161Z"
+        "last_fetched": "2026-01-01T03:58:04.754Z"
       },
       "installation_methods": [
         {
@@ -7083,7 +7083,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/circleci",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:37.060Z"
+        "last_fetched": "2026-01-01T03:58:13.586Z"
       },
       "installation_methods": [
         {
@@ -7154,7 +7154,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/clickhouse",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:46.960Z"
+        "last_fetched": "2026-01-01T03:58:23.751Z"
       },
       "installation_methods": [
         {
@@ -7225,7 +7225,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cloud-run-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:56.721Z"
+        "last_fetched": "2026-01-01T03:58:33.421Z"
       },
       "installation_methods": [
         {
@@ -7296,7 +7296,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cloudtrail-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:15.371Z"
+        "last_fetched": "2026-01-01T03:58:52.051Z"
       },
       "installation_methods": [
         {
@@ -7371,7 +7371,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cloudwatch-appsignals-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:15.809Z"
+        "last_fetched": "2026-01-01T03:58:52.494Z"
       },
       "installation_methods": [
         {
@@ -7444,7 +7444,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cloudwatch-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:16.257Z"
+        "last_fetched": "2026-01-01T03:58:52.934Z"
       },
       "installation_methods": [
         {
@@ -7515,7 +7515,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cockroachdb",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.293Z"
+        "last_fetched": "2026-01-01T03:58:30.057Z"
       },
       "installation_methods": [
         {
@@ -7576,7 +7576,7 @@
         "repository": "https://github.com/upstash"
       },
       "stats": {
-        "docker_pulls": 221314,
+        "docker_pulls": 221320,
         "docker_stars": 18,
         "last_updated": "2025-06-16T19:18:29.995325Z"
       },
@@ -7589,7 +7589,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/context7",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:39.289Z"
+        "last_fetched": "2026-01-01T03:58:15.838Z"
       },
       "installation_methods": [
         {
@@ -7662,7 +7662,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cost-explorer-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:16.694Z"
+        "last_fetched": "2026-01-01T03:58:53.387Z"
       },
       "installation_methods": [
         {
@@ -7735,7 +7735,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/couchbase",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:54.460Z"
+        "last_fetched": "2026-01-01T03:58:31.188Z"
       },
       "installation_methods": [
         {
@@ -7809,7 +7809,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cylera-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:08.954Z"
+        "last_fetched": "2026-01-01T03:58:45.672Z"
       },
       "installation_methods": [
         {
@@ -7880,7 +7880,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/cyreslab-ai-shodan",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.320Z"
+        "last_fetched": "2026-01-01T03:58:02.899Z"
       },
       "installation_methods": [
         {
@@ -7954,7 +7954,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/dappier",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:38.394Z"
+        "last_fetched": "2026-01-01T03:58:14.926Z"
       },
       "installation_methods": [
         {
@@ -8027,7 +8027,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/dart",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.766Z"
+        "last_fetched": "2026-01-01T03:58:03.355Z"
       },
       "installation_methods": [
         {
@@ -8100,7 +8100,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/databutton",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:26.990Z"
+        "last_fetched": "2026-01-01T03:58:03.585Z"
       },
       "installation_methods": [
         {
@@ -8171,7 +8171,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/descope",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:27.707Z"
+        "last_fetched": "2026-01-01T03:58:04.283Z"
       },
       "installation_methods": [
         {
@@ -8229,7 +8229,7 @@
         "repository": "https://github.com/wonderwhy-er"
       },
       "stats": {
-        "docker_pulls": 112662,
+        "docker_pulls": 112665,
         "docker_stars": 21,
         "last_updated": "2025-12-03T16:28:08.680033Z"
       },
@@ -8242,7 +8242,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/desktop-commander",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:35.502Z"
+        "last_fetched": "2026-01-01T03:58:12.006Z"
       },
       "installation_methods": [
         {
@@ -8316,7 +8316,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/devhub-cms",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:27.219Z"
+        "last_fetched": "2026-01-01T03:58:03.805Z"
       },
       "installation_methods": [
         {
@@ -8387,7 +8387,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/df-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:05.583Z"
+        "last_fetched": "2026-01-01T03:58:42.303Z"
       },
       "installation_methods": [
         {
@@ -8446,7 +8446,7 @@
         "official": "https://hub.docker.com/r/mcp/docker"
       },
       "stats": {
-        "docker_pulls": 160700,
+        "docker_pulls": 160706,
         "docker_stars": 45,
         "last_updated": "2025-07-22T23:08:31.158811Z"
       },
@@ -8459,7 +8459,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/docker",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:23.836Z"
+        "last_fetched": "2026-01-01T03:58:00.408Z"
       },
       "installation_methods": [
         {
@@ -8531,7 +8531,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/docker-mcp-catalog",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:22.358Z"
+        "last_fetched": "2026-01-01T03:58:58.979Z"
       },
       "installation_methods": [
         {
@@ -8590,7 +8590,7 @@
         "repository": "https://github.com/docker"
       },
       "stats": {
-        "docker_pulls": 49530,
+        "docker_pulls": 49532,
         "docker_stars": 6,
         "last_updated": "2025-11-03T21:29:05.650649Z"
       },
@@ -8603,7 +8603,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/dockerhub",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:50.360Z"
+        "last_fetched": "2026-01-01T03:58:27.139Z"
       },
       "installation_methods": [
         {
@@ -8676,7 +8676,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/doit",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:37.942Z"
+        "last_fetched": "2026-01-01T03:58:14.461Z"
       },
       "installation_methods": [
         {
@@ -8734,7 +8734,7 @@
         "repository": "https://github.com/nickclyde"
       },
       "stats": {
-        "docker_pulls": 200027,
+        "docker_pulls": 200029,
         "docker_stars": 9,
         "last_updated": "2025-06-16T19:20:40.254088Z"
       },
@@ -8747,7 +8747,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/duckduckgo",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:35.270Z"
+        "last_fetched": "2026-01-01T03:58:11.777Z"
       },
       "installation_methods": [
         {
@@ -8820,7 +8820,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/dynamodb-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:17.201Z"
+        "last_fetched": "2026-01-01T03:58:53.829Z"
       },
       "installation_methods": [
         {
@@ -8880,7 +8880,7 @@
         "repository": "https://github.com/dynatrace-oss"
       },
       "stats": {
-        "docker_pulls": 141996,
+        "docker_pulls": 142072,
         "docker_stars": 0,
         "last_updated": "2025-08-15T06:17:54.964405Z"
       },
@@ -8893,7 +8893,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/dynatrace-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:57.169Z"
+        "last_fetched": "2026-01-01T03:58:33.873Z"
       },
       "installation_methods": [
         {
@@ -8964,7 +8964,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/e2b",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:27.470Z"
+        "last_fetched": "2026-01-01T03:58:04.025Z"
       },
       "installation_methods": [
         {
@@ -9035,7 +9035,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/edubase",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:35.723Z"
+        "last_fetched": "2026-01-01T03:58:12.231Z"
       },
       "installation_methods": [
         {
@@ -9106,7 +9106,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/effect-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:59.700Z"
+        "last_fetched": "2026-01-01T03:58:36.364Z"
       },
       "installation_methods": [
         {
@@ -9177,7 +9177,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/elasticache-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:17.645Z"
+        "last_fetched": "2026-01-01T03:58:54.280Z"
       },
       "installation_methods": [
         {
@@ -9248,7 +9248,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/elasticsearch",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:33.436Z"
+        "last_fetched": "2026-01-01T03:58:09.952Z"
       },
       "installation_methods": [
         {
@@ -9321,7 +9321,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/elevenlabs",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:38.165Z"
+        "last_fetched": "2026-01-01T03:58:14.687Z"
       },
       "installation_methods": [
         {
@@ -9392,7 +9392,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/everart",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:20.901Z"
+        "last_fetched": "2026-01-01T03:57:57.439Z"
       },
       "installation_methods": [
         {
@@ -9465,7 +9465,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/everything",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:21.120Z"
+        "last_fetched": "2026-01-01T03:57:57.658Z"
       },
       "installation_methods": [
         {
@@ -9536,7 +9536,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/exa",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:27.935Z"
+        "last_fetched": "2026-01-01T03:58:04.524Z"
       },
       "installation_methods": [
         {
@@ -9609,7 +9609,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/explorium",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:06.937Z"
+        "last_fetched": "2026-01-01T03:58:43.635Z"
       },
       "installation_methods": [
         {
@@ -9667,7 +9667,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 1088696,
+        "docker_pulls": 1088748,
         "docker_stars": 49,
         "last_updated": "2025-06-16T19:21:45.465716Z"
       },
@@ -9680,7 +9680,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/fetch",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:19.076Z"
+        "last_fetched": "2026-01-01T03:57:55.585Z"
       },
       "installation_methods": [
         {
@@ -9751,7 +9751,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/fibery",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:41.316Z"
+        "last_fetched": "2026-01-01T03:58:17.867Z"
       },
       "installation_methods": [
         {
@@ -9809,7 +9809,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 108690,
+        "docker_pulls": 108693,
         "docker_stars": 28,
         "last_updated": "2025-09-09T20:33:28.042877Z"
       },
@@ -9822,7 +9822,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/filesystem",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:21.344Z"
+        "last_fetched": "2026-01-01T03:57:57.884Z"
       },
       "installation_methods": [
         {
@@ -9880,7 +9880,7 @@
         "repository": "https://github.com/firecrawl"
       },
       "stats": {
-        "docker_pulls": 53996,
+        "docker_pulls": 54000,
         "docker_stars": 17,
         "last_updated": "2025-12-02T00:22:55.40724Z"
       },
@@ -9893,7 +9893,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/firecrawl",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:28.841Z"
+        "last_fetched": "2026-01-01T03:58:05.436Z"
       },
       "installation_methods": [
         {
@@ -9967,7 +9967,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/firewalla-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:54.901Z"
+        "last_fetched": "2026-01-01T03:58:31.633Z"
       },
       "installation_methods": [
         {
@@ -10041,7 +10041,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/flexprice",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:40.412Z"
+        "last_fetched": "2026-01-01T03:58:16.963Z"
       },
       "installation_methods": [
         {
@@ -10111,7 +10111,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/gdrive",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:21.585Z"
+        "last_fetched": "2026-01-01T03:57:58.120Z"
       },
       "installation_methods": [
         {
@@ -10184,7 +10184,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/gemini-api-docs-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:10.357Z"
+        "last_fetched": "2026-01-01T03:58:47.119Z"
       },
       "installation_methods": [
         {
@@ -10245,7 +10245,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 64210,
+        "docker_pulls": 64212,
         "docker_stars": 28,
         "last_updated": "2025-06-16T19:22:35.133934Z"
       },
@@ -10258,7 +10258,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/git",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:19.300Z"
+        "last_fetched": "2026-01-01T03:57:55.810Z"
       },
       "installation_methods": [
         {
@@ -10316,7 +10316,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 78342,
+        "docker_pulls": 78345,
         "docker_stars": 20,
         "last_updated": "2025-06-16T19:22:33.231289Z"
       },
@@ -10329,7 +10329,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/github",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:21.810Z"
+        "last_fetched": "2026-01-01T03:57:58.346Z"
       },
       "installation_methods": [
         {
@@ -10403,7 +10403,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/github-chat",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:28.611Z"
+        "last_fetched": "2026-01-01T03:58:05.206Z"
       },
       "installation_methods": [
         {
@@ -10476,7 +10476,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/gitlab",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:22.036Z"
+        "last_fetched": "2026-01-01T03:57:58.582Z"
       },
       "installation_methods": [
         {
@@ -10536,7 +10536,7 @@
         "repository": "https://github.com/glifxyz"
       },
       "stats": {
-        "docker_pulls": 4379,
+        "docker_pulls": 4380,
         "docker_stars": 2,
         "last_updated": "2025-10-31T21:37:58.504817Z"
       },
@@ -10549,7 +10549,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/glif",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:28.385Z"
+        "last_fetched": "2026-01-01T03:58:04.974Z"
       },
       "installation_methods": [
         {
@@ -10609,7 +10609,7 @@
         "repository": "https://github.com/kgprs"
       },
       "stats": {
-        "docker_pulls": 2313,
+        "docker_pulls": 2315,
         "docker_stars": 0,
         "last_updated": "2025-11-19T23:17:55.333494Z"
       },
@@ -10622,7 +10622,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/google-flights",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:22.138Z"
+        "last_fetched": "2026-01-01T03:58:58.759Z"
       },
       "installation_methods": [
         {
@@ -10695,7 +10695,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/google-maps",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:22.258Z"
+        "last_fetched": "2026-01-01T03:57:58.809Z"
       },
       "installation_methods": [
         {
@@ -10768,7 +10768,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/google-maps-comprehensive",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:08.059Z"
+        "last_fetched": "2026-01-01T03:58:44.766Z"
       },
       "installation_methods": [
         {
@@ -10828,7 +10828,7 @@
         "repository": "https://github.com/grafana"
       },
       "stats": {
-        "docker_pulls": 215369,
+        "docker_pulls": 215402,
         "docker_stars": 19,
         "last_updated": "2025-12-03T16:39:11.776537Z"
       },
@@ -10841,7 +10841,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/grafana",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:36.385Z"
+        "last_fetched": "2026-01-01T03:58:12.906Z"
       },
       "installation_methods": [
         {
@@ -10912,7 +10912,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/gyazo",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:39.738Z"
+        "last_fetched": "2026-01-01T03:58:16.286Z"
       },
       "installation_methods": [
         {
@@ -10983,7 +10983,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/hackernews-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:03.352Z"
+        "last_fetched": "2026-01-01T03:58:39.974Z"
       },
       "installation_methods": [
         {
@@ -11054,7 +11054,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/hackle",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:40.184Z"
+        "last_fetched": "2026-01-01T03:58:16.738Z"
       },
       "installation_methods": [
         {
@@ -11125,7 +11125,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/handwriting-ocr",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:29.066Z"
+        "last_fetched": "2026-01-01T03:58:05.670Z"
       },
       "installation_methods": [
         {
@@ -11196,7 +11196,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/hdx",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:59.928Z"
+        "last_fetched": "2026-01-01T03:58:36.599Z"
       },
       "installation_methods": [
         {
@@ -11267,7 +11267,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/heroku",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:33.664Z"
+        "last_fetched": "2026-01-01T03:58:10.174Z"
       },
       "installation_methods": [
         {
@@ -11338,7 +11338,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/husqvarna-automower",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:41.777Z"
+        "last_fetched": "2026-01-01T03:58:18.315Z"
       },
       "installation_methods": [
         {
@@ -11409,7 +11409,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/hyperbrowser",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:29.297Z"
+        "last_fetched": "2026-01-01T03:58:05.887Z"
       },
       "installation_methods": [
         {
@@ -11480,7 +11480,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/hyperspell",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:29.978Z"
+        "last_fetched": "2026-01-01T03:58:06.568Z"
       },
       "installation_methods": [
         {
@@ -11551,7 +11551,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/iam-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:18.083Z"
+        "last_fetched": "2026-01-01T03:58:54.721Z"
       },
       "installation_methods": [
         {
@@ -11622,7 +11622,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/iaptic",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:29.520Z"
+        "last_fetched": "2026-01-01T03:58:06.115Z"
       },
       "installation_methods": [
         {
@@ -11692,7 +11692,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/inspector",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:23.611Z"
+        "last_fetched": "2026-01-01T03:58:00.177Z"
       },
       "installation_methods": [
         {
@@ -11762,7 +11762,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/inspektor-gadget",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:55.126Z"
+        "last_fetched": "2026-01-01T03:58:31.856Z"
       },
       "installation_methods": [
         {
@@ -11823,7 +11823,7 @@
         "repository": "https://github.com/GannaChernyshova"
       },
       "stats": {
-        "docker_pulls": 10956,
+        "docker_pulls": 10957,
         "docker_stars": 2,
         "last_updated": "2025-06-16T19:25:51.764318Z"
       },
@@ -11836,7 +11836,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/jetbrains",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:24.751Z"
+        "last_fetched": "2026-01-01T03:58:01.304Z"
       },
       "installation_methods": [
         {
@@ -11909,7 +11909,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/kagisearch",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:30.209Z"
+        "last_fetched": "2026-01-01T03:58:06.795Z"
       },
       "installation_methods": [
         {
@@ -11982,7 +11982,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/keboola-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:47.863Z"
+        "last_fetched": "2026-01-01T03:58:24.657Z"
       },
       "installation_methods": [
         {
@@ -12055,7 +12055,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/kong",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:36.835Z"
+        "last_fetched": "2026-01-01T03:58:13.358Z"
       },
       "installation_methods": [
         {
@@ -12129,7 +12129,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/kubectl-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:05.148Z"
+        "last_fetched": "2026-01-01T03:58:41.859Z"
       },
       "installation_methods": [
         {
@@ -12190,7 +12190,7 @@
         "repository": "https://github.com/Flux159"
       },
       "stats": {
-        "docker_pulls": 43558,
+        "docker_pulls": 43561,
         "docker_stars": 17,
         "last_updated": "2025-12-03T16:46:18.006964Z"
       },
@@ -12203,7 +12203,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/kubernetes",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:34.574Z"
+        "last_fetched": "2026-01-01T03:58:11.086Z"
       },
       "installation_methods": [
         {
@@ -12276,7 +12276,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/lara",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:34.346Z"
+        "last_fetched": "2026-01-01T03:58:10.857Z"
       },
       "installation_methods": [
         {
@@ -12349,7 +12349,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/line",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:39.514Z"
+        "last_fetched": "2026-01-01T03:58:16.063Z"
       },
       "installation_methods": [
         {
@@ -12424,7 +12424,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/maestro-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:07.386Z"
+        "last_fetched": "2026-01-01T03:58:44.086Z"
       },
       "installation_methods": [
         {
@@ -12498,7 +12498,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mapbox",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:00.180Z"
+        "last_fetched": "2026-01-01T03:58:36.827Z"
       },
       "installation_methods": [
         {
@@ -12572,7 +12572,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mapbox-devkit",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:00.416Z"
+        "last_fetched": "2026-01-01T03:58:37.056Z"
       },
       "installation_methods": [
         {
@@ -12646,7 +12646,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/markdownify",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:58.782Z"
+        "last_fetched": "2026-01-01T03:58:35.468Z"
       },
       "installation_methods": [
         {
@@ -12717,7 +12717,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/markitdown",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:59.005Z"
+        "last_fetched": "2026-01-01T03:58:35.693Z"
       },
       "installation_methods": [
         {
@@ -12788,7 +12788,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mcp-code-interpreter",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:00.643Z"
+        "last_fetched": "2026-01-01T03:58:37.281Z"
       },
       "installation_methods": [
         {
@@ -12859,7 +12859,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mcp-discord",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:39.963Z"
+        "last_fetched": "2026-01-01T03:58:16.513Z"
       },
       "installation_methods": [
         {
@@ -12930,7 +12930,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mcp-playwright",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:54.214Z"
+        "last_fetched": "2026-01-01T03:58:30.960Z"
       },
       "installation_methods": [
         {
@@ -13003,7 +13003,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mcp-python-refactoring",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:02.003Z"
+        "last_fetched": "2026-01-01T03:58:38.624Z"
       },
       "installation_methods": [
         {
@@ -13076,7 +13076,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/memcached-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:18.572Z"
+        "last_fetched": "2026-01-01T03:58:55.168Z"
       },
       "installation_methods": [
         {
@@ -13134,7 +13134,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 160177,
+        "docker_pulls": 160182,
         "docker_stars": 26,
         "last_updated": "2025-05-02T14:31:01.345819Z"
       },
@@ -13147,7 +13147,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/memory",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:22.490Z"
+        "last_fetched": "2026-01-01T03:57:59.038Z"
       },
       "installation_methods": [
         {
@@ -13218,7 +13218,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/metabase",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:55.354Z"
+        "last_fetched": "2026-01-01T03:58:32.077Z"
       },
       "installation_methods": [
         {
@@ -13289,7 +13289,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/minecraft-wiki",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:46.277Z"
+        "last_fetched": "2026-01-01T03:58:23.085Z"
       },
       "installation_methods": [
         {
@@ -13347,7 +13347,7 @@
         "repository": "https://github.com/mongodb-js"
       },
       "stats": {
-        "docker_pulls": 91791,
+        "docker_pulls": 91793,
         "docker_stars": 8,
         "last_updated": "2025-12-03T16:44:34.647433Z"
       },
@@ -13360,7 +13360,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/mongodb",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:45.129Z"
+        "last_fetched": "2026-01-01T03:58:21.939Z"
       },
       "installation_methods": [
         {
@@ -13433,7 +13433,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/multiversx-mx",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:29.742Z"
+        "last_fetched": "2026-01-01T03:58:06.339Z"
       },
       "installation_methods": [
         {
@@ -13491,7 +13491,7 @@
         "repository": "https://github.com/czlonkowski"
       },
       "stats": {
-        "docker_pulls": 20989,
+        "docker_pulls": 20999,
         "docker_stars": 2,
         "last_updated": "2025-12-03T16:46:39.517497Z"
       },
@@ -13504,7 +13504,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/n8n",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:22.821Z"
+        "last_fetched": "2026-01-01T03:58:59.455Z"
       },
       "installation_methods": [
         {
@@ -13577,7 +13577,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/nasdaq-data-link",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:48.985Z"
+        "last_fetched": "2026-01-01T03:58:25.801Z"
       },
       "installation_methods": [
         {
@@ -13648,7 +13648,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/needle-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:52.391Z"
+        "last_fetched": "2026-01-01T03:58:29.157Z"
       },
       "installation_methods": [
         {
@@ -13721,7 +13721,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neo4j-cloud-aura-api",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:42.528Z"
+        "last_fetched": "2026-01-01T03:58:19.061Z"
       },
       "installation_methods": [
         {
@@ -13782,7 +13782,7 @@
         "repository": "https://github.com/neo4j-contrib"
       },
       "stats": {
-        "docker_pulls": 16868,
+        "docker_pulls": 16869,
         "docker_stars": 2,
         "last_updated": "2025-12-03T16:47:15.105576Z"
       },
@@ -13795,7 +13795,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neo4j-cypher",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:42.302Z"
+        "last_fetched": "2026-01-01T03:58:18.824Z"
       },
       "installation_methods": [
         {
@@ -13866,7 +13866,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neo4j-data-modeling",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:02.456Z"
+        "last_fetched": "2026-01-01T03:58:39.084Z"
       },
       "installation_methods": [
         {
@@ -13937,7 +13937,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neo4j-memory",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:40.638Z"
+        "last_fetched": "2026-01-01T03:58:17.189Z"
       },
       "installation_methods": [
         {
@@ -14009,7 +14009,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neo4j-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:37.505Z"
+        "last_fetched": "2026-01-01T03:58:14.026Z"
       },
       "installation_methods": [
         {
@@ -14079,7 +14079,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/neon",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:30.451Z"
+        "last_fetched": "2026-01-01T03:58:07.021Z"
       },
       "installation_methods": [
         {
@@ -14153,7 +14153,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/next-devtools-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:09.399Z"
+        "last_fetched": "2026-01-01T03:58:46.116Z"
       },
       "installation_methods": [
         {
@@ -14224,7 +14224,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/node-code-sandbox",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:43.206Z"
+        "last_fetched": "2026-01-01T03:58:19.724Z"
       },
       "installation_methods": [
         {
@@ -14286,7 +14286,7 @@
         "repository": "https://github.com/makenotion"
       },
       "stats": {
-        "docker_pulls": 81231,
+        "docker_pulls": 81236,
         "docker_stars": 34,
         "last_updated": "2025-08-23T06:17:24.795696Z"
       },
@@ -14299,7 +14299,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/notion",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:34.804Z"
+        "last_fetched": "2026-01-01T03:58:11.320Z"
       },
       "installation_methods": [
         {
@@ -14370,7 +14370,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/nova-canvas-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:19.011Z"
+        "last_fetched": "2026-01-01T03:58:55.611Z"
       },
       "installation_methods": [
         {
@@ -14443,7 +14443,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/novita",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:45.370Z"
+        "last_fetched": "2026-01-01T03:58:22.166Z"
       },
       "installation_methods": [
         {
@@ -14516,7 +14516,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/npm-sentinel",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:49.213Z"
+        "last_fetched": "2026-01-01T03:58:26.022Z"
       },
       "installation_methods": [
         {
@@ -14576,7 +14576,7 @@
         "repository": "https://github.com/MarkusPfundstein"
       },
       "stats": {
-        "docker_pulls": 45904,
+        "docker_pulls": 45911,
         "docker_stars": 18,
         "last_updated": "2025-06-16T19:29:21.399437Z"
       },
@@ -14589,7 +14589,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/obsidian",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:25.420Z"
+        "last_fetched": "2026-01-01T03:58:01.982Z"
       },
       "installation_methods": [
         {
@@ -14662,7 +14662,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/octomind",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:30.715Z"
+        "last_fetched": "2026-01-01T03:58:07.238Z"
       },
       "installation_methods": [
         {
@@ -14733,7 +14733,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/okta-mcp-fctr",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:55.581Z"
+        "last_fetched": "2026-01-01T03:58:32.309Z"
       },
       "installation_methods": [
         {
@@ -14804,7 +14804,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/omi",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.980Z"
+        "last_fetched": "2026-01-01T03:58:30.746Z"
       },
       "installation_methods": [
         {
@@ -14875,7 +14875,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/onlyoffice-docspace",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:53.750Z"
+        "last_fetched": "2026-01-01T03:58:30.516Z"
       },
       "installation_methods": [
         {
@@ -14946,7 +14946,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/openapi",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:03.576Z"
+        "last_fetched": "2026-01-01T03:58:40.196Z"
       },
       "installation_methods": [
         {
@@ -15019,7 +15019,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/openapi-schema",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:39.066Z"
+        "last_fetched": "2026-01-01T03:58:15.607Z"
       },
       "installation_methods": [
         {
@@ -15092,7 +15092,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/openbnb-airbnb",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:48.308Z"
+        "last_fetched": "2026-01-01T03:58:25.122Z"
       },
       "installation_methods": [
         {
@@ -15166,7 +15166,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/openweather",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:48.085Z"
+        "last_fetched": "2026-01-01T03:58:24.891Z"
       },
       "installation_methods": [
         {
@@ -15237,7 +15237,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/opik",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:30.962Z"
+        "last_fetched": "2026-01-01T03:58:07.483Z"
       },
       "installation_methods": [
         {
@@ -15310,7 +15310,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/oracle",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:02.686Z"
+        "last_fetched": "2026-01-01T03:58:39.315Z"
       },
       "installation_methods": [
         {
@@ -15383,7 +15383,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/osp_marketing_tools",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:31.405Z"
+        "last_fetched": "2026-01-01T03:58:07.920Z"
       },
       "installation_methods": [
         {
@@ -15454,7 +15454,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/oxylabs",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:31.187Z"
+        "last_fetched": "2026-01-01T03:58:07.702Z"
       },
       "installation_methods": [
         {
@@ -15514,7 +15514,7 @@
         "repository": "https://github.com/openags"
       },
       "stats": {
-        "docker_pulls": 10659,
+        "docker_pulls": 10662,
         "docker_stars": 3,
         "last_updated": "2025-08-26T06:21:40.867316Z"
       },
@@ -15527,7 +15527,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/paper-search",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:46.504Z"
+        "last_fetched": "2026-01-01T03:58:23.309Z"
       },
       "installation_methods": [
         {
@@ -15600,7 +15600,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/perplexity-ask",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:24.279Z"
+        "last_fetched": "2026-01-01T03:58:00.857Z"
       },
       "installation_methods": [
         {
@@ -15674,7 +15674,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pia",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:58.081Z"
+        "last_fetched": "2026-01-01T03:58:34.776Z"
       },
       "installation_methods": [
         {
@@ -15747,7 +15747,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pica-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:21.002Z"
+        "last_fetched": "2026-01-01T03:58:57.645Z"
       },
       "installation_methods": [
         {
@@ -15818,7 +15818,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pinecone",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:46.727Z"
+        "last_fetched": "2026-01-01T03:58:23.529Z"
       },
       "installation_methods": [
         {
@@ -15876,7 +15876,7 @@
         "repository": "https://github.com/microsoft"
       },
       "stats": {
-        "docker_pulls": 444800,
+        "docker_pulls": 444846,
         "docker_stars": 25,
         "last_updated": "2025-12-03T16:51:06.273902Z"
       },
@@ -15889,7 +15889,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/playwright",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:40.861Z"
+        "last_fetched": "2026-01-01T03:58:17.418Z"
       },
       "installation_methods": [
         {
@@ -15960,7 +15960,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pluggedin-mcp-proxy",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:49.444Z"
+        "last_fetched": "2026-01-01T03:58:26.240Z"
       },
       "installation_methods": [
         {
@@ -16033,7 +16033,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pomodash",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:02.233Z"
+        "last_fetched": "2026-01-01T03:58:38.857Z"
       },
       "installation_methods": [
         {
@@ -16093,7 +16093,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 198332,
+        "docker_pulls": 198344,
         "docker_stars": 32,
         "last_updated": "2025-06-16T19:31:18.147133Z"
       },
@@ -16106,7 +16106,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/postgres",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:22.716Z"
+        "last_fetched": "2026-01-01T03:57:59.265Z"
       },
       "installation_methods": [
         {
@@ -16166,7 +16166,7 @@
         "repository": "https://github.com/postmanlabs"
       },
       "stats": {
-        "docker_pulls": 9080,
+        "docker_pulls": 9082,
         "docker_stars": 4,
         "last_updated": "2025-11-03T22:01:41.221278Z"
       },
@@ -16179,7 +16179,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/postman",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:02.911Z"
+        "last_fetched": "2026-01-01T03:58:39.541Z"
       },
       "installation_methods": [
         {
@@ -16253,7 +16253,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pref-editor",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:49.680Z"
+        "last_fetched": "2026-01-01T03:58:26.463Z"
       },
       "installation_methods": [
         {
@@ -16324,7 +16324,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/pulumi",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:36.610Z"
+        "last_fetched": "2026-01-01T03:58:13.133Z"
       },
       "installation_methods": [
         {
@@ -16397,7 +16397,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/puppeteer",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:22.939Z"
+        "last_fetched": "2026-01-01T03:57:59.492Z"
       },
       "installation_methods": [
         {
@@ -16470,7 +16470,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/quantconnect",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:06.258Z"
+        "last_fetched": "2026-01-01T03:58:42.968Z"
       },
       "installation_methods": [
         {
@@ -16543,7 +16543,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/ramparts",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:58.320Z"
+        "last_fetched": "2026-01-01T03:58:34.999Z"
       },
       "installation_methods": [
         {
@@ -16616,7 +16616,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/razorpay",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:41.094Z"
+        "last_fetched": "2026-01-01T03:58:17.640Z"
       },
       "installation_methods": [
         {
@@ -16687,7 +16687,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/reddit-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:07.837Z"
+        "last_fetched": "2026-01-01T03:58:44.536Z"
       },
       "installation_methods": [
         {
@@ -16761,7 +16761,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/redis",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:24.058Z"
+        "last_fetched": "2026-01-01T03:58:00.630Z"
       },
       "installation_methods": [
         {
@@ -16834,7 +16834,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/redis-cloud",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:34.117Z"
+        "last_fetched": "2026-01-01T03:58:10.629Z"
       },
       "installation_methods": [
         {
@@ -16907,7 +16907,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/redshift-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:19.456Z"
+        "last_fetched": "2026-01-01T03:58:56.073Z"
       },
       "installation_methods": [
         {
@@ -16978,7 +16978,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/ref-tools-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:51.036Z"
+        "last_fetched": "2026-01-01T03:58:27.806Z"
       },
       "installation_methods": [
         {
@@ -17051,7 +17051,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/render",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:45.831Z"
+        "last_fetched": "2026-01-01T03:58:22.626Z"
       },
       "installation_methods": [
         {
@@ -17122,7 +17122,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/resend",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:25.640Z"
+        "last_fetched": "2026-01-01T03:58:02.206Z"
       },
       "installation_methods": [
         {
@@ -17195,7 +17195,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/risken",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:38.618Z"
+        "last_fetched": "2026-01-01T03:58:15.159Z"
       },
       "installation_methods": [
         {
@@ -17266,7 +17266,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/root",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:52.166Z"
+        "last_fetched": "2026-01-01T03:58:28.928Z"
       },
       "installation_methods": [
         {
@@ -17339,7 +17339,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/ros2",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:04.706Z"
+        "last_fetched": "2026-01-01T03:58:41.416Z"
       },
       "installation_methods": [
         {
@@ -17410,7 +17410,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/rust-mcp-filesystem",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:08.281Z"
+        "last_fetched": "2026-01-01T03:58:45.009Z"
       },
       "installation_methods": [
         {
@@ -17481,7 +17481,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/s3-tables-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:19.894Z"
+        "last_fetched": "2026-01-01T03:58:56.522Z"
       },
       "installation_methods": [
         {
@@ -17552,7 +17552,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/schemacrawler-ai",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:01.105Z"
+        "last_fetched": "2026-01-01T03:58:37.726Z"
       },
       "installation_methods": [
         {
@@ -17626,7 +17626,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/schogini_mcp_image_border",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:52.609Z"
+        "last_fetched": "2026-01-01T03:58:29.377Z"
       },
       "installation_methods": [
         {
@@ -17697,7 +17697,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/scrapegraph",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:31.634Z"
+        "last_fetched": "2026-01-01T03:58:08.148Z"
       },
       "installation_methods": [
         {
@@ -17768,7 +17768,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/scrapezy",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:31.863Z"
+        "last_fetched": "2026-01-01T03:58:08.371Z"
       },
       "installation_methods": [
         {
@@ -17841,7 +17841,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sec-edgar",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:49.897Z"
+        "last_fetched": "2026-01-01T03:58:26.689Z"
       },
       "installation_methods": [
         {
@@ -17915,7 +17915,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/securenote-link-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:51.480Z"
+        "last_fetched": "2026-01-01T03:58:28.251Z"
       },
       "installation_methods": [
         {
@@ -17988,7 +17988,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sentry",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:19.747Z"
+        "last_fetched": "2026-01-01T03:57:56.272Z"
       },
       "installation_methods": [
         {
@@ -18059,7 +18059,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sequa",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:57.404Z"
+        "last_fetched": "2026-01-01T03:58:34.093Z"
       },
       "installation_methods": [
         {
@@ -18119,7 +18119,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 191386,
+        "docker_pulls": 191390,
         "docker_stars": 28,
         "last_updated": "2025-05-02T14:31:32.557551Z"
       },
@@ -18132,7 +18132,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sequentialthinking",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:23.163Z"
+        "last_fetched": "2026-01-01T03:57:59.717Z"
       },
       "installation_methods": [
         {
@@ -18203,7 +18203,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/shopify",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:32.091Z"
+        "last_fetched": "2026-01-01T03:58:08.604Z"
       },
       "installation_methods": [
         {
@@ -18273,7 +18273,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/signatures",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:41.538Z"
+        "last_fetched": "2026-01-01T03:58:18.093Z"
       },
       "installation_methods": [
         {
@@ -18346,7 +18346,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/singlestore",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:51.940Z"
+        "last_fetched": "2026-01-01T03:58:28.700Z"
       },
       "installation_methods": [
         {
@@ -18406,7 +18406,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 283270,
+        "docker_pulls": 283271,
         "docker_stars": 22,
         "last_updated": "2025-06-17T16:00:33.852798Z"
       },
@@ -18419,7 +18419,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/slack",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:23.387Z"
+        "last_fetched": "2026-01-01T03:57:59.950Z"
       },
       "installation_methods": [
         {
@@ -18492,7 +18492,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/smartbear",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:56.268Z"
+        "last_fetched": "2026-01-01T03:58:32.979Z"
       },
       "installation_methods": [
         {
@@ -18553,7 +18553,7 @@
         "repository": "https://github.com/SonarSource"
       },
       "stats": {
-        "docker_pulls": 49325,
+        "docker_pulls": 49327,
         "docker_stars": 18,
         "last_updated": "2025-12-02T21:41:01.477432Z"
       },
@@ -18566,7 +18566,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sonarqube",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:48.529Z"
+        "last_fetched": "2026-01-01T03:58:25.354Z"
       },
       "installation_methods": [
         {
@@ -18626,7 +18626,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 19920,
+        "docker_pulls": 19924,
         "docker_stars": 17,
         "last_updated": "2025-06-16T19:14:18.657946Z"
       },
@@ -18639,7 +18639,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sqlite",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:19.970Z"
+        "last_fetched": "2026-01-01T03:57:56.493Z"
       },
       "installation_methods": [
         {
@@ -18712,7 +18712,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/sqlite-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:09.634Z"
+        "last_fetched": "2026-01-01T03:58:46.366Z"
       },
       "installation_methods": [
         {
@@ -18786,7 +18786,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/stackhawk",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:06.479Z"
+        "last_fetched": "2026-01-01T03:58:43.194Z"
       },
       "installation_methods": [
         {
@@ -18846,7 +18846,7 @@
         "repository": "https://github.com/stripe"
       },
       "stats": {
-        "docker_pulls": 14055,
+        "docker_pulls": 14057,
         "docker_stars": 9,
         "last_updated": "2025-12-03T16:54:43.594778Z"
       },
@@ -18859,7 +18859,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/stripe",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:24.976Z"
+        "last_fetched": "2026-01-01T03:58:01.534Z"
       },
       "installation_methods": [
         {
@@ -18932,7 +18932,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/suzieq-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:47.183Z"
+        "last_fetched": "2026-01-01T03:58:23.985Z"
       },
       "installation_methods": [
         {
@@ -19005,7 +19005,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/tavily",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:32.316Z"
+        "last_fetched": "2026-01-01T03:58:08.832Z"
       },
       "installation_methods": [
         {
@@ -19079,7 +19079,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/teamwork",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:00.880Z"
+        "last_fetched": "2026-01-01T03:58:37.503Z"
       },
       "installation_methods": [
         {
@@ -19150,7 +19150,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/tembo",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:32.542Z"
+        "last_fetched": "2026-01-01T03:58:09.062Z"
       },
       "installation_methods": [
         {
@@ -19223,7 +19223,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/temporal",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:21.907Z"
+        "last_fetched": "2026-01-01T03:58:58.537Z"
       },
       "installation_methods": [
         {
@@ -19294,7 +19294,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/testkube",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:21.669Z"
+        "last_fetched": "2026-01-01T03:58:58.313Z"
       },
       "installation_methods": [
         {
@@ -19365,7 +19365,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/text-to-graphql",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:50.124Z"
+        "last_fetched": "2026-01-01T03:58:26.912Z"
       },
       "installation_methods": [
         {
@@ -19438,7 +19438,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/thingsboard",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:10.132Z"
+        "last_fetched": "2026-01-01T03:58:46.889Z"
       },
       "installation_methods": [
         {
@@ -19511,7 +19511,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/tigris",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:48.754Z"
+        "last_fetched": "2026-01-01T03:58:25.580Z"
       },
       "installation_methods": [
         {
@@ -19569,7 +19569,7 @@
         "repository": "https://github.com/modelcontextprotocol"
       },
       "stats": {
-        "docker_pulls": 349745,
+        "docker_pulls": 349786,
         "docker_stars": 8,
         "last_updated": "2025-06-17T16:00:45.757862Z"
       },
@@ -19582,7 +19582,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/time",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:19.525Z"
+        "last_fetched": "2026-01-01T03:57:56.036Z"
       },
       "installation_methods": [
         {
@@ -19653,7 +19653,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/timestream-for-influxdb-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:20.780Z"
+        "last_fetched": "2026-01-01T03:58:57.410Z"
       },
       "installation_methods": [
         {
@@ -19726,7 +19726,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/triplewhale",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:32.765Z"
+        "last_fetched": "2026-01-01T03:58:09.281Z"
       },
       "installation_methods": [
         {
@@ -19797,7 +19797,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/unreal-engine-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:04.023Z"
+        "last_fetched": "2026-01-01T03:58:40.642Z"
       },
       "installation_methods": [
         {
@@ -19870,7 +19870,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/valkey-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:20.340Z"
+        "last_fetched": "2026-01-01T03:58:56.965Z"
       },
       "installation_methods": [
         {
@@ -19941,7 +19941,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/vectra-ai-rux-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:21.444Z"
+        "last_fetched": "2026-01-01T03:58:58.092Z"
       },
       "installation_methods": [
         {
@@ -20014,7 +20014,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/veyrax",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:32.988Z"
+        "last_fetched": "2026-01-01T03:58:09.508Z"
       },
       "installation_methods": [
         {
@@ -20085,7 +20085,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/vizro",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:46.058Z"
+        "last_fetched": "2026-01-01T03:58:22.857Z"
       },
       "installation_methods": [
         {
@@ -20156,7 +20156,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/vuln-nist-mcp-server",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:04.482Z"
+        "last_fetched": "2026-01-01T03:58:41.099Z"
       },
       "installation_methods": [
         {
@@ -20229,7 +20229,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/webflow",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:35.943Z"
+        "last_fetched": "2026-01-01T03:58:12.460Z"
       },
       "installation_methods": [
         {
@@ -20302,7 +20302,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/wikipedia-mcp",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:42.973Z"
+        "last_fetched": "2026-01-01T03:58:19.504Z"
       },
       "installation_methods": [
         {
@@ -20373,7 +20373,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/wolfram-alpha",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:35.044Z"
+        "last_fetched": "2026-01-01T03:58:11.540Z"
       },
       "installation_methods": [
         {
@@ -20431,7 +20431,7 @@
         "repository": "https://github.com/jkawamoto"
       },
       "stats": {
-        "docker_pulls": 152404,
+        "docker_pulls": 152406,
         "docker_stars": 18,
         "last_updated": "2025-11-12T21:02:20.291962Z"
       },
@@ -20444,7 +20444,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/youtube-transcript",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:18:25.196Z"
+        "last_fetched": "2026-01-01T03:58:01.752Z"
       },
       "installation_methods": [
         {
@@ -20515,7 +20515,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/zen",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:22.597Z"
+        "last_fetched": "2026-01-01T03:58:59.215Z"
       },
       "installation_methods": [
         {
@@ -20588,7 +20588,7 @@
         "type": "docker",
         "url": "https://hub.docker.com/r/mcp/zerodha-kite",
         "verified_by": "Docker",
-        "last_fetched": "2026-01-01T03:19:06.710Z"
+        "last_fetched": "2026-01-01T03:58:43.413Z"
       },
       "installation_methods": [
         {
