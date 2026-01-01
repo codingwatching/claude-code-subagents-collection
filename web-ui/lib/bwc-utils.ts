@@ -1,57 +1,69 @@
 /**
- * Utility functions for generating BWC CLI commands
+ * Utility functions for generating plugin install commands
  */
 
-export type ResourceType = 'subagent' | 'command' | 'mcp'
+export type ResourceType = 'subagent' | 'command' | 'mcp' | 'hook'
 
-export interface BWCCommands {
+export interface PluginCommands {
+  marketplaceAdd: string
   install: string
-  info: string
-  list: string
-  remove: string
-  search?: string
+  installBundle: string
 }
 
+const MARKETPLACE_NAME = 'buildwithclaude'
+const MARKETPLACE_REPO = 'davepoon/claude-code-subagents-collection'
+
 /**
- * Generate BWC CLI commands for a given resource
+ * Generate plugin commands for a given resource
  */
-export function generateBWCCommands(type: ResourceType, name: string): BWCCommands {
-  // Map resource type to CLI flag
-  const flag = type === 'subagent' ? 'agent' : type
-  
-  const commands: BWCCommands = {
-    install: `bwc add --${flag} ${name}`,
-    info: `bwc info --${flag} ${name}`,
-    list: `bwc list --${flag}s`,
-    remove: `bwc remove --${flag} ${name}`,
-    search: `bwc search --${flag}s ${name}`
+export function generatePluginCommands(type: ResourceType, category: string): PluginCommands {
+  // Map resource type to plugin prefix
+  const prefix = getPluginPrefix(type)
+
+  return {
+    marketplaceAdd: `/plugin marketplace add ${MARKETPLACE_REPO}`,
+    install: `/plugin install ${prefix}-${category}@${MARKETPLACE_NAME}`,
+    installBundle: `/plugin install all-${prefix}@${MARKETPLACE_NAME}`
   }
-  
-  return commands
 }
 
 /**
- * Generate a complete BWC installation script with all commands
+ * Get the plugin prefix for a resource type
  */
-export function generateBWCInstallScript(type: ResourceType, name: string): string {
-  const commands = generateBWCCommands(type, name)
+function getPluginPrefix(type: ResourceType): string {
+  switch (type) {
+    case 'subagent':
+      return 'agents'
+    case 'command':
+      return 'commands'
+    case 'hook':
+      return 'hooks'
+    case 'mcp':
+      return 'mcp-servers'
+    default:
+      return type
+  }
+}
+
+/**
+ * Generate a complete plugin installation script
+ */
+export function generatePluginInstallScript(type: ResourceType, category: string): string {
+  const commands = generatePluginCommands(type, category)
   const resourceName = getResourceTypeDisplayName(type)
-  
-  return `# Install ${name} ${resourceName}
+
+  return `# First, add the marketplace (one-time setup)
+${commands.marketplaceAdd}
+
+# Install ${category} ${resourceName}s
 ${commands.install}
 
-# View info
-${commands.info}
-
-# List installed ${resourceName}s
-${commands.list}
-
-# Remove if needed
-# ${commands.remove}`
+# Or install all ${resourceName}s
+# ${commands.installBundle}`
 }
 
 /**
- * Format command name for BWC CLI (commands use underscore format)
+ * Format command name for display (commands use underscore format)
  */
 export function formatCommandName(slug: string): string {
   return `/${slug.replace(/-/g, '_')}`
@@ -63,12 +75,28 @@ export function formatCommandName(slug: string): string {
 export function getResourceTypeDisplayName(type: ResourceType): string {
   switch (type) {
     case 'subagent':
-      return 'Subagent'
+      return 'Agent'
     case 'command':
       return 'Command'
     case 'mcp':
       return 'MCP Server'
+    case 'hook':
+      return 'Hook'
     default:
       return type
   }
+}
+
+/**
+ * Get the marketplace add command
+ */
+export function getMarketplaceAddCommand(): string {
+  return `/plugin marketplace add ${MARKETPLACE_REPO}`
+}
+
+/**
+ * Get install command for MCP servers bundle
+ */
+export function getMCPInstallCommand(): string {
+  return `/plugin install mcp-servers-docker@${MARKETPLACE_NAME}`
 }

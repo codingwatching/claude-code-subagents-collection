@@ -1,7 +1,6 @@
 # Claude Code Subagents & Commands Collection
 
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
-[![npm version](https://img.shields.io/npm/v/bwc-cli.svg)](https://www.npmjs.com/package/bwc-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![GitHub stars](https://img.shields.io/github/stars/davepoon/claude-code-subagents-collection.svg?style=social&label=Star)](https://github.com/davepoon/claude-code-subagents-collection)
@@ -17,14 +16,14 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 /plugin marketplace add davepoon/claude-code-subagents-collection
 
 # Install individual plugins by category
-/plugin install agents-python-expert@davepoon
-/plugin install commands-version-control-git@davepoon
-/plugin install hooks-notifications@davepoon
+/plugin install agents-python-expert@buildwithclaude
+/plugin install commands-version-control-git@buildwithclaude
+/plugin install hooks-notifications@buildwithclaude
 
 # Or install complete bundles
-/plugin install all-agents@davepoon      # All 117 agents
-/plugin install all-commands@davepoon    # All 174 commands
-/plugin install all-hooks@davepoon       # All 28 hooks
+/plugin install all-agents@buildwithclaude      # All 117 agents
+/plugin install all-commands@buildwithclaude    # All 174 commands
+/plugin install all-hooks@buildwithclaude       # All 28 hooks
 
 # Verify installation
 /help
@@ -58,9 +57,9 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 
 ---
 
-## 🌐 Also Available: Web UI and CLI Tool!
+## 🌐 Web UI for Browsing
 
-Browse, search, and install both subagents and commands instantly at [buildwithclaude.com](https://www.buildwithclaude.com)
+Browse, search, and explore all subagents, commands, hooks, and MCP servers at [buildwithclaude.com](https://www.buildwithclaude.com)
 
 ![Claude Code Subagents Homepage](buildwithclaude-homepage.png)
 
@@ -68,96 +67,23 @@ Browse, search, and install both subagents and commands instantly at [buildwithc
 
 ![Browse Commands](buildwithclaude-commands.png)
 
-### 🚀 CLI Tool for Easy Installation
+### Features
+- 📋 **Copy** markdown content with one click
+- 💾 **Download** individual files directly
+- 🔍 **Search** and filter by category
+- 📖 **Preview** full documentation
+- 🔧 **Copy plugin install commands** for easy installation
 
-Install and manage subagents and commands directly from your terminal with our new CLI tool:
-
-```bash
-# Install the CLI for current user
-npm install -g bwc-cli
-
-# Initialize user configuration (default)
-bwc init
-
-# Or initialize project configuration (team sharing)
-bwc init --project
-
-# Add subagents or commands (goes to project if project config exists)
-bwc add --agent python-pro
-bwc add --command dockerize
-
-# Browse and install interactively
-bwc add
-
-# Check configuration status
-bwc status
-bwc status --verify-mcp  # Deep MCP server verification
-
-# List available items
-bwc list --agents
-bwc list --commands
-bwc list --mcps
-
-# Search for specific tools
-bwc search python
-```
-
-Learn more about the CLI tool at [buildwithclaude.com/docs/cli](https://www.buildwithclaude.com/docs/cli)
-
-### 🔌 MCP Server Support (New!) - Docker & Remote
-
-Connect Claude to external tools through two providers:
-- **Docker MCP**: 100+ containerized servers for local tools
-- **Remote MCP**: SSE/HTTP endpoints for cloud services
+### 🔌 MCP Servers (199 Docker-based servers)
 
 ![MCP Servers](buildwithclaude-mcps.png)
 
+Install all MCP servers via the plugin marketplace:
 ```bash
-# Docker MCP Servers (requires Docker Desktop)
-bwc add --mcp postgres --docker-mcp --scope project
-bwc add --mcp redis --docker-mcp --scope user
-
-# Remote MCP Servers (SSE/HTTP)
-bwc add --mcp linear-server --transport sse \
-  --url https://mcp.linear.app/sse --scope project
-
-bwc add --mcp api-server --transport http \
-  --url https://api.example.com --header "Authorization: Bearer token" \
-  --scope project
-
-# Verify installations
-bwc status --verify-mcp
-
-# List servers by scope
-bwc list --mcps              # All servers
-bwc list --mcps --user       # User-installed
-bwc list --mcps --project    # Project-installed
+/plugin install mcp-servers-docker@buildwithclaude
 ```
 
-#### Installation Scopes
-- **Local Scope**: Current machine only (default)
-- **User Scope**: Personal servers across all projects (stored in `~/.bwc/config.json`)
-- **Project Scope**: Team-shared servers (stored in `./bwc.config.json` and `./.mcp.json`)
-  - Docker servers: Configured via gateway (NOT in .mcp.json)
-  - Remote servers: Saved to .mcp.json for team sharing
-
-**Note**: When `bwc init --project` is used, all subagents and commands default to project installation
-
-#### MCP Provider Comparison
-
-**Docker MCP**:
-- 🔒 **Container Isolation** - Maximum security
-- 🔑 **Protected Secrets** - Docker manages API keys
-- ✅ **Verified Images** - Signed by Docker
-- 📦 **100+ Servers** - Pre-configured catalog
-
-**Remote MCP (Claude CLI)**:
-- ☁️ **Cloud Services** - Direct API connections
-- 🔐 **Custom Auth** - Headers and tokens
-- 🌍 **SSE/HTTP** - Real-time and REST
-- 🤝 **Team Sharing** - Via .mcp.json
-
-Learn more: [buildwithclaude.com/mcp-servers](https://www.buildwithclaude.com/mcp-servers)
+Or browse individual servers at [buildwithclaude.com/mcp-servers](https://www.buildwithclaude.com/mcp-servers)
 
 ## Overview
 
@@ -169,7 +95,7 @@ This repository contains:
 
 ## Quick Start
 
-> **💡 Tip**: For easier installation and management, use our [CLI tool](#-cli-tool-for-easy-installation) (`npm install -g bwc-cli`)
+> **💡 Tip**: The easiest way to install is via the [Plugin Marketplace](#-new-claude-code-plugin-marketplace-support) - just run `/plugin marketplace add davepoon/claude-code-subagents-collection`
 
 ### Install Everything (Recommended)
 ```bash

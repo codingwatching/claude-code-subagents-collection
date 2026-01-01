@@ -9,10 +9,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { ArrowLeft, Copy, Download, Check, Github, Terminal } from 'lucide-react'
+import { ArrowLeft, Copy, Download, Check, Github, Puzzle } from 'lucide-react'
 import { type Subagent } from '@/lib/subagents-types'
 import { generateSubagentMarkdown } from '@/lib/utils'
-import { generateBWCCommands } from '@/lib/bwc-utils'
+import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/bwc-utils'
 
 interface SubagentPageClientProps {
   subagent: Subagent
@@ -21,7 +21,8 @@ interface SubagentPageClientProps {
 export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
   const [copied, setCopied] = useState(false)
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
-  const bwcCommands = generateBWCCommands('subagent', subagent.name)
+  const pluginCommands = generatePluginCommands('subagent', subagent.category)
+  const marketplaceAdd = getMarketplaceAddCommand()
   
   
   const handleCopy = async () => {
@@ -179,18 +180,39 @@ export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-primary" />
-                  Option A: Install using BWC CLI (Recommended)
+                  <Puzzle className="h-4 w-4 text-primary" />
+                  Option A: Install using Plugin Marketplace (Recommended)
                 </h3>
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">Install and manage this subagent with a single command:</p>
+                  <p className="text-sm text-muted-foreground">Step 1: Add the marketplace (one-time):</p>
                   <div className="bg-background rounded p-3 font-mono text-sm flex items-center justify-between">
-                    <span>{bwcCommands.install}</span>
+                    <span className="break-all">{marketplaceAdd}</span>
                     <Button
                       size="sm"
                       variant="ghost"
+                      className="ml-2 shrink-0"
                       onClick={async () => {
-                        await navigator.clipboard.writeText(bwcCommands.install)
+                        await navigator.clipboard.writeText(marketplaceAdd)
+                        setCopiedCommand('marketplace')
+                        setTimeout(() => setCopiedCommand(null), 2000)
+                      }}
+                    >
+                      {copiedCommand === 'marketplace' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">Step 2: Install the {subagent.category} agents:</p>
+                  <div className="bg-background rounded p-3 font-mono text-sm flex items-center justify-between">
+                    <span className="break-all">{pluginCommands.install}</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="ml-2 shrink-0"
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(pluginCommands.install)
                         setCopiedCommand('install')
                         setTimeout(() => setCopiedCommand(null), 2000)
                       }}
@@ -202,6 +224,7 @@ export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
                       )}
                     </Button>
                   </div>
+                  <p className="text-xs text-muted-foreground">This installs all agents in the {subagent.category} category</p>
                 </div>
               </div>
               <div>

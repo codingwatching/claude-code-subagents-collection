@@ -94,15 +94,33 @@ for %f in (\\path\\to\\claude-code-subagents-collection\\commands\\*.md) do copy
       </div>
       
       <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Quick Tip */}
+        {/* Plugin Marketplace - Recommended */}
+        <div className="mb-8 p-6 bg-green-500/10 rounded-xl border border-green-500/20">
+          <div className="flex items-start gap-3">
+            <Download className="h-5 w-5 text-green-500 mt-0.5" />
+            <div>
+              <p className="font-semibold text-green-500 mb-1">Recommended: Plugin Marketplace</p>
+              <p className="text-sm mb-3">
+                The easiest way to install is via Claude Code&apos;s built-in plugin system:
+              </p>
+              <pre className="bg-background/50 border border-border/50 p-3 rounded-lg overflow-x-auto mb-3">
+                <code className="text-sm font-mono">/plugin marketplace add davepoon/claude-code-subagents-collection</code>
+              </pre>
+              <p className="text-sm text-muted-foreground">
+                Then install plugins: <code className="bg-background px-1 rounded">/plugin install all-agents@buildwithclaude</code>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Manual Installation Tip */}
         <div className="mb-8 p-6 bg-primary/10 rounded-xl border border-primary/20">
           <div className="flex items-start gap-3">
             <Download className="h-5 w-5 text-primary mt-0.5" />
             <div>
-              <p className="font-semibold text-primary mb-1">Quick Installation Tip</p>
+              <p className="font-semibold text-primary mb-1">Alternative: Manual Installation</p>
               <p className="text-sm">
-                The easiest way to install individual subagents or commands is directly from their pages!
-                Each page has platform-specific installation instructions with copy buttons for quick setup.
+                If you prefer manual installation, browse individual items and copy the markdown files directly.
               </p>
               <div className="flex gap-2 mt-3">
                 <Link href="/browse">

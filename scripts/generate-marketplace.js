@@ -263,7 +263,7 @@ plugins.push({
 // Create marketplace object
 const marketplace = {
   $schema: 'https://anthropic.com/claude-code/marketplace.schema.json',
-  name: 'buildwithclaude-collection',
+  name: 'buildwithclaude',
   version: '1.0.0',
   owner: {
     name: 'BuildWithClaude Community',

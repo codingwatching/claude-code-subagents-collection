@@ -10,10 +10,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { ArrowLeft, Copy, Download, Check, Github, Terminal } from 'lucide-react'
+import { ArrowLeft, Copy, Download, Check, Github, Terminal, Puzzle } from 'lucide-react'
 import { generateCommandMarkdown } from '@/lib/utils'
 import { generateCategoryDisplayName, getCategoryIcon, type Command } from '@/lib/commands-types'
-import { generateBWCCommands } from '@/lib/bwc-utils'
+import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/bwc-utils'
 
 interface CommandPageClientProps {
   command: Command
@@ -26,7 +26,8 @@ export function CommandPageClient({ command }: CommandPageClientProps) {
   const categoryName = generateCategoryDisplayName(command.category)
   const categoryIcon = getCategoryIcon(command.category)
   const commandName = `/${command.slug.replace(/-/g, '_')}`
-  const bwcCommands = generateBWCCommands('command', command.slug)
+  const pluginCommands = generatePluginCommands('command', command.category)
+  const marketplaceAdd = getMarketplaceAddCommand()
   
   const handleCopy = async () => {
     const markdown = generateCommandMarkdown(command)
@@ -217,18 +218,39 @@ export function CommandPageClient({ command }: CommandPageClientProps) {
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-primary" />
-                  Option A: Install using BWC CLI (Recommended)
+                  <Puzzle className="h-4 w-4 text-primary" />
+                  Option A: Install using Plugin Marketplace (Recommended)
                 </h3>
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">Install and manage this command with a single command:</p>
+                  <p className="text-sm text-muted-foreground">Step 1: Add the marketplace (one-time):</p>
                   <div className="bg-background rounded p-3 font-mono text-sm flex items-center justify-between">
-                    <span>{bwcCommands.install}</span>
+                    <span className="break-all">{marketplaceAdd}</span>
                     <Button
                       size="sm"
                       variant="ghost"
+                      className="ml-2 shrink-0"
                       onClick={async () => {
-                        await navigator.clipboard.writeText(bwcCommands.install)
+                        await navigator.clipboard.writeText(marketplaceAdd)
+                        setCopiedCommand('marketplace')
+                        setTimeout(() => setCopiedCommand(null), 2000)
+                      }}
+                    >
+                      {copiedCommand === 'marketplace' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">Step 2: Install the {categoryName} commands:</p>
+                  <div className="bg-background rounded p-3 font-mono text-sm flex items-center justify-between">
+                    <span className="break-all">{pluginCommands.install}</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="ml-2 shrink-0"
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(pluginCommands.install)
                         setCopiedCommand('install')
                         setTimeout(() => setCopiedCommand(null), 2000)
                       }}
@@ -240,6 +262,7 @@ export function CommandPageClient({ command }: CommandPageClientProps) {
                       )}
                     </Button>
                   </div>
+                  <p className="text-xs text-muted-foreground">This installs all commands in the {categoryName} category</p>
                 </div>
               </div>
               <div>

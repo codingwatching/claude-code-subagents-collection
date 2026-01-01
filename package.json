@@ -13,7 +13,6 @@
     "release": "changeset publish"
   },
   "workspaces": [
-    "packages/*",
     "web-ui"
   ],
   "repository": {

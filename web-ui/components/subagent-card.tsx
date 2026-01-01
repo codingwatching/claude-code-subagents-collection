@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Copy, Download, Check, Terminal } from 'lucide-react'
+import { Copy, Download, Check, Puzzle } from 'lucide-react'
 import { generateCategoryDisplayName, getCategoryIcon } from '@/lib/subagents-types'
 import { generateSubagentMarkdown } from '@/lib/utils'
 import type { Subagent } from '@/lib/subagents-types'
@@ -149,11 +149,11 @@ export function SubagentCard({ subagent }: SubagentCardProps) {
                   setShowInstallModal(true)
                 }}
               >
-                <Terminal className="h-4 w-4" />
+                <Puzzle className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Install with BWC CLI</p>
+              <p>Install with Plugin</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -164,6 +164,7 @@ export function SubagentCard({ subagent }: SubagentCardProps) {
         onClose={() => setShowInstallModal(false)}
         resourceType="subagent"
         resourceName={subagent.name}
+        category={subagent.category}
         displayName={subagent.name}
         markdownContent={generateSubagentMarkdown(subagent)}
       />

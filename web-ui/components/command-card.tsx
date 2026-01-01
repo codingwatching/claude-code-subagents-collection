@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Copy, Download, Check, Terminal } from 'lucide-react'
+import { Copy, Download, Check, Terminal, Puzzle } from 'lucide-react'
 import { generateCategoryDisplayName, getCategoryIcon } from '@/lib/commands-types'
 import { generateCommandMarkdown } from '@/lib/utils'
 import type { Command } from '@/lib/commands-types'
@@ -158,21 +158,22 @@ export function CommandCard({ command }: CommandCardProps) {
                   setShowInstallModal(true)
                 }}
               >
-                <Terminal className="h-4 w-4" />
+                <Puzzle className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Install with BWC CLI</p>
+              <p>Install with Plugin</p>
             </TooltipContent>
           </Tooltip>
         </div>
       </div>
-      
+
       <InstallationModalEnhanced
         isOpen={showInstallModal}
         onClose={() => setShowInstallModal(false)}
         resourceType="command"
         resourceName={command.slug}
+        category={command.category}
         displayName={commandName}
         markdownContent={generateCommandMarkdown(command)}
       />
