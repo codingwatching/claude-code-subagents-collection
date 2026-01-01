@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "davepoon/claude-code-subagents-collection"
+      "repo": "davepoon/buildwithclaude"
     }
   ],
   "commit": false,

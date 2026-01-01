@@ -291,7 +291,7 @@ export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
           {/* Actions */}
           <div className="flex gap-4">
             <a 
-              href={`https://github.com/davepoon/claude-code-subagents-collection/blob/main/subagents/${subagent.slug}.md`}
+              href={`https://github.com/davepoon/buildwithclaude/blob/main/subagents/${subagent.slug}.md`}
               target="_blank"
               rel="noopener noreferrer"
             >

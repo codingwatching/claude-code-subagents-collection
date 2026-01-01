@@ -11,7 +11,7 @@ export interface PluginCommands {
 }
 
 const MARKETPLACE_NAME = 'buildwithclaude'
-const MARKETPLACE_REPO = 'davepoon/claude-code-subagents-collection'
+const MARKETPLACE_REPO = 'davepoon/buildwithclaude'
 
 /**
  * Generate plugin commands for a given resource

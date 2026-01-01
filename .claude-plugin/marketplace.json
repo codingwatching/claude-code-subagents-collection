@@ -5,13 +5,13 @@
   "owner": {
     "name": "BuildWithClaude Community",
     "email": "community@buildwithclaude.com",
-    "url": "https://github.com/davepoon/claude-code-subagents-collection"
+    "url": "https://github.com/davepoon/buildwithclaude"
   },
   "metadata": {
     "description": "A comprehensive community-driven collection of 117 AI agents, 174 slash commands, 28 hooks, and 199 MCP servers for Claude Code",
     "version": "1.0.0",
     "homepage": "https://buildwithclaude.com",
-    "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+    "repository": "https://github.com/davepoon/buildwithclaude",
     "license": "MIT",
     "keywords": [
       "claude-code",
@@ -30,9 +30,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -54,9 +54,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -82,9 +82,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -112,9 +112,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -154,9 +154,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -178,9 +178,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -220,9 +220,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -256,9 +256,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -300,9 +300,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -350,9 +350,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -382,9 +382,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -484,9 +484,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -512,9 +512,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -534,9 +534,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -576,9 +576,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -632,9 +632,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -660,9 +660,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -686,9 +686,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -726,9 +726,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -778,9 +778,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -800,9 +800,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -844,9 +844,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -870,9 +870,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -894,9 +894,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -926,9 +926,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -958,9 +958,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1012,9 +1012,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1040,9 +1040,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1076,9 +1076,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1120,9 +1120,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1142,9 +1142,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1190,9 +1190,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1234,9 +1234,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1272,9 +1272,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1294,9 +1294,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1317,9 +1317,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1338,9 +1338,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1360,9 +1360,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1389,9 +1389,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1409,9 +1409,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1431,9 +1431,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",
@@ -1452,10 +1452,10 @@
       "version": "1.0.0",
       "author": {
         "name": "Docker Inc. & BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
       "homepage": "https://hub.docker.com/u/mcp",
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "mcp",
@@ -1485,9 +1485,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -1623,9 +1623,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "commands",
@@ -1818,9 +1818,9 @@
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
-        "url": "https://github.com/davepoon/claude-code-subagents-collection"
+        "url": "https://github.com/davepoon/buildwithclaude"
       },
-      "repository": "https://github.com/davepoon/claude-code-subagents-collection",
+      "repository": "https://github.com/davepoon/buildwithclaude",
       "license": "MIT",
       "keywords": [
         "hooks",

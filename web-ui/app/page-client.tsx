@@ -101,7 +101,7 @@ export default function HomePageClient({
                 </Button>
               </Link>
               <a 
-                href="https://github.com/davepoon/claude-code-subagents-collection" 
+                href="https://github.com/davepoon/buildwithclaude" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
@@ -235,7 +235,7 @@ export default function HomePageClient({
               <div className="bg-background/80 backdrop-blur rounded-xl p-6 max-w-3xl mx-auto mb-10 border border-border/50">
                 <p className="text-sm text-muted-foreground mb-2">Quick install everything:</p>
                 <code className="text-sm font-mono text-foreground/90 block overflow-x-auto">
-                  git clone https://github.com/davepoon/claude-code-subagents-collection.git && cd claude-code-subagents-collection && {'find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;'} && {'find commands -name "*.md" -exec cp {} ~/.claude/commands/ \\;'}
+                  git clone https://github.com/davepoon/buildwithclaude.git && cd buildwithclaude && {'find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;'} && {'find commands -name "*.md" -exec cp {} ~/.claude/commands/ \\;'}
                 </code>
               </div>
               <Link href="/docs/installation">

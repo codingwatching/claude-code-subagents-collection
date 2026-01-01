@@ -42,7 +42,7 @@ export default function RootLayout({
               </p>
               <div className="flex items-center justify-center gap-6 text-sm">
                 <a 
-                  href="https://github.com/davepoon/claude-code-subagents-collection/blob/main/LICENSE"
+                  href="https://github.com/davepoon/buildwithclaude/blob/main/LICENSE"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -51,7 +51,7 @@ export default function RootLayout({
                 </a>
                 <span className="text-muted-foreground/40">•</span>
                 <a 
-                  href="https://github.com/davepoon/claude-code-subagents-collection/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/davepoon/buildwithclaude/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -60,7 +60,7 @@ export default function RootLayout({
                 </a>
                 <span className="text-muted-foreground/40">•</span>
                 <a 
-                  href="https://github.com/davepoon/claude-code-subagents-collection/issues" 
+                  href="https://github.com/davepoon/buildwithclaude/issues" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"

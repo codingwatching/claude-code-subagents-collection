@@ -51,7 +51,7 @@ export function Navigation() {
                 <HamburgerMenuIcon className="h-5 w-5" />
               </Button>
               <a 
-                href="https://github.com/davepoon/claude-code-subagents-collection" 
+                href="https://github.com/davepoon/buildwithclaude" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
@@ -61,14 +61,14 @@ export function Navigation() {
                 </Button>
               </a>
               <a
-                href="https://github.com/davepoon/claude-code-subagents-collection"
+                href="https://github.com/davepoon/buildwithclaude"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden sm:block"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                  src="https://img.shields.io/github/stars/davepoon/claude-code-subagents-collection.svg?style=social&label=Star"
+                  src="https://img.shields.io/github/stars/davepoon/buildwithclaude.svg?style=social&label=Star"
                   alt="GitHub stars"
                   className="h-5"
                 />
@@ -129,7 +129,7 @@ export function Navigation() {
             {/* Footer actions */}
             <div className="border-t border-border/40 p-4 space-y-3">
               <a 
-                href="https://github.com/davepoon/claude-code-subagents-collection" 
+                href="https://github.com/davepoon/buildwithclaude" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="block"
@@ -141,13 +141,13 @@ export function Navigation() {
               </a>
               <div className="flex justify-center">
                 <a
-                  href="https://github.com/davepoon/claude-code-subagents-collection"
+                  href="https://github.com/davepoon/buildwithclaude"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
-                    src="https://img.shields.io/github/stars/davepoon/claude-code-subagents-collection.svg?style=social&label=Star"
+                    src="https://img.shields.io/github/stars/davepoon/buildwithclaude.svg?style=social&label=Star"
                     alt="GitHub stars"
                     className="h-5"
                   />

@@ -319,7 +319,7 @@ export function CommandPageClient({ command }: CommandPageClientProps) {
           {/* Actions */}
           <div className="flex gap-4">
             <a 
-              href={`https://github.com/davepoon/claude-code-subagents-collection/blob/main/commands/${command.slug}.md`}
+              href={`https://github.com/davepoon/buildwithclaude/blob/main/commands/${command.slug}.md`}
               target="_blank"
               rel="noopener noreferrer"
             >

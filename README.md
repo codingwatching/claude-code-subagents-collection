@@ -3,7 +3,7 @@
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![GitHub stars](https://img.shields.io/github/stars/davepoon/claude-code-subagents-collection.svg?style=social&label=Star)](https://github.com/davepoon/claude-code-subagents-collection)
+[![GitHub stars](https://img.shields.io/github/stars/davepoon/buildwithclaude.svg?style=social&label=Star)](https://github.com/davepoon/buildwithclaude)
 
 A comprehensive collection of specialized AI subagents and slash commands for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), designed to enhance development workflows with domain-specific expertise and powerful automation.
 
@@ -13,7 +13,7 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 
 ```bash
 # Add the marketplace
-/plugin marketplace add davepoon/claude-code-subagents-collection
+/plugin marketplace add davepoon/buildwithclaude
 
 # Install individual plugins by category
 /plugin install agents-python-expert@buildwithclaude
@@ -95,13 +95,13 @@ This repository contains:
 
 ## Quick Start
 
-> **💡 Tip**: The easiest way to install is via the [Plugin Marketplace](#-new-claude-code-plugin-marketplace-support) - just run `/plugin marketplace add davepoon/claude-code-subagents-collection`
+> **💡 Tip**: The easiest way to install is via the [Plugin Marketplace](#-new-claude-code-plugin-marketplace-support) - just run `/plugin marketplace add davepoon/buildwithclaude`
 
 ### Install Everything (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/davepoon/claude-code-subagents-collection.git
-cd claude-code-subagents-collection
+git clone https://github.com/davepoon/buildwithclaude.git
+cd buildwithclaude
 
 # Install all subagents
 find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
@@ -115,15 +115,15 @@ find commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
 ### Install Only Subagents
 ```bash
 # Clone and install subagents
-git clone https://github.com/davepoon/claude-code-subagents-collection.git
-find claude-code-subagents-collection/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
+git clone https://github.com/davepoon/buildwithclaude.git
+find buildwithclaude/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
 ```
 
 ### Install Only Commands
 ```bash
 # Clone and install commands
-git clone https://github.com/davepoon/claude-code-subagents-collection.git
-find claude-code-subagents-collection/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
+git clone https://github.com/davepoon/buildwithclaude.git
+find buildwithclaude/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
 ```
 
 ## Available Subagents
@@ -201,8 +201,8 @@ Visit our [Web UI](https://www.buildwithclaude.com) to browse all subagents and 
 
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/davepoon/claude-code-subagents-collection.git
-   cd claude-code-subagents-collection
+   git clone https://github.com/davepoon/buildwithclaude.git
+   cd buildwithclaude
    ```
 
 2. **Install Subagents:**
@@ -228,11 +228,11 @@ Visit our [Web UI](https://www.buildwithclaude.com) to browse all subagents and 
    mkdir -p .claude/agents
    
    # macOS/Linux - Copy specific subagents you need
-   find /path/to/claude-code-subagents-collection/subagents -name "*.md" -exec cp {} .claude/agents/ \;
+   find /path/to/buildwithclaude/subagents -name "*.md" -exec cp {} .claude/agents/ \;
    
    # Windows - Copy specific subagents you need
    mkdir .claude\agents 2>nul
-   for %f in (\path\to\claude-code-subagents-collection\subagents\*.md) do copy "%f" .claude\agents\
+   for %f in (\path\to\buildwithclaude\subagents\*.md) do copy "%f" .claude\agents\
    ```
    
    > **Note**: Project subagents are only available in the specific project where they're installed. Use this option when you want subagents tailored to a particular project or when testing new subagents.
@@ -260,11 +260,11 @@ Visit our [Web UI](https://www.buildwithclaude.com) to browse all subagents and 
    mkdir -p .claude/commands
    
    # macOS/Linux - Copy specific commands you need
-   find /path/to/claude-code-subagents-collection/commands -name "*.md" -exec cp {} .claude/commands/ \;
+   find /path/to/buildwithclaude/commands -name "*.md" -exec cp {} .claude/commands/ \;
    
    # Windows - Copy specific commands you need
    mkdir .claude\commands 2>nul
-   for %f in (\path\to\claude-code-subagents-collection\commands\*.md) do copy "%f" .claude\commands\
+   for %f in (\path\to\buildwithclaude\commands\*.md) do copy "%f" .claude\commands\
    ```
    
    > **Note**: Project commands are only available in the specific project where they're installed. Use this option for project-specific commands or when testing new commands.
