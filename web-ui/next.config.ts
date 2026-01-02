@@ -204,6 +204,11 @@ const nextConfig: NextConfig = {
         hostname: '*.githubassets.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.google.com',
+        pathname: '/**',
+      },
     ],
   },
 };

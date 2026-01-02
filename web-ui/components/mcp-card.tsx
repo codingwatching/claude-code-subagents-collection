@@ -14,13 +14,11 @@ import {
 } from '@/components/ui/tooltip'
 import { Copy, Star, Package, Box } from 'lucide-react'
 import { HiMiniCheckBadge } from 'react-icons/hi2'
-import { 
-  MCPServer, 
-  VERIFICATION_STATUS, 
-  SOURCE_INDICATORS, 
-  EXECUTION_INDICATORS,
-  getMCPCategoryDisplayName, 
-  getMCPCategoryIcon 
+import {
+  MCPServer,
+  SOURCE_INDICATORS,
+  getMCPCategoryDisplayName,
+  getMCPCategoryIcon
 } from '@/lib/mcp-types'
 import { MCPInstallationModal } from './mcp-installation-modal'
 
@@ -31,8 +29,6 @@ interface MCPCardProps {
 export function MCPCard({ server }: MCPCardProps) {
   const [showInstallModal, setShowInstallModal] = useState(false)
   const [logoError, setLogoError] = useState(false)
-  const verificationStatus = VERIFICATION_STATUS[server.verification.status]
-  const categoryName = getMCPCategoryDisplayName(server.category)
   const categoryIcon = getMCPCategoryIcon(server.category)
   
   // Generate logo URL based on source
@@ -123,16 +119,28 @@ export function MCPCard({ server }: MCPCardProps) {
                     📈 Trending
                   </Badge>
                 )}
-                {/* Hidden: Execution type badge - data still available in server.execution_type */}
-                {server.source_registry && (
+                {/* Source badges - show both when available in both sources */}
+                {(server.source_registry?.type === 'official-mcp' || server.docker_mcp_available) && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="outline" className="text-xs">
-                        {SOURCE_INDICATORS[server.source_registry.type]?.icon} {SOURCE_INDICATORS[server.source_registry.type]?.label}
+                      <Badge className="text-xs bg-violet-500 hover:bg-violet-600 text-white">
+                        {SOURCE_INDICATORS['official-mcp']?.icon} Official MCP
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{SOURCE_INDICATORS[server.source_registry.type]?.description}</p>
+                      <p>{SOURCE_INDICATORS['official-mcp']?.description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+                {(server.source_registry?.type === 'docker' || server.docker_mcp_available) && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge className="text-xs bg-sky-500 hover:bg-sky-600 text-white">
+                        {SOURCE_INDICATORS.docker?.icon} Docker
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{SOURCE_INDICATORS.docker?.description}</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -210,23 +218,10 @@ export function MCPCard({ server }: MCPCardProps) {
         onClose={() => setShowInstallModal(false)}
         serverName={server.name}
         displayName={server.display_name}
-        serverType={server.server_type}
-        dockerHubUrl={server.sources?.docker || `https://hub.docker.com/r/mcp/${server.name}`}
-        jsonConfig={(() => {
-          // Find the first installation method with config_example
-          const methodWithConfig = server.installation_methods.find(m => m.config_example)
-          
-          // Return the config or generate default
-          return methodWithConfig?.config_example || JSON.stringify({
-            mcpServers: {
-              [server.name]: {
-                command: "npx",
-                args: ["-y", server.name],
-                env: {}
-              }
-            }
-          }, null, 2)
-        })()}
+        claudeMcpAddCommand={server.claude_mcp_add_command}
+        dockerMcpAvailable={server.docker_mcp_available || server.source_registry?.type === 'docker'}
+        dockerMcpCommand={server.docker_mcp_command || `docker mcp server enable mcp/${server.name}`}
+        environmentVariables={server.environment_variables}
       />
     </TooltipProvider>
   )

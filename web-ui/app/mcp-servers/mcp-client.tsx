@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { HiMiniCheckBadge, HiUserGroup, HiBeaker } from 'react-icons/hi2'
 import { MCPCard } from '@/components/mcp-card'
 import { CategoryFilter } from '@/components/category-filter'
 import { SearchBar } from '@/components/search-bar'
@@ -25,11 +24,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { 
-  type MCPServer, 
-  VERIFICATION_STATUS,
-  SOURCE_INDICATORS,
-  EXECUTION_INDICATORS 
+import {
+  type MCPServer,
+  SOURCE_INDICATORS
 } from '@/lib/mcp-types'
 import { type MCPCategoryMetadata } from '@/lib/mcp-server'
 
@@ -51,8 +48,6 @@ export default function MCPPageClient({
   const searchParams = useSearchParams()
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
-  const [selectedVerification, setSelectedVerification] = useState<string>('all')
-  const [selectedExecutionType, setSelectedExecutionType] = useState<string>('all')
   const [selectedSource, setSelectedSource] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -64,17 +59,17 @@ export default function MCPPageClient({
   // Set initial filters from URL parameters
   useEffect(() => {
     const categoryParam = searchParams.get('category')
-    const verificationParam = searchParams.get('verification')
+    const sourceParam = searchParams.get('source')
     const sortParam = searchParams.get('sort')
-    
+
     if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
       setSelectedCategory(categoryParam)
     }
-    
-    if (verificationParam && ['verified', 'community', 'experimental'].includes(verificationParam)) {
-      setSelectedVerification(verificationParam)
+
+    if (sourceParam && ['official-mcp', 'docker'].includes(sourceParam)) {
+      setSelectedSource(sourceParam)
     }
-    
+
     if (sortParam && ['downloads-desc', 'downloads-asc', 'newest', 'oldest', 'name-asc', 'name-desc'].includes(sortParam)) {
       setSortBy(sortParam as typeof sortBy)
     }
@@ -85,17 +80,23 @@ export default function MCPPageClient({
     setSelectedCategory(category)
     updateURL({ category })
   }
-  
-  // Handle verification change
-  const handleVerificationChange = (verification: string) => {
-    setSelectedVerification(verification)
-    updateURL({ verification })
+
+  // Handle source change
+  const handleSourceChange = (source: string) => {
+    setSelectedSource(source)
+    // Reset to name sort if switching to official-mcp while sorted by downloads
+    if (source === 'official-mcp' && (sortBy === 'downloads-desc' || sortBy === 'downloads-asc')) {
+      setSortBy('name-asc')
+      updateURL({ source, sort: 'name-asc' })
+    } else {
+      updateURL({ source })
+    }
   }
-  
+
   // Update URL with new parameters
-  const updateURL = (newParams: { category?: string | 'all', verification?: string, sort?: string }) => {
+  const updateURL = (newParams: { category?: string | 'all', source?: string, sort?: string }) => {
     const params = new URLSearchParams(searchParams.toString())
-    
+
     if (newParams.category !== undefined) {
       if (newParams.category === 'all') {
         params.delete('category')
@@ -103,15 +104,15 @@ export default function MCPPageClient({
         params.set('category', newParams.category)
       }
     }
-    
-    if (newParams.verification !== undefined) {
-      if (newParams.verification === 'all') {
-        params.delete('verification')
+
+    if (newParams.source !== undefined) {
+      if (newParams.source === 'all') {
+        params.delete('source')
       } else {
-        params.set('verification', newParams.verification)
+        params.set('source', newParams.source)
       }
     }
-    
+
     if (newParams.sort !== undefined) {
       if (newParams.sort === 'downloads-desc') {
         params.delete('sort') // Remove if it's the default
@@ -119,45 +120,42 @@ export default function MCPPageClient({
         params.set('sort', newParams.sort)
       }
     }
-    
+
     const newUrl = params.toString() ? `/mcp-servers?${params.toString()}` : '/mcp-servers'
     router.replace(newUrl)
   }
   
   const filteredServers = useMemo(() => {
     let filtered = allServers
-    
+
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(server => server.category === selectedCategory)
     }
-    
-    // Filter by verification status
-    if (selectedVerification !== 'all') {
-      filtered = filtered.filter(server => server.verification.status === selectedVerification)
-    }
-    
-    // Filter by execution type
-    if (selectedExecutionType !== 'all') {
-      filtered = filtered.filter(server => server.execution_type === selectedExecutionType)
-    }
-    
+
     // Filter by source
     if (selectedSource !== 'all') {
-      filtered = filtered.filter(server => server.source_registry?.type === selectedSource)
+      if (selectedSource === 'docker') {
+        // Show servers that are from Docker or have docker_mcp_available
+        filtered = filtered.filter(server =>
+          server.source_registry?.type === 'docker' || server.docker_mcp_available
+        )
+      } else {
+        filtered = filtered.filter(server => server.source_registry?.type === selectedSource)
+      }
     }
-    
+
     // Filter by search query
     if (searchQuery) {
       const normalizedQuery = searchQuery.toLowerCase()
-      filtered = filtered.filter(server => 
+      filtered = filtered.filter(server =>
         server.name.toLowerCase().includes(normalizedQuery) ||
         server.display_name.toLowerCase().includes(normalizedQuery) ||
         server.description.toLowerCase().includes(normalizedQuery) ||
         server.tags.some(tag => tag.toLowerCase().includes(normalizedQuery))
       )
     }
-    
+
     // Apply sorting
     const sorted = [...filtered].sort((a, b) => {
       switch(sortBy) {
@@ -177,40 +175,32 @@ export default function MCPPageClient({
           return 0
       }
     })
-    
+
     return sorted
-  }, [allServers, selectedCategory, selectedVerification, selectedExecutionType, selectedSource, searchQuery, sortBy])
+  }, [allServers, selectedCategory, selectedSource, searchQuery, sortBy])
   
-  // Group servers by verification status
-  const groupedServers = useMemo(() => {
-    const groups = {
-      verified: [] as MCPServer[],
-      community: [] as MCPServer[],
-      experimental: [] as MCPServer[]
-    }
-    
-    filteredServers.forEach(server => {
-      groups[server.verification.status].push(server)
-    })
-    
-    return groups
-  }, [filteredServers])
+  // Count servers by source
+  const sourceCounts = useMemo(() => {
+    const officialMcp = allServers.filter(server => server.source_registry?.type === 'official-mcp').length
+    const docker = allServers.filter(server =>
+      server.source_registry?.type === 'docker' || server.docker_mcp_available
+    ).length
+    return { 'official-mcp': officialMcp, docker }
+  }, [allServers])
   
   // Check if any filters are active
   const hasActiveFilters = useMemo(() => {
     return (
       searchQuery !== '' ||
       selectedCategory !== 'all' ||
-      selectedVerification !== 'all' ||
-      selectedExecutionType !== 'all' ||
       selectedSource !== 'all'
     )
-  }, [searchQuery, selectedCategory, selectedVerification, selectedExecutionType, selectedSource])
+  }, [searchQuery, selectedCategory, selectedSource])
   
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, selectedCategory, selectedVerification, selectedExecutionType, selectedSource])
+  }, [searchQuery, selectedCategory, selectedSource])
   
   // Calculate paginated servers
   const paginatedServers = useMemo(() => {
@@ -294,51 +284,31 @@ export default function MCPPageClient({
           />
         </div>
         
-        {/* Verification Tabs */}
-        <Tabs value={selectedVerification} onValueChange={handleVerificationChange} className="mb-6">
-          <TabsList>
-            <TabsTrigger value="all">
-              All Servers
-              <Badge variant="secondary" className="ml-2">
-                {filteredServers.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="verified">
-              <HiMiniCheckBadge className="h-4 w-4 text-blue-500 mr-1" />
-              Verified
-              <Badge variant="secondary" className="ml-2">
-                {groupedServers.verified.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="community">
-              <HiUserGroup className="h-4 w-4 text-blue-600 mr-1" />
-              Community
-              <Badge variant="secondary" className="ml-2">
-                {groupedServers.community.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="experimental">
-              <HiBeaker className="h-4 w-4 text-amber-600 mr-1" />
-              Experimental
-              <Badge variant="secondary" className="ml-2">
-                {groupedServers.experimental.length}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-        
-        {/* Additional Filters */}
+        {/* Source Filter Tabs */}
         <div className="flex justify-between mb-6 flex-wrap gap-4">
-          {/* Source Filter */}
-          <Tabs value={selectedSource} onValueChange={setSelectedSource}>
+          <Tabs value={selectedSource} onValueChange={handleSourceChange}>
             <TabsList>
-              <TabsTrigger value="all">All Sources</TabsTrigger>
+              <TabsTrigger value="all">
+                All Sources
+                <Badge variant="secondary" className="ml-2">
+                  {allServers.length}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value="official-mcp">
+                {SOURCE_INDICATORS['official-mcp'].icon} Official MCP
+                <Badge variant="secondary" className="ml-2">
+                  {sourceCounts['official-mcp']}
+                </Badge>
+              </TabsTrigger>
               <TabsTrigger value="docker">
                 {SOURCE_INDICATORS.docker.icon} Docker
+                <Badge variant="secondary" className="ml-2">
+                  {sourceCounts.docker}
+                </Badge>
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          
+
           {/* Sort Dropdown - aligned to the right */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -356,20 +326,24 @@ export default function MCPPageClient({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={() => {
-                setSortBy('downloads-desc')
-                updateURL({ sort: 'downloads-desc' })
-              }}>
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Most Downloaded
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSortBy('downloads-asc')
-                updateURL({ sort: 'downloads-asc' })
-              }}>
-                <TrendingDown className="h-4 w-4 mr-2" />
-                Least Downloaded
-              </DropdownMenuItem>
+              {selectedSource !== 'official-mcp' && (
+                <>
+                  <DropdownMenuItem onClick={() => {
+                    setSortBy('downloads-desc')
+                    updateURL({ sort: 'downloads-desc' })
+                  }}>
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    Most Downloaded
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    setSortBy('downloads-asc')
+                    updateURL({ sort: 'downloads-asc' })
+                  }}>
+                    <TrendingDown className="h-4 w-4 mr-2" />
+                    Least Downloaded
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuItem onClick={() => {
                 setSortBy('newest')
                 updateURL({ sort: 'newest' })

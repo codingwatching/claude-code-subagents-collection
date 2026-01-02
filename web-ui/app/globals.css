@@ -1,38 +1,92 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* Border radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Font family */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Container */
+  --container-2xl: 1400px;
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
 
 @layer base {
   :root {
     /* Claude Code inspired dark theme */
     --background: 0 0% 6%;           /* #0f0f0f - Deep charcoal */
     --foreground: 0 0% 98%;          /* #fafafa - Bright white */
-    
+
     --card: 0 0% 10%;                /* #1a1a1a - Dark card background */
     --card-foreground: 0 0% 98%;     /* #fafafa */
-    
+
     --popover: 0 0% 10%;             /* #1a1a1a */
     --popover-foreground: 0 0% 98%;  /* #fafafa */
-    
+
     --primary: 22 78% 55%;           /* #e85d3b - Warm orange accent */
     --primary-foreground: 0 0% 98%;  /* #fafafa */
-    
+
     --secondary: 0 0% 16%;           /* #292929 - Subtle gray */
     --secondary-foreground: 0 0% 98%; /* #fafafa */
-    
+
     --muted: 0 0% 16%;               /* #292929 */
     --muted-foreground: 0 0% 64%;    /* #a3a3a3 - Muted text */
-    
+
     --accent: 22 78% 55%;            /* #e85d3b - Same as primary */
     --accent-foreground: 0 0% 98%;   /* #fafafa */
-    
+
     --destructive: 0 84.2% 60.2%;    /* #ef4444 */
     --destructive-foreground: 0 0% 98%; /* #fafafa */
-    
+
     --border: 0 0% 16%;              /* #292929 - Subtle borders */
     --input: 0 0% 16%;               /* #292929 */
     --ring: 22 78% 55%;              /* #e85d3b - Focus ring matches accent */
-    
+
     --radius: 0.75rem;               /* Slightly larger radius */
   }
 
@@ -64,60 +118,61 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     @apply scroll-smooth;
+    color-scheme: dark;
   }
-  
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   /* Typography improvements */
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
   }
-  
+
   /* Custom gradients */
   .gradient-radial {
     background: radial-gradient(ellipse at center, rgba(232, 93, 59, 0.15) 0%, transparent 70%);
   }
-  
+
   .gradient-border {
     background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 0.8));
   }
-  
+
   /* Card hover effect */
   .card-hover {
     @apply transition-all duration-300;
     background: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--card)));
   }
-  
+
   .card-hover:hover {
     background: linear-gradient(to bottom, hsl(var(--card)), hsl(var(--card) / 0.8));
     box-shadow: 0 0 30px rgba(232, 93, 59, 0.1);
   }
-  
+
   /* Button gradients */
   .btn-gradient {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
     transition: all 0.3s ease;
   }
-  
+
   .btn-gradient:hover {
     background: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--primary) / 0.7));
     transform: translateY(-1px);
     box-shadow: 0 5px 20px rgba(232, 93, 59, 0.3);
   }
-  
+
   /* Glow effects */
   .glow-primary {
     box-shadow: 0 0 20px rgba(232, 93, 59, 0.5);
   }
-  
+
   /* Animation keyframes */
   @keyframes fadeIn {
     from {
@@ -129,7 +184,7 @@
       transform: translateY(0);
     }
   }
-  
+
   @keyframes slideIn {
     from {
       opacity: 0;
@@ -140,7 +195,7 @@
       transform: translateX(0);
     }
   }
-  
+
   @keyframes wiggle {
     0%, 100% {
       transform: rotate(8deg);
@@ -155,34 +210,47 @@
       transform: rotate(-1deg);
     }
   }
-  
+
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out;
   }
-  
+
   .animate-slide-in {
     animation: slideIn 0.5s ease-out;
   }
-  
+
   .animate-wiggle {
     animation: wiggle 4s ease-in-out infinite;
-  }
-  
-  /* Force dark mode */
-  html {
-    color-scheme: dark;
   }
 }
 
 /* Custom utilities */
 @layer utilities {
+  .text-display-1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .text-display-2 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .text-display-3 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
   .text-gradient {
     background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 0.7));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .backdrop-blur-md {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);

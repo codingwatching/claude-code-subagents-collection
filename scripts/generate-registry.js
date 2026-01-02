@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const matter = require('gray-matter');
 const { fetchDockerMCPServers } = require('./fetch-docker-mcp');
+const { fetchOfficialMCPServers } = require('./fetch-official-mcp');
 const { enhanceMCPServersWithDockerStats } = require('./enhance-docker-stats');
 
 const REPO_ROOT = path.join(__dirname, '..');
@@ -75,25 +76,49 @@ async function getMCPServers() {
 async function generateRegistry() {
   try {
     console.log('Generating registry.json...');
-    
-    const [subagents, commands, mcpServers, dockerMCPServers] = await Promise.all([
+
+    const [subagents, commands, mcpServers, dockerMCPServers, officialMCPServers] = await Promise.all([
       getSubagents(),
       getCommands(),
       getMCPServers(),
-      fetchDockerMCPServers()
+      fetchDockerMCPServers(),
+      fetchOfficialMCPServers()
     ]);
 
-    // Merge Docker MCP servers with existing MCP servers
-    const allMCPServers = [...mcpServers, ...dockerMCPServers];
-    
-    // Remove duplicates based on server name
-    const uniqueServers = allMCPServers.reduce((acc, server) => {
-      if (!acc.find(s => s.name === server.name)) {
-        acc.push(server);
+    // Merge all MCP servers: Official MCP > Docker MCP > Local
+    // Official MCP servers take priority (have correct installation commands)
+    const allMCPServers = [...mcpServers, ...dockerMCPServers, ...officialMCPServers];
+
+    // Remove duplicates based on server name, preferring official-mcp source
+    const serversByName = new Map();
+    for (const server of allMCPServers) {
+      const existing = serversByName.get(server.name);
+      if (!existing) {
+        serversByName.set(server.name, server);
+      } else {
+        // Prefer official-mcp over docker over others
+        const existingPriority = existing.source_registry?.type === 'official-mcp' ? 2 :
+                                  existing.source_registry?.type === 'docker' ? 1 : 0;
+        const newPriority = server.source_registry?.type === 'official-mcp' ? 2 :
+                            server.source_registry?.type === 'docker' ? 1 : 0;
+
+        if (newPriority > existingPriority) {
+          // Merge: keep new server but add docker_mcp_available flag if docker exists
+          if (existingPriority === 1 || existing.source_registry?.type === 'docker') {
+            server.docker_mcp_available = true;
+            server.docker_mcp_command = `docker mcp server enable mcp/${server.name}`;
+          }
+          serversByName.set(server.name, server);
+        } else if (newPriority < existingPriority && server.source_registry?.type === 'docker') {
+          // Mark existing server as having docker available
+          existing.docker_mcp_available = true;
+          existing.docker_mcp_command = `docker mcp server enable mcp/${server.name}`;
+        }
       }
-      return acc;
-    }, []);
-    
+    }
+
+    const uniqueServers = Array.from(serversByName.values());
+
     // Enhance MCP servers with Docker Hub stats
     const enhancedServers = await enhanceMCPServersWithDockerStats(uniqueServers);
 
@@ -108,14 +133,16 @@ async function generateRegistry() {
 
     // Ensure the public directory exists
     await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
-    
+
     // Write the registry file
     await fs.writeFile(OUTPUT_PATH, JSON.stringify(registry, null, 2));
-    
+
     console.log(`✓ Registry generated successfully!`);
     console.log(`  - ${subagents.length} subagents`);
     console.log(`  - ${commands.length} commands`);
-    console.log(`  - ${uniqueServers.length} MCP servers (${dockerMCPServers.length} from Docker MCP)`);
+    console.log(`  - ${uniqueServers.length} MCP servers`);
+    console.log(`    - ${officialMCPServers.length} from Official MCP Registry`);
+    console.log(`    - ${dockerMCPServers.length} from Docker MCP`);
     console.log(`  - Output: ${OUTPUT_PATH}`);
   } catch (error) {
     console.error('Error generating registry:', error);
