@@ -51,9 +51,9 @@ export function PluginCard({ plugin }: PluginCardProps) {
     e.preventDefault()
     e.stopPropagation()
 
-    if (plugin.repository) {
-      window.open(plugin.repository, '_blank')
-    }
+    // Link to the specific plugin directory on GitHub
+    const pluginUrl = `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${plugin.name}`
+    window.open(pluginUrl, '_blank')
   }
 
   // Limit keywords to display
@@ -137,23 +137,21 @@ export function PluginCard({ plugin }: PluginCardProps) {
             </TooltipContent>
           </Tooltip>
 
-{plugin.repository && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-primary/20 hover:text-primary border border-border/50"
-                  onClick={handleOpenRepo}
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View on GitHub</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-primary/20 hover:text-primary border border-border/50"
+                onClick={handleOpenRepo}
+              >
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View on GitHub</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </TooltipProvider>
