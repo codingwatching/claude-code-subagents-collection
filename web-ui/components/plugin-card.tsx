@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -76,10 +77,10 @@ export function PluginCard({ plugin }: PluginCardProps) {
         <Card className="h-full card-hover border-border/50 hover:border-primary/20 transition-all duration-300 overflow-hidden">
           <CardHeader>
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
+              <Link href={`/plugin/${plugin.name}`} className="flex items-center gap-2 hover:text-primary transition-colors">
                 <Package className="h-5 w-5 text-primary flex-shrink-0" />
                 <CardTitle className="text-xl font-mono">{plugin.name}</CardTitle>
-              </div>
+              </Link>
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge
                   className={`${colorClass} bg-transparent border font-medium inline-flex items-center gap-1 whitespace-nowrap text-xs`}
@@ -147,6 +148,12 @@ export function PluginCard({ plugin }: PluginCardProps) {
                   </TooltipContent>
                 </Tooltip>
               </div>
+              <Link
+                href={`/plugin/${plugin.name}`}
+                className="block text-xs text-center text-muted-foreground hover:text-primary transition-colors"
+              >
+                View details
+              </Link>
             </div>
           </CardContent>
         </Card>

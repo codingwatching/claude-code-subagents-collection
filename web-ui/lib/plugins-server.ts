@@ -38,6 +38,10 @@ export function getPluginByName(name: string): Plugin | null {
   return plugins.find(p => p.name === name) || null
 }
 
+export function getPluginBySlug(slug: string): Plugin | null {
+  return getPluginByName(slug)
+}
+
 export function getPluginsByCategory(category: string): Plugin[] {
   const plugins = loadMarketplaceData()
   return plugins
