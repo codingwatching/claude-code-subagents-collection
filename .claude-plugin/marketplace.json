@@ -25,6 +25,28 @@
   },
   "plugins": [
     {
+      "name": "claude-hud",
+      "description": "Real-time statusline HUD for Claude Code - displays context usage, tool activity, agent tracking, and todo progress",
+      "version": "1.0.0",
+      "author": {
+        "name": "Build With Claude",
+        "url": "https://github.com/davepoon/buildwithclaude"
+      },
+      "repository": "https://github.com/davepoon/buildwithclaude",
+      "license": "MIT",
+      "keywords": [
+        "hud",
+        "monitoring",
+        "statusline",
+        "context",
+        "tools",
+        "agents",
+        "todos"
+      ],
+      "category": "utilities",
+      "source": "./plugins/claude-hud"
+    },
+    {
       "name": "agents-blockchain-web3",
       "description": "Specialized agents for blockchain development, smart contracts, and Web3 applications",
       "version": "1.0.0",
