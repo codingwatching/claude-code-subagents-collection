@@ -10,6 +10,7 @@ const { enhanceMCPServersWithDockerStats } = require('./enhance-docker-stats');
 const REPO_ROOT = path.join(__dirname, '..');
 const SUBAGENTS_DIR = path.join(REPO_ROOT, 'subagents');
 const COMMANDS_DIR = path.join(REPO_ROOT, 'commands');
+const HOOKS_DIR = path.join(REPO_ROOT, 'hooks');
 const MCP_SERVERS_DIR = path.join(REPO_ROOT, 'mcp-servers');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'web-ui', 'public', 'registry.json');
 
@@ -67,6 +68,39 @@ async function getCommands() {
   return commands.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+async function getHooks() {
+  try {
+    const files = await fs.readdir(HOOKS_DIR);
+    const hooks = [];
+
+    for (const file of files) {
+      if (!file.endsWith('.md')) continue;
+
+      const filePath = path.join(HOOKS_DIR, file);
+      const content = await fs.readFile(filePath, 'utf-8');
+      const { data } = matter(content);
+
+      hooks.push({
+        name: data.name || file.replace('.md', ''),
+        category: data.category || 'automation',
+        description: data.description || '',
+        event: data.event || 'PostToolUse',
+        matcher: data.matcher || '*',
+        language: data.language || 'bash',
+        version: data.version || '1.0.0',
+        file: `hooks/${file}`,
+        path: file.replace('.md', ''),
+        tags: data.tags || []
+      });
+    }
+
+    return hooks.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.warn('Warning: Could not read hooks directory:', error.message);
+    return [];
+  }
+}
+
 async function getMCPServers() {
   // We only use Docker MCP servers now, no markdown files
   // All MCP servers come from fetchDockerMCPServers()
@@ -77,9 +111,10 @@ async function generateRegistry() {
   try {
     console.log('Generating registry.json...');
 
-    const [subagents, commands, mcpServers, dockerMCPServers, officialMCPServers] = await Promise.all([
+    const [subagents, commands, hooks, mcpServers, dockerMCPServers, officialMCPServers] = await Promise.all([
       getSubagents(),
       getCommands(),
+      getHooks(),
       getMCPServers(),
       fetchDockerMCPServers(),
       fetchOfficialMCPServers()
@@ -128,6 +163,7 @@ async function generateRegistry() {
       lastUpdated: new Date().toISOString(),
       subagents,
       commands,
+      hooks,
       mcpServers: enhancedServers.sort((a, b) => a.name.localeCompare(b.name))
     };
 
@@ -140,6 +176,7 @@ async function generateRegistry() {
     console.log(`✓ Registry generated successfully!`);
     console.log(`  - ${subagents.length} subagents`);
     console.log(`  - ${commands.length} commands`);
+    console.log(`  - ${hooks.length} hooks`);
     console.log(`  - ${uniqueServers.length} MCP servers`);
     console.log(`    - ${officialMCPServers.length} from Official MCP Registry`);
     console.log(`    - ${dockerMCPServers.length} from Docker MCP`);

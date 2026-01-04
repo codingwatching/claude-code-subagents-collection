@@ -51,6 +51,15 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'utilities-debugging': '🐛',
   'version-control-git': '🌿',
   'workflow-orchestration': '🎭',
+  // Hook categories
+  'git': '🌿',
+  'automation': '⚙️',
+  'notifications': '🔔',
+  'formatting': '✨',
+  'security': '🔒',
+  'testing': '🧪',
+  'development': '💻',
+  'performance': '⚡',
   // Default icon for unknown categories
   'default': '📦'
 };

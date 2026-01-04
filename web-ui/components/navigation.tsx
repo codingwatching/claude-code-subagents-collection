@@ -13,6 +13,7 @@ export function Navigation() {
   const navigationLinks = [
     { href: "/browse", label: "Subagents" },
     { href: "/commands", label: "Commands" },
+    { href: "/hooks", label: "Hooks" },
     { href: "/mcp-servers", label: "MCP Servers" },
     { href: "/docs", label: "Documentation" },
     { href: "/contribute", label: "Contribute" },

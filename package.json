@@ -5,8 +5,11 @@
   "description": "A comprehensive collection of specialized AI subagents for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), designed to enhance development workflows with domain-specific expertise.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "validate": "node scripts/validate-subagents.js",
+    "test": "npm run validate",
+    "test:integration": "./tests/plugin-test-harness.sh",
+    "validate": "node scripts/validate-all.js",
+    "validate:subagents": "node scripts/validate-subagents.js",
+    "validate:hooks": "node scripts/validate-hooks.js",
     "generate:registry": "node scripts/generate-registry.js",
     "changeset": "changeset",
     "version-packages": "changeset version",

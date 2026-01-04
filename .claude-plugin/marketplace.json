@@ -42,11 +42,7 @@
         "hyperledger-fabric-developer"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/blockchain-developer.md",
-        "./subagents/hyperledger-fabric-developer.md"
-      ]
+      "source": "./plugins/agents-blockchain-web3"
     },
     {
       "name": "agents-business-finance",
@@ -68,13 +64,7 @@
         "quant-analyst"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/business-analyst.md",
-        "./subagents/legal-advisor.md",
-        "./subagents/payment-integration.md",
-        "./subagents/quant-analyst.md"
-      ]
+      "source": "./plugins/agents-business-finance"
     },
     {
       "name": "agents-crypto-trading",
@@ -97,14 +87,7 @@
         "defi-strategist"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/arbitrage-bot.md",
-        "./subagents/crypto-analyst.md",
-        "./subagents/crypto-risk-manager.md",
-        "./subagents/crypto-trader.md",
-        "./subagents/defi-strategist.md"
-      ]
+      "source": "./plugins/agents-crypto-trading"
     },
     {
       "name": "agents-data-ai",
@@ -133,20 +116,7 @@
         "task-decomposition-expert"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/ai-engineer.md",
-        "./subagents/context-manager.md",
-        "./subagents/data-engineer.md",
-        "./subagents/data-scientist.md",
-        "./subagents/hackathon-ai-strategist.md",
-        "./subagents/llms-maintainer.md",
-        "./subagents/ml-engineer.md",
-        "./subagents/mlops-engineer.md",
-        "./subagents/prompt-engineer.md",
-        "./subagents/search-specialist.md",
-        "./subagents/task-decomposition-expert.md"
-      ]
+      "source": "./plugins/agents-data-ai"
     },
     {
       "name": "agents-design-experience",
@@ -166,11 +136,7 @@
         "ui-ux-designer"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/accessibility-specialist.md",
-        "./subagents/ui-ux-designer.md"
-      ]
+      "source": "./plugins/agents-design-experience"
     },
     {
       "name": "agents-development-architecture",
@@ -199,20 +165,7 @@
         "wordpress-developer"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/backend-architect.md",
-        "./subagents/directus-developer.md",
-        "./subagents/drupal-developer.md",
-        "./subagents/frontend-developer.md",
-        "./subagents/graphql-architect.md",
-        "./subagents/ios-developer.md",
-        "./subagents/laravel-vue-developer.md",
-        "./subagents/mobile-developer.md",
-        "./subagents/nextjs-app-router-developer.md",
-        "./subagents/react-performance-optimization.md",
-        "./subagents/wordpress-developer.md"
-      ]
+      "source": "./plugins/agents-development-architecture"
     },
     {
       "name": "agents-infrastructure-operations",
@@ -238,17 +191,7 @@
         "terraform-specialist"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/cloud-architect.md",
-        "./subagents/database-admin.md",
-        "./subagents/database-optimization.md",
-        "./subagents/database-optimizer.md",
-        "./subagents/deployment-engineer.md",
-        "./subagents/devops-troubleshooter.md",
-        "./subagents/network-engineer.md",
-        "./subagents/terraform-specialist.md"
-      ]
+      "source": "./plugins/agents-infrastructure-operations"
     },
     {
       "name": "agents-language-specialists",
@@ -278,21 +221,7 @@
         "typescript-expert"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/c-developer.md",
-        "./subagents/cpp-engineer.md",
-        "./subagents/golang-expert.md",
-        "./subagents/java-developer.md",
-        "./subagents/javascript-developer.md",
-        "./subagents/php-developer.md",
-        "./subagents/python-expert.md",
-        "./subagents/rails-expert.md",
-        "./subagents/ruby-expert.md",
-        "./subagents/rust-expert.md",
-        "./subagents/sql-expert.md",
-        "./subagents/typescript-expert.md"
-      ]
+      "source": "./plugins/agents-language-specialists"
     },
     {
       "name": "agents-quality-security",
@@ -325,24 +254,7 @@
         "test-automator"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/api-security-audit.md",
-        "./subagents/architect-review.md",
-        "./subagents/code-reviewer.md",
-        "./subagents/command-expert.md",
-        "./subagents/debugger.md",
-        "./subagents/dx-optimizer.md",
-        "./subagents/error-detective.md",
-        "./subagents/incident-responder.md",
-        "./subagents/mcp-security-auditor.md",
-        "./subagents/mcp-server-architect.md",
-        "./subagents/mcp-testing-engineer.md",
-        "./subagents/performance-engineer.md",
-        "./subagents/review-agent.md",
-        "./subagents/security-auditor.md",
-        "./subagents/test-automator.md"
-      ]
+      "source": "./plugins/agents-quality-security"
     },
     {
       "name": "agents-sales-marketing",
@@ -366,15 +278,7 @@
         "social-media-copywriter"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/content-marketer.md",
-        "./subagents/customer-support.md",
-        "./subagents/risk-manager.md",
-        "./subagents/sales-automator.md",
-        "./subagents/social-media-clip-creator.md",
-        "./subagents/social-media-copywriter.md"
-      ]
+      "source": "./plugins/agents-sales-marketing"
     },
     {
       "name": "agents-specialized-domains",
@@ -433,50 +337,7 @@
         "visual-analysis-ocr"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/academic-research-synthesizer.md",
-        "./subagents/academic-researcher.md",
-        "./subagents/agent-expert.md",
-        "./subagents/api-documenter.md",
-        "./subagents/audio-quality-controller.md",
-        "./subagents/comprehensive-researcher.md",
-        "./subagents/connection-agent.md",
-        "./subagents/data-analyst.md",
-        "./subagents/docusaurus-expert.md",
-        "./subagents/episode-orchestrator.md",
-        "./subagents/game-developer.md",
-        "./subagents/legacy-modernizer.md",
-        "./subagents/markdown-syntax-formatter.md",
-        "./subagents/market-research-analyst.md",
-        "./subagents/mcp-deployment-orchestrator.md",
-        "./subagents/mcp-expert.md",
-        "./subagents/mcp-registry-navigator.md",
-        "./subagents/metadata-agent.md",
-        "./subagents/moc-agent.md",
-        "./subagents/ocr-grammar-fixer.md",
-        "./subagents/ocr-quality-assurance.md",
-        "./subagents/podcast-content-analyzer.md",
-        "./subagents/podcast-metadata-specialist.md",
-        "./subagents/podcast-transcriber.md",
-        "./subagents/podcast-trend-scout.md",
-        "./subagents/project-supervisor-orchestrator.md",
-        "./subagents/query-clarifier.md",
-        "./subagents/report-generator.md",
-        "./subagents/research-brief-generator.md",
-        "./subagents/research-coordinator.md",
-        "./subagents/research-orchestrator.md",
-        "./subagents/research-synthesizer.md",
-        "./subagents/seo-podcast-optimizer.md",
-        "./subagents/tag-agent.md",
-        "./subagents/technical-researcher.md",
-        "./subagents/text-comparison-validator.md",
-        "./subagents/timestamp-precision-specialist.md",
-        "./subagents/twitter-ai-influencer-manager.md",
-        "./subagents/url-context-validator.md",
-        "./subagents/url-link-extractor.md",
-        "./subagents/visual-analysis-ocr.md"
-      ]
+      "source": "./plugins/agents-specialized-domains"
     },
     {
       "name": "commands-api-development",
@@ -498,13 +359,7 @@
         "implement-graphql-api"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/design-rest-api.md",
-        "./commands/doc-api.md",
-        "./commands/generate-api-documentation.md",
-        "./commands/implement-graphql-api.md"
-      ]
+      "source": "./plugins/commands-api-development"
     },
     {
       "name": "commands-automation-workflow",
@@ -523,10 +378,7 @@
         "act"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/act.md"
-      ]
+      "source": "./plugins/commands-automation-workflow"
     },
     {
       "name": "commands-ci-deployment",
@@ -555,20 +407,7 @@
         "setup-kubernetes-deployment"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-changelog.md",
-        "./commands/changelog-demo-command.md",
-        "./commands/ci-setup.md",
-        "./commands/containerize-application.md",
-        "./commands/hotfix-deploy.md",
-        "./commands/prepare-release.md",
-        "./commands/release.md",
-        "./commands/rollback-deploy.md",
-        "./commands/run-ci.md",
-        "./commands/setup-automated-releases.md",
-        "./commands/setup-kubernetes-deployment.md"
-      ]
+      "source": "./plugins/commands-ci-deployment"
     },
     {
       "name": "commands-code-analysis-testing",
@@ -604,27 +443,7 @@
         "write-tests"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-mutation-testing.md",
-        "./commands/add-property-based-testing.md",
-        "./commands/check.md",
-        "./commands/clean.md",
-        "./commands/code_analysis.md",
-        "./commands/e2e-setup.md",
-        "./commands/generate-test-cases.md",
-        "./commands/generate-tests.md",
-        "./commands/optimize.md",
-        "./commands/repro-issue.md",
-        "./commands/setup-comprehensive-testing.md",
-        "./commands/setup-load-testing.md",
-        "./commands/setup-visual-testing.md",
-        "./commands/tdd.md",
-        "./commands/test-changelog-automation.md",
-        "./commands/test-coverage.md",
-        "./commands/testing_plan_integration.md",
-        "./commands/write-tests.md"
-      ]
+      "source": "./plugins/commands-code-analysis-testing"
     },
     {
       "name": "commands-context-loading-priming",
@@ -646,13 +465,7 @@
         "rsi"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/context-prime.md",
-        "./commands/initref.md",
-        "./commands/prime.md",
-        "./commands/rsi.md"
-      ]
+      "source": "./plugins/commands-context-loading-priming"
     },
     {
       "name": "commands-database-operations",
@@ -673,12 +486,7 @@
         "optimize-database-performance"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/create-database-migrations.md",
-        "./commands/design-database-schema.md",
-        "./commands/optimize-database-performance.md"
-      ]
+      "source": "./plugins/commands-database-operations"
     },
     {
       "name": "commands-documentation-changelogs",
@@ -706,19 +514,7 @@
         "update-docs"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-to-changelog.md",
-        "./commands/create-architecture-documentation.md",
-        "./commands/create-docs.md",
-        "./commands/create-onboarding-guide.md",
-        "./commands/docs.md",
-        "./commands/explain-issue-fix.md",
-        "./commands/load-llms-txt.md",
-        "./commands/migration-guide.md",
-        "./commands/troubleshooting-guide.md",
-        "./commands/update-docs.md"
-      ]
+      "source": "./plugins/commands-documentation-changelogs"
     },
     {
       "name": "commands-framework-svelte",
@@ -752,25 +548,7 @@
         "svelte-test-setup"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/svelte-a11y.md",
-        "./commands/svelte-component.md",
-        "./commands/svelte-debug.md",
-        "./commands/svelte-migrate.md",
-        "./commands/svelte-optimize.md",
-        "./commands/svelte-scaffold.md",
-        "./commands/svelte-storybook.md",
-        "./commands/svelte-storybook-migrate.md",
-        "./commands/svelte-storybook-mock.md",
-        "./commands/svelte-storybook-setup.md",
-        "./commands/svelte-storybook-story.md",
-        "./commands/svelte-storybook-troubleshoot.md",
-        "./commands/svelte-test.md",
-        "./commands/svelte-test-coverage.md",
-        "./commands/svelte-test-fix.md",
-        "./commands/svelte-test-setup.md"
-      ]
+      "source": "./plugins/commands-framework-svelte"
     },
     {
       "name": "commands-game-development",
@@ -789,10 +567,7 @@
         "unity-project-setup"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/unity-project-setup.md"
-      ]
+      "source": "./plugins/commands-game-development"
     },
     {
       "name": "commands-integration-sync",
@@ -822,21 +597,7 @@
         "task-from-pr"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/bidirectional-sync.md",
-        "./commands/bulk-import-issues.md",
-        "./commands/cross-reference-manager.md",
-        "./commands/issue-to-linear-task.md",
-        "./commands/linear-task-to-issue.md",
-        "./commands/sync-automation-setup.md",
-        "./commands/sync-conflict-resolver.md",
-        "./commands/sync-issues-to-linear.md",
-        "./commands/sync-linear-to-issues.md",
-        "./commands/sync-pr-to-task.md",
-        "./commands/sync-status.md",
-        "./commands/task-from-pr.md"
-      ]
+      "source": "./plugins/commands-integration-sync"
     },
     {
       "name": "commands-miscellaneous",
@@ -857,12 +618,7 @@
         "use-stepper"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/five.md",
-        "./commands/mermaid.md",
-        "./commands/use-stepper.md"
-      ]
+      "source": "./plugins/commands-miscellaneous"
     },
     {
       "name": "commands-monitoring-observability",
@@ -882,11 +638,7 @@
         "setup-monitoring-observability"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-performance-monitoring.md",
-        "./commands/setup-monitoring-observability.md"
-      ]
+      "source": "./plugins/commands-monitoring-observability"
     },
     {
       "name": "commands-performance-optimization",
@@ -910,15 +662,7 @@
         "system-behavior-simulator"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/implement-caching-strategy.md",
-        "./commands/optimize-build.md",
-        "./commands/optimize-bundle-size.md",
-        "./commands/performance-audit.md",
-        "./commands/setup-cdn-optimization.md",
-        "./commands/system-behavior-simulator.md"
-      ]
+      "source": "./plugins/commands-performance-optimization"
     },
     {
       "name": "commands-project-setup",
@@ -942,15 +686,7 @@
         "setup-rate-limiting"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/modernize-deps.md",
-        "./commands/setup-development-environment.md",
-        "./commands/setup-formatting.md",
-        "./commands/setup-linting.md",
-        "./commands/setup-monorepo.md",
-        "./commands/setup-rate-limiting.md"
-      ]
+      "source": "./plugins/commands-project-setup"
     },
     {
       "name": "commands-project-task-management",
@@ -973,6 +709,7 @@
         "create-prd",
         "create-prp",
         "init-project",
+        "interview",
         "milestone-tracker",
         "pac-configure",
         "pac-create-epic",
@@ -985,26 +722,7 @@
         "todo"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-package.md",
-        "./commands/create-command.md",
-        "./commands/create-feature.md",
-        "./commands/create-jtbd.md",
-        "./commands/create-prd.md",
-        "./commands/create-prp.md",
-        "./commands/init-project.md",
-        "./commands/milestone-tracker.md",
-        "./commands/pac-configure.md",
-        "./commands/pac-create-epic.md",
-        "./commands/pac-create-ticket.md",
-        "./commands/pac-update-status.md",
-        "./commands/pac-validate.md",
-        "./commands/project-health-check.md",
-        "./commands/project-timeline-simulator.md",
-        "./commands/project-to-linear.md",
-        "./commands/todo.md"
-      ]
+      "source": "./plugins/commands-project-task-management"
     },
     {
       "name": "commands-security-audit",
@@ -1026,13 +744,7 @@
         "security-hardening"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/add-authentication-system.md",
-        "./commands/dependency-audit.md",
-        "./commands/security-audit.md",
-        "./commands/security-hardening.md"
-      ]
+      "source": "./plugins/commands-security-audit"
     },
     {
       "name": "commands-simulation-modeling",
@@ -1058,17 +770,7 @@
         "timeline-compressor"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/business-scenario-explorer.md",
-        "./commands/constraint-modeler.md",
-        "./commands/decision-tree-explorer.md",
-        "./commands/digital-twin-creator.md",
-        "./commands/future-scenario-generator.md",
-        "./commands/market-response-modeler.md",
-        "./commands/simulation-calibrator.md",
-        "./commands/timeline-compressor.md"
-      ]
+      "source": "./plugins/commands-simulation-modeling"
     },
     {
       "name": "commands-team-collaboration",
@@ -1098,21 +800,7 @@
         "team-workload-balancer"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/architecture-review.md",
-        "./commands/decision-quality-analyzer.md",
-        "./commands/dependency-mapper.md",
-        "./commands/estimate-assistant.md",
-        "./commands/issue-triage.md",
-        "./commands/memory-spring-cleaning.md",
-        "./commands/migration-assistant.md",
-        "./commands/retrospective-analyzer.md",
-        "./commands/session-learning-capture.md",
-        "./commands/sprint-planning.md",
-        "./commands/standup-report.md",
-        "./commands/team-workload-balancer.md"
-      ]
+      "source": "./plugins/commands-team-collaboration"
     },
     {
       "name": "commands-typescript-migration",
@@ -1131,10 +819,7 @@
         "migrate-to-typescript"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/migrate-to-typescript.md"
-      ]
+      "source": "./plugins/commands-typescript-migration"
     },
     {
       "name": "commands-utilities-debugging",
@@ -1166,23 +851,7 @@
         "ultra-think"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/all-tools.md",
-        "./commands/architecture-scenario-explorer.md",
-        "./commands/check-file.md",
-        "./commands/clean-branches.md",
-        "./commands/code-permutation-tester.md",
-        "./commands/code-review.md",
-        "./commands/code-to-task.md",
-        "./commands/debug-error.md",
-        "./commands/directory-deep-dive.md",
-        "./commands/explain-code.md",
-        "./commands/generate-linear-worklog.md",
-        "./commands/git-status.md",
-        "./commands/refactor-code.md",
-        "./commands/ultra-think.md"
-      ]
+      "source": "./plugins/commands-utilities-debugging"
     },
     {
       "name": "commands-version-control-git",
@@ -1212,21 +881,7 @@
         "update-branch-name"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/bug-fix.md",
-        "./commands/commit.md",
-        "./commands/commit-fast.md",
-        "./commands/create-pr.md",
-        "./commands/create-pull-request.md",
-        "./commands/create-worktrees.md",
-        "./commands/fix-github-issue.md",
-        "./commands/fix-issue.md",
-        "./commands/fix-pr.md",
-        "./commands/husky.md",
-        "./commands/pr-review.md",
-        "./commands/update-branch-name.md"
-      ]
+      "source": "./plugins/commands-version-control-git"
     },
     {
       "name": "commands-workflow-orchestration",
@@ -1253,18 +908,7 @@
         "sync"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/find.md",
-        "./commands/log.md",
-        "./commands/move.md",
-        "./commands/remove.md",
-        "./commands/report.md",
-        "./commands/resume.md",
-        "./commands/start.md",
-        "./commands/status.md",
-        "./commands/sync.md"
-      ]
+      "source": "./plugins/commands-workflow-orchestration"
     },
     {
       "name": "hooks-automation",
@@ -1285,8 +929,7 @@
         "slack-notifications"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/automation-hooks.json"
+      "source": "./plugins/hooks-automation"
     },
     {
       "name": "hooks-development",
@@ -1308,8 +951,7 @@
         "smart-formatting"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/development-hooks.json"
+      "source": "./plugins/hooks-development"
     },
     {
       "name": "hooks-formatting",
@@ -1329,8 +971,7 @@
         "format-python-files"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/formatting-hooks.json"
+      "source": "./plugins/hooks-formatting"
     },
     {
       "name": "hooks-git",
@@ -1351,8 +992,7 @@
         "smart-commit"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/git-hooks.json"
+      "source": "./plugins/hooks-git"
     },
     {
       "name": "hooks-notifications",
@@ -1380,8 +1020,7 @@
         "telegram-notifications"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/notifications-hooks.json"
+      "source": "./plugins/hooks-notifications"
     },
     {
       "name": "hooks-performance",
@@ -1400,8 +1039,7 @@
         "performance-monitor"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/performance-hooks.json"
+      "source": "./plugins/hooks-performance"
     },
     {
       "name": "hooks-security",
@@ -1422,8 +1060,7 @@
         "security-scanner"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/security-hooks.json"
+      "source": "./plugins/hooks-security"
     },
     {
       "name": "hooks-testing",
@@ -1443,8 +1080,7 @@
         "test-runner"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/testing-hooks.json"
+      "source": "./plugins/hooks-testing"
     },
     {
       "name": "mcp-servers-docker",
@@ -1476,8 +1112,7 @@
         "media-generation"
       ],
       "category": "mcp-servers",
-      "strict": false,
-      "mcpServers": "./mcp-servers.json"
+      "source": "./plugins/mcp-servers-docker"
     },
     {
       "name": "all-agents",
@@ -1496,126 +1131,7 @@
         "bundle"
       ],
       "category": "agents",
-      "strict": false,
-      "agents": [
-        "./subagents/academic-research-synthesizer.md",
-        "./subagents/academic-researcher.md",
-        "./subagents/accessibility-specialist.md",
-        "./subagents/agent-expert.md",
-        "./subagents/ai-engineer.md",
-        "./subagents/api-documenter.md",
-        "./subagents/api-security-audit.md",
-        "./subagents/arbitrage-bot.md",
-        "./subagents/architect-review.md",
-        "./subagents/audio-quality-controller.md",
-        "./subagents/backend-architect.md",
-        "./subagents/blockchain-developer.md",
-        "./subagents/business-analyst.md",
-        "./subagents/c-developer.md",
-        "./subagents/cloud-architect.md",
-        "./subagents/code-reviewer.md",
-        "./subagents/command-expert.md",
-        "./subagents/comprehensive-researcher.md",
-        "./subagents/connection-agent.md",
-        "./subagents/content-marketer.md",
-        "./subagents/context-manager.md",
-        "./subagents/cpp-engineer.md",
-        "./subagents/crypto-analyst.md",
-        "./subagents/crypto-risk-manager.md",
-        "./subagents/crypto-trader.md",
-        "./subagents/customer-support.md",
-        "./subagents/data-analyst.md",
-        "./subagents/data-engineer.md",
-        "./subagents/data-scientist.md",
-        "./subagents/database-admin.md",
-        "./subagents/database-optimization.md",
-        "./subagents/database-optimizer.md",
-        "./subagents/debugger.md",
-        "./subagents/defi-strategist.md",
-        "./subagents/deployment-engineer.md",
-        "./subagents/devops-troubleshooter.md",
-        "./subagents/directus-developer.md",
-        "./subagents/docusaurus-expert.md",
-        "./subagents/drupal-developer.md",
-        "./subagents/dx-optimizer.md",
-        "./subagents/episode-orchestrator.md",
-        "./subagents/error-detective.md",
-        "./subagents/frontend-developer.md",
-        "./subagents/game-developer.md",
-        "./subagents/golang-expert.md",
-        "./subagents/graphql-architect.md",
-        "./subagents/hackathon-ai-strategist.md",
-        "./subagents/hyperledger-fabric-developer.md",
-        "./subagents/incident-responder.md",
-        "./subagents/ios-developer.md",
-        "./subagents/java-developer.md",
-        "./subagents/javascript-developer.md",
-        "./subagents/laravel-vue-developer.md",
-        "./subagents/legacy-modernizer.md",
-        "./subagents/legal-advisor.md",
-        "./subagents/llms-maintainer.md",
-        "./subagents/markdown-syntax-formatter.md",
-        "./subagents/market-research-analyst.md",
-        "./subagents/mcp-deployment-orchestrator.md",
-        "./subagents/mcp-expert.md",
-        "./subagents/mcp-registry-navigator.md",
-        "./subagents/mcp-security-auditor.md",
-        "./subagents/mcp-server-architect.md",
-        "./subagents/mcp-testing-engineer.md",
-        "./subagents/metadata-agent.md",
-        "./subagents/ml-engineer.md",
-        "./subagents/mlops-engineer.md",
-        "./subagents/mobile-developer.md",
-        "./subagents/moc-agent.md",
-        "./subagents/network-engineer.md",
-        "./subagents/nextjs-app-router-developer.md",
-        "./subagents/ocr-grammar-fixer.md",
-        "./subagents/ocr-quality-assurance.md",
-        "./subagents/payment-integration.md",
-        "./subagents/performance-engineer.md",
-        "./subagents/php-developer.md",
-        "./subagents/podcast-content-analyzer.md",
-        "./subagents/podcast-metadata-specialist.md",
-        "./subagents/podcast-transcriber.md",
-        "./subagents/podcast-trend-scout.md",
-        "./subagents/project-supervisor-orchestrator.md",
-        "./subagents/prompt-engineer.md",
-        "./subagents/python-expert.md",
-        "./subagents/quant-analyst.md",
-        "./subagents/query-clarifier.md",
-        "./subagents/rails-expert.md",
-        "./subagents/react-performance-optimization.md",
-        "./subagents/report-generator.md",
-        "./subagents/research-brief-generator.md",
-        "./subagents/research-coordinator.md",
-        "./subagents/research-orchestrator.md",
-        "./subagents/research-synthesizer.md",
-        "./subagents/review-agent.md",
-        "./subagents/risk-manager.md",
-        "./subagents/ruby-expert.md",
-        "./subagents/rust-expert.md",
-        "./subagents/sales-automator.md",
-        "./subagents/search-specialist.md",
-        "./subagents/security-auditor.md",
-        "./subagents/seo-podcast-optimizer.md",
-        "./subagents/social-media-clip-creator.md",
-        "./subagents/social-media-copywriter.md",
-        "./subagents/sql-expert.md",
-        "./subagents/tag-agent.md",
-        "./subagents/task-decomposition-expert.md",
-        "./subagents/technical-researcher.md",
-        "./subagents/terraform-specialist.md",
-        "./subagents/test-automator.md",
-        "./subagents/text-comparison-validator.md",
-        "./subagents/timestamp-precision-specialist.md",
-        "./subagents/twitter-ai-influencer-manager.md",
-        "./subagents/typescript-expert.md",
-        "./subagents/ui-ux-designer.md",
-        "./subagents/url-context-validator.md",
-        "./subagents/url-link-extractor.md",
-        "./subagents/visual-analysis-ocr.md",
-        "./subagents/wordpress-developer.md"
-      ]
+      "source": "./plugins/all-agents"
     },
     {
       "name": "all-commands",
@@ -1634,183 +1150,7 @@
         "bundle"
       ],
       "category": "commands",
-      "strict": false,
-      "commands": [
-        "./commands/act.md",
-        "./commands/add-authentication-system.md",
-        "./commands/add-changelog.md",
-        "./commands/add-mutation-testing.md",
-        "./commands/add-package.md",
-        "./commands/add-performance-monitoring.md",
-        "./commands/add-property-based-testing.md",
-        "./commands/add-to-changelog.md",
-        "./commands/all-tools.md",
-        "./commands/architecture-review.md",
-        "./commands/architecture-scenario-explorer.md",
-        "./commands/bidirectional-sync.md",
-        "./commands/bug-fix.md",
-        "./commands/bulk-import-issues.md",
-        "./commands/business-scenario-explorer.md",
-        "./commands/changelog-demo-command.md",
-        "./commands/check.md",
-        "./commands/check-file.md",
-        "./commands/ci-setup.md",
-        "./commands/clean.md",
-        "./commands/clean-branches.md",
-        "./commands/code_analysis.md",
-        "./commands/code-permutation-tester.md",
-        "./commands/code-review.md",
-        "./commands/code-to-task.md",
-        "./commands/commit.md",
-        "./commands/commit-fast.md",
-        "./commands/constraint-modeler.md",
-        "./commands/containerize-application.md",
-        "./commands/context-prime.md",
-        "./commands/create-architecture-documentation.md",
-        "./commands/create-command.md",
-        "./commands/create-database-migrations.md",
-        "./commands/create-docs.md",
-        "./commands/create-feature.md",
-        "./commands/create-jtbd.md",
-        "./commands/create-onboarding-guide.md",
-        "./commands/create-pr.md",
-        "./commands/create-prd.md",
-        "./commands/create-prp.md",
-        "./commands/create-pull-request.md",
-        "./commands/create-worktrees.md",
-        "./commands/cross-reference-manager.md",
-        "./commands/debug-error.md",
-        "./commands/decision-quality-analyzer.md",
-        "./commands/decision-tree-explorer.md",
-        "./commands/dependency-audit.md",
-        "./commands/dependency-mapper.md",
-        "./commands/design-database-schema.md",
-        "./commands/design-rest-api.md",
-        "./commands/digital-twin-creator.md",
-        "./commands/directory-deep-dive.md",
-        "./commands/doc-api.md",
-        "./commands/docs.md",
-        "./commands/e2e-setup.md",
-        "./commands/estimate-assistant.md",
-        "./commands/explain-code.md",
-        "./commands/explain-issue-fix.md",
-        "./commands/find.md",
-        "./commands/five.md",
-        "./commands/fix-github-issue.md",
-        "./commands/fix-issue.md",
-        "./commands/fix-pr.md",
-        "./commands/future-scenario-generator.md",
-        "./commands/generate-api-documentation.md",
-        "./commands/generate-linear-worklog.md",
-        "./commands/generate-test-cases.md",
-        "./commands/generate-tests.md",
-        "./commands/git-status.md",
-        "./commands/hotfix-deploy.md",
-        "./commands/husky.md",
-        "./commands/implement-caching-strategy.md",
-        "./commands/implement-graphql-api.md",
-        "./commands/init-project.md",
-        "./commands/initref.md",
-        "./commands/issue-to-linear-task.md",
-        "./commands/issue-triage.md",
-        "./commands/linear-task-to-issue.md",
-        "./commands/load-llms-txt.md",
-        "./commands/log.md",
-        "./commands/market-response-modeler.md",
-        "./commands/memory-spring-cleaning.md",
-        "./commands/mermaid.md",
-        "./commands/migrate-to-typescript.md",
-        "./commands/migration-assistant.md",
-        "./commands/migration-guide.md",
-        "./commands/milestone-tracker.md",
-        "./commands/modernize-deps.md",
-        "./commands/move.md",
-        "./commands/optimize.md",
-        "./commands/optimize-build.md",
-        "./commands/optimize-bundle-size.md",
-        "./commands/optimize-database-performance.md",
-        "./commands/pac-configure.md",
-        "./commands/pac-create-epic.md",
-        "./commands/pac-create-ticket.md",
-        "./commands/pac-update-status.md",
-        "./commands/pac-validate.md",
-        "./commands/performance-audit.md",
-        "./commands/pr-review.md",
-        "./commands/prepare-release.md",
-        "./commands/prime.md",
-        "./commands/project-health-check.md",
-        "./commands/project-timeline-simulator.md",
-        "./commands/project-to-linear.md",
-        "./commands/refactor-code.md",
-        "./commands/release.md",
-        "./commands/remove.md",
-        "./commands/report.md",
-        "./commands/repro-issue.md",
-        "./commands/resume.md",
-        "./commands/retrospective-analyzer.md",
-        "./commands/rollback-deploy.md",
-        "./commands/rsi.md",
-        "./commands/run-ci.md",
-        "./commands/security-audit.md",
-        "./commands/security-hardening.md",
-        "./commands/session-learning-capture.md",
-        "./commands/setup-automated-releases.md",
-        "./commands/setup-cdn-optimization.md",
-        "./commands/setup-comprehensive-testing.md",
-        "./commands/setup-development-environment.md",
-        "./commands/setup-formatting.md",
-        "./commands/setup-kubernetes-deployment.md",
-        "./commands/setup-linting.md",
-        "./commands/setup-load-testing.md",
-        "./commands/setup-monitoring-observability.md",
-        "./commands/setup-monorepo.md",
-        "./commands/setup-rate-limiting.md",
-        "./commands/setup-visual-testing.md",
-        "./commands/simulation-calibrator.md",
-        "./commands/sprint-planning.md",
-        "./commands/standup-report.md",
-        "./commands/start.md",
-        "./commands/status.md",
-        "./commands/svelte-a11y.md",
-        "./commands/svelte-component.md",
-        "./commands/svelte-debug.md",
-        "./commands/svelte-migrate.md",
-        "./commands/svelte-optimize.md",
-        "./commands/svelte-scaffold.md",
-        "./commands/svelte-storybook.md",
-        "./commands/svelte-storybook-migrate.md",
-        "./commands/svelte-storybook-mock.md",
-        "./commands/svelte-storybook-setup.md",
-        "./commands/svelte-storybook-story.md",
-        "./commands/svelte-storybook-troubleshoot.md",
-        "./commands/svelte-test.md",
-        "./commands/svelte-test-coverage.md",
-        "./commands/svelte-test-fix.md",
-        "./commands/svelte-test-setup.md",
-        "./commands/sync.md",
-        "./commands/sync-automation-setup.md",
-        "./commands/sync-conflict-resolver.md",
-        "./commands/sync-issues-to-linear.md",
-        "./commands/sync-linear-to-issues.md",
-        "./commands/sync-pr-to-task.md",
-        "./commands/sync-status.md",
-        "./commands/system-behavior-simulator.md",
-        "./commands/task-from-pr.md",
-        "./commands/tdd.md",
-        "./commands/team-workload-balancer.md",
-        "./commands/test-changelog-automation.md",
-        "./commands/test-coverage.md",
-        "./commands/testing_plan_integration.md",
-        "./commands/timeline-compressor.md",
-        "./commands/todo.md",
-        "./commands/troubleshooting-guide.md",
-        "./commands/ultra-think.md",
-        "./commands/unity-project-setup.md",
-        "./commands/update-branch-name.md",
-        "./commands/update-docs.md",
-        "./commands/use-stepper.md",
-        "./commands/write-tests.md"
-      ]
+      "source": "./plugins/all-commands"
     },
     {
       "name": "all-hooks",
@@ -1829,8 +1169,7 @@
         "bundle"
       ],
       "category": "hooks",
-      "strict": false,
-      "hooks": "./hooks/all-hooks.json"
+      "source": "./plugins/all-hooks"
     }
   ]
 }
