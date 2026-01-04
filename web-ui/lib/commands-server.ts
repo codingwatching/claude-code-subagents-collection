@@ -5,7 +5,7 @@ import { Command } from './commands-types'
 import { CategoryMetadata, generateCategoryMetadata } from './category-utils'
 
 export function getAllCommands(): Command[] {
-  const commandsDirectory = path.join(process.cwd(), '../commands')
+  const commandsDirectory = path.join(process.cwd(), '../plugins/all-commands/commands')
   const fileNames = fs.readdirSync(commandsDirectory)
   
   const commands = fileNames
@@ -33,7 +33,7 @@ export function getAllCommands(): Command[] {
 }
 
 export function getCommandBySlug(slug: string): Command | null {
-  const commandsDirectory = path.join(process.cwd(), '../commands')
+  const commandsDirectory = path.join(process.cwd(), '../plugins/all-commands/commands')
   const filePath = path.join(commandsDirectory, `${slug}.md`)
   
   if (!fs.existsSync(filePath)) {

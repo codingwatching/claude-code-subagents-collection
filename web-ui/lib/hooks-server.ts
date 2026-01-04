@@ -5,7 +5,7 @@ import { Hook } from './hooks-types'
 import { CategoryMetadata, generateCategoryMetadata } from './category-utils'
 
 export function getAllHooks(): Hook[] {
-  const hooksDirectory = path.join(process.cwd(), '../hooks')
+  const hooksDirectory = path.join(process.cwd(), '../plugins/all-hooks/hooks')
 
   if (!fs.existsSync(hooksDirectory)) {
     return []
@@ -40,7 +40,7 @@ export function getAllHooks(): Hook[] {
 }
 
 export function getHookBySlug(slug: string): Hook | null {
-  const hooksDirectory = path.join(process.cwd(), '../hooks')
+  const hooksDirectory = path.join(process.cwd(), '../plugins/all-hooks/hooks')
   const filePath = path.join(hooksDirectory, `${slug}.md`)
 
   if (!fs.existsSync(filePath)) {

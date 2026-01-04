@@ -8,9 +8,9 @@ const { fetchOfficialMCPServers } = require('./fetch-official-mcp');
 const { enhanceMCPServersWithDockerStats } = require('./enhance-docker-stats');
 
 const REPO_ROOT = path.join(__dirname, '..');
-const SUBAGENTS_DIR = path.join(REPO_ROOT, 'subagents');
-const COMMANDS_DIR = path.join(REPO_ROOT, 'commands');
-const HOOKS_DIR = path.join(REPO_ROOT, 'hooks');
+const SUBAGENTS_DIR = path.join(REPO_ROOT, 'plugins/all-agents/agents');
+const COMMANDS_DIR = path.join(REPO_ROOT, 'plugins/all-commands/commands');
+const HOOKS_DIR = path.join(REPO_ROOT, 'plugins/all-hooks/hooks');
 const MCP_SERVERS_DIR = path.join(REPO_ROOT, 'mcp-servers');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'web-ui', 'public', 'registry.json');
 

@@ -21,7 +21,7 @@ const errors = [];
 const warnings = [];
 
 // Find all hook markdown files
-const hookFiles = globSync(['hooks/*.md'])
+const hookFiles = globSync(['plugins/all-hooks/hooks/*.md'])
   .filter(file => !file.endsWith('README.md') && !file.endsWith('INDEX.md'));
 
 console.log(`\n\x1b[34mValidating ${hookFiles.length} hook files...\x1b[0m\n`);

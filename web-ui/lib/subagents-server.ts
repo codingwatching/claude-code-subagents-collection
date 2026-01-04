@@ -5,7 +5,7 @@ import { Subagent } from './subagents-types'
 import { CategoryMetadata, generateCategoryMetadata } from './category-utils'
 
 export function getAllSubagents(): Subagent[] {
-  const subagentsDirectory = path.join(process.cwd(), '../subagents')
+  const subagentsDirectory = path.join(process.cwd(), '../plugins/all-agents/agents')
   const fileNames = fs.readdirSync(subagentsDirectory)
   
   const subagents = fileNames
@@ -32,7 +32,7 @@ export function getAllSubagents(): Subagent[] {
 }
 
 export function getSubagentBySlug(slug: string): Subagent | null {
-  const subagentsDirectory = path.join(process.cwd(), '../subagents')
+  const subagentsDirectory = path.join(process.cwd(), '../plugins/all-agents/agents')
   const filePath = path.join(subagentsDirectory, `${slug}.md`)
   
   if (!fs.existsSync(filePath)) {

@@ -3,7 +3,7 @@ const path = require('path');
 const matter = require('gray-matter');
 const Ajv = require('ajv');
 
-const COMMANDS_DIR = path.join(__dirname, '..', 'commands');
+const COMMANDS_DIR = path.join(__dirname, '..', 'plugins/all-commands/commands');
 const SCHEMA_PATH = path.join(__dirname, 'command-schema.json');
 
 // Load schema
