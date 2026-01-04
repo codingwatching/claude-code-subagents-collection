@@ -1192,6 +1192,28 @@
       ],
       "category": "hooks",
       "source": "./plugins/all-hooks"
+    },
+    {
+      "name": "all-skills",
+      "description": "Complete collection of 26 Claude Code skills for document processing, development, business productivity, and creative tasks",
+      "version": "1.0.0",
+      "author": {
+        "name": "BuildWithClaude Community",
+        "url": "https://github.com/davepoon/buildwithclaude"
+      },
+      "repository": "https://github.com/davepoon/buildwithclaude",
+      "license": "MIT",
+      "keywords": [
+        "skills",
+        "all",
+        "bundle",
+        "document-processing",
+        "development",
+        "business-productivity",
+        "creative-collaboration"
+      ],
+      "category": "skills",
+      "source": "./plugins/all-skills"
     }
   ]
 }

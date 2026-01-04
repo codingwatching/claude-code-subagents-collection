@@ -66,6 +66,12 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'testing': '🧪',
   'development': '💻',
   'performance': '⚡',
+  // Skill categories
+  'document-processing': '📄',
+  'development-code': '💻',
+  'business-productivity': '📊',
+  'creative-collaboration': '🎨',
+  'uncategorized': '📦',
   // Default icon for unknown categories
   'default': '📦'
 };

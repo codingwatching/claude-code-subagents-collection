@@ -14,6 +14,7 @@ export function Navigation() {
     { href: "/plugins", label: "Plugins" },
     { href: "/browse", label: "Subagents" },
     { href: "/commands", label: "Commands" },
+    { href: "/skills", label: "Skills" },
     { href: "/hooks", label: "Hooks" },
     { href: "/mcp-servers", label: "MCP Servers" },
     { href: "/docs", label: "Documentation" },
