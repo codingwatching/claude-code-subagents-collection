@@ -13,7 +13,7 @@ import {
 import { ArrowLeft, Copy, Download, Check, Github, Terminal, Puzzle } from 'lucide-react'
 import { generateCommandMarkdown } from '@/lib/utils'
 import { generateCategoryDisplayName, getCategoryIcon, type Command } from '@/lib/commands-types'
-import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/bwc-utils'
+import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/plugin-utils'
 
 interface CommandPageClientProps {
   command: Command

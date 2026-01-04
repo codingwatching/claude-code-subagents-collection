@@ -27,33 +27,3 @@ Send Telegram notifications when Claude Code finishes working
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook telegram-notifications
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook telegram-notifications"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

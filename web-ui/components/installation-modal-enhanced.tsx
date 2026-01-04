@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Copy, Check, Puzzle, FileText } from 'lucide-react'
-import { generatePluginCommands, generatePluginInstallScript, getMarketplaceAddCommand, type ResourceType } from '@/lib/bwc-utils'
+import { generatePluginCommands, generatePluginInstallScript, getMarketplaceAddCommand, type ResourceType } from '@/lib/plugin-utils'
 
 interface InstallationModalEnhancedProps {
   isOpen: boolean

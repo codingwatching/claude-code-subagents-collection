@@ -26,33 +26,3 @@ None required
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook notify-before-bash
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook notify-before-bash"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

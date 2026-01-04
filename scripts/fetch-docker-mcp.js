@@ -359,13 +359,8 @@ async function fetchMCPServersFromDockerHubAPI() {
         },
         installation_methods: [
           {
-            type: 'bwc',
-            recommended: true,
-            command: `bwc add --mcp ${name.toLowerCase()}`,
-            requirements: ['Docker Desktop', 'Docker MCP Toolkit', 'BWC CLI']
-          },
-          {
             type: 'docker',
+            recommended: true,
             command: `docker mcp server enable ${name.toLowerCase()}`,
             requirements: ['Docker Desktop', 'Docker MCP Toolkit']
           }
@@ -439,13 +434,8 @@ async function fetchMCPServersFromDockerHubAPI() {
           },
           installation_methods: [
             {
-              type: 'bwc',
-              recommended: true,
-              command: `bwc add --mcp ${name.toLowerCase()}`,
-              requirements: ['Docker Desktop', 'Docker MCP Toolkit', 'BWC CLI']
-            },
-            {
               type: 'docker',
+              recommended: true,
               command: `docker mcp server enable ${name.toLowerCase()}`,
               requirements: ['Docker Desktop', 'Docker MCP Toolkit']
             }
@@ -547,13 +537,8 @@ async function fetchDockerMCPServers() {
         },
         installation_methods: [
           {
-            type: 'bwc',
-            recommended: true,
-            command: `bwc add --mcp ${name.toLowerCase()}`,
-            requirements: ['Docker Desktop', 'Docker MCP Toolkit', 'BWC CLI']
-          },
-          {
             type: 'docker',
+            recommended: true,
             command: `docker mcp server enable ${name.toLowerCase()}`,
             requirements: ['Docker Desktop', 'Docker MCP Toolkit']
           }
@@ -639,13 +624,8 @@ async function getMockDockerServers() {
     },
     installation_methods: [
       {
-        type: 'bwc',
-        recommended: true,
-        command: `bwc add --mcp ${server.name.toLowerCase()}`,
-        requirements: ['Docker Desktop', 'Docker MCP Toolkit', 'BWC CLI']
-      },
-      {
         type: 'docker',
+        recommended: true,
         command: `docker mcp server enable ${server.name.toLowerCase()}`,
         requirements: ['Docker Desktop', 'Docker MCP Toolkit']
       }

@@ -26,33 +26,3 @@ Send simple desktop notifications when Claude Code operations complete
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook simple-notifications
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook simple-notifications"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

@@ -26,33 +26,3 @@ Automatically run linting tools after file modifications
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook lint-on-save
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook lint-on-save"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

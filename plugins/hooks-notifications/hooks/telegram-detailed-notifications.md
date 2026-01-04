@@ -27,33 +27,3 @@ Send detailed Telegram notifications with session information and metrics
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook telegram-detailed-notifications
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook telegram-detailed-notifications"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

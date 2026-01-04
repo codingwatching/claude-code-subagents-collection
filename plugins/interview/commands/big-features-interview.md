@@ -1,6 +1,6 @@
 ---
 description: Interview to flesh out a plan/spec
-category: project-task-management
+category: interview
 argument-hint: "<plan-file>"
 allowed-tools: AskUserQuestion, Read, Glob, Grep, Write, Edit
 ---

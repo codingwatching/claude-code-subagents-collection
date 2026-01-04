@@ -7,12 +7,12 @@ import { CategoryFilter } from '@/components/category-filter'
 import { SearchBar } from '@/components/search-bar'
 import { type Subagent, type CategoryMetadata, generateCategoryDisplayName } from '@/lib/subagents-types'
 
-interface BrowsePageClientProps {
+interface SubagentsPageClientProps {
   allSubagents: Subagent[]
   categories: CategoryMetadata[]
 }
 
-export default function BrowsePageClient({ allSubagents, categories }: BrowsePageClientProps) {
+export default function SubagentsPageClient({ allSubagents, categories }: SubagentsPageClientProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
@@ -39,7 +39,7 @@ export default function BrowsePageClient({ allSubagents, categories }: BrowsePag
     }
     
     // Use replace to avoid adding to browser history for each filter change
-    const newUrl = params.toString() ? `/browse?${params.toString()}` : '/browse'
+    const newUrl = params.toString() ? `/subagents?${params.toString()}` : '/subagents'
     router.replace(newUrl)
   }
   

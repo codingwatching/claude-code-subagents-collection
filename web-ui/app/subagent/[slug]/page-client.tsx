@@ -12,7 +12,7 @@ import {
 import { ArrowLeft, Copy, Download, Check, Github, Puzzle } from 'lucide-react'
 import { type Subagent } from '@/lib/subagents-types'
 import { generateSubagentMarkdown } from '@/lib/utils'
-import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/bwc-utils'
+import { generatePluginCommands, getMarketplaceAddCommand } from '@/lib/plugin-utils'
 
 interface SubagentPageClientProps {
   subagent: Subagent
@@ -82,9 +82,9 @@ export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
       <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Back button */}
-          <Link href="/browse" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6">
+          <Link href="/subagents" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6">
             <ArrowLeft className="h-4 w-4" />
-            Back to Browse
+            Back to Subagents
           </Link>
           
           {/* Header */}
@@ -300,7 +300,7 @@ export function SubagentPageClient({ subagent }: SubagentPageClientProps) {
                 View on GitHub
               </Button>
             </a>
-            <Link href="/browse">
+            <Link href="/subagents">
               <Button variant="outline">Browse More Subagents</Button>
             </Link>
           </div>

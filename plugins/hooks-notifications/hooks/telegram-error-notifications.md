@@ -27,33 +27,3 @@ Send Telegram notifications for long-running operations and important events
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook telegram-error-notifications
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook telegram-error-notifications"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

@@ -26,33 +26,3 @@ None required
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook slack-error-notifications
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook slack-error-notifications"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

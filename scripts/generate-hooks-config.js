@@ -147,36 +147,6 @@ ${hook.envVars && hook.envVars.length > 0 ? hook.envVars.map(v => `- \`${v}\``).
 
 ${hook.requirements && hook.requirements.length > 0 ? hook.requirements.map(r => `- ${r}`).join('\n') : 'None'}
 
-## Installation
-
-\`\`\`bash
-# Using bwc CLI
-bwc add --hook ${hook.name}
-
-# Or add to your .claude/settings.json
-\`\`\`
-
-## Configuration
-
-Add to your \`.claude/settings.json\`:
-
-\`\`\`json
-{
-  "hooks": {
-    "${hook.event}": [
-      {
-        "matcher": "${hook.matcher || ''}",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${generateHookCommand(hook).replace(/"/g, '\\"')}"
-          }
-        ]
-      }
-    ]
-  }
-}
-\`\`\`
 `;
 
   fs.writeFileSync(
@@ -194,10 +164,6 @@ function generateHookCommand(hook) {
     ? hook.envVars.map(v => `export ${v}="$${v}"`).join(' && ') + ' && '
     : '';
 
-  // For hooks that use bwc CLI
-  if (hook.script && hook.script.startsWith('bwc ')) {
-    return hook.script;
-  }
 
   // Default: run a script from hooks directory
   return `${envSetup}./hooks/scripts/${hook.name}.sh`;

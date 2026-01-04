@@ -731,7 +731,6 @@
         "create-prd",
         "create-prp",
         "init-project",
-        "interview",
         "milestone-tracker",
         "pac-configure",
         "pac-create-epic",
@@ -745,6 +744,26 @@
       ],
       "category": "commands",
       "source": "./plugins/commands-project-task-management"
+    },
+    {
+      "name": "interview",
+      "description": "Interview command for fleshing out big feature plans and specifications",
+      "version": "1.0.0",
+      "author": {
+        "name": "BuildWithClaude Community",
+        "url": "https://github.com/davepoon/buildwithclaude"
+      },
+      "repository": "https://github.com/davepoon/buildwithclaude",
+      "license": "MIT",
+      "keywords": [
+        "commands",
+        "slash-commands",
+        "interview",
+        "planning",
+        "specification"
+      ],
+      "category": "commands",
+      "source": "./plugins/interview"
     },
     {
       "name": "commands-security-audit",
@@ -1214,6 +1233,56 @@
       ],
       "category": "skills",
       "source": "./plugins/all-skills"
+    },
+    {
+      "name": "nextjs-expert",
+      "description": "Next.js development expertise with skills for App Router, Server Components, Route Handlers, Server Actions, and authentication patterns",
+      "version": "1.0.0",
+      "author": {
+        "name": "BuildWithClaude Community",
+        "url": "https://github.com/davepoon/buildwithclaude"
+      },
+      "repository": "https://github.com/davepoon/buildwithclaude",
+      "license": "MIT",
+      "keywords": [
+        "skills",
+        "nextjs",
+        "react",
+        "app-router",
+        "server-components",
+        "route-handlers",
+        "server-actions",
+        "authentication"
+      ],
+      "category": "skills",
+      "source": "./plugins/nextjs-expert"
+    },
+    {
+      "name": "frontend-design-pro",
+      "description": "Advanced frontend design plugin with interactive wizard, trend research, moodboard creation, browser-based inspiration analysis, color/typography selection, and WCAG accessibility",
+      "version": "1.0.0",
+      "author": {
+        "name": "BuildWithClaude Community",
+        "url": "https://github.com/davepoon/buildwithclaude"
+      },
+      "repository": "https://github.com/davepoon/buildwithclaude",
+      "license": "MIT",
+      "keywords": [
+        "skills",
+        "frontend",
+        "design",
+        "ui-ux",
+        "tailwind",
+        "colors",
+        "typography",
+        "accessibility",
+        "moodboard",
+        "dribbble",
+        "coolors",
+        "google-fonts"
+      ],
+      "category": "skills",
+      "source": "./plugins/frontend-design-pro"
     }
   ]
 }

@@ -85,7 +85,7 @@ export default function HomePageClient({
               Get domain-specific assistance and automate workflows instantly.
             </p>
             <div className="flex gap-4 justify-center flex-wrap animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Link href="/browse">
+              <Link href="/subagents">
                 <Button size="lg" className="btn-gradient gap-2 px-8">
                   Browse All Subagents <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -172,7 +172,7 @@ export default function HomePageClient({
           ))}
         </div>
         <div className="text-center">
-          <Link href="/browse">
+          <Link href="/subagents">
             <Button variant="outline" size="lg">
               View All Subagents
             </Button>
@@ -211,7 +211,7 @@ export default function HomePageClient({
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {categories.map((category) => (
-            <Link key={category.id} href={`/browse?category=${category.id}`}>
+            <Link key={category.id} href={`/subagents?category=${category.id}`}>
               <div className="p-6 bg-card rounded-lg border hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="text-3xl mb-2">{category.icon}</div>
                 <h3 className="font-semibold mb-1">{category.displayName}</h3>

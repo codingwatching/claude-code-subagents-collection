@@ -26,33 +26,3 @@ None required
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook change-tracker
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook change-tracker"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

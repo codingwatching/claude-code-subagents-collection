@@ -12,7 +12,7 @@ export function Navigation() {
 
   const navigationLinks = [
     { href: "/plugins", label: "Plugins" },
-    { href: "/browse", label: "Subagents" },
+    { href: "/subagents", label: "Subagents" },
     { href: "/commands", label: "Commands" },
     { href: "/skills", label: "Skills" },
     { href: "/hooks", label: "Hooks" },

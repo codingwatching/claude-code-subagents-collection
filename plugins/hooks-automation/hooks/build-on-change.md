@@ -27,33 +27,3 @@ Automatically trigger build processes when source files change
 
 None
 
-## Installation
-
-```bash
-# Using bwc CLI
-bwc add --hook build-on-change
-
-# Or add to your .claude/settings.json
-```
-
-## Configuration
-
-Add to your `.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bwc add --hook build-on-change"
-          }
-        ]
-      }
-    ]
-  }
-}
-```

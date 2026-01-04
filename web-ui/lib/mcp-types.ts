@@ -80,7 +80,7 @@ export interface MCPStats {
 }
 
 export interface MCPInstallationMethod {
-  type: 'docker' | 'npm' | 'manual' | 'binary' | 'bwc' | 'claude-cli' | 'docker-mcp'
+  type: 'docker' | 'npm' | 'manual' | 'binary' | 'claude-cli' | 'docker-mcp'
   recommended?: boolean
   command?: string
   config_example?: string
