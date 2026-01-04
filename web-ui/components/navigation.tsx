@@ -11,6 +11,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigationLinks = [
+    { href: "/plugins", label: "Plugins" },
     { href: "/browse", label: "Subagents" },
     { href: "/commands", label: "Commands" },
     { href: "/hooks", label: "Hooks" },

@@ -16,6 +16,12 @@ const SPECIAL_CASES: Record<string, string> = {
 
 // Icon mappings for categories
 export const CATEGORY_ICONS: Record<string, string> = {
+  // Plugin categories
+  'utilities': '🔧',
+  'agents': '🤖',
+  'commands': '⌨️',
+  'hooks': '🪝',
+  'mcp-servers': '🔌',
   // Subagent categories
   'development-architecture': '🏗️',
   'language-specialists': '💻',
