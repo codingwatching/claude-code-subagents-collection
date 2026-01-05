@@ -1,24 +1,22 @@
-import { getAllSubagents, getAllCategories } from '@/lib/subagents-server'
-import { getAllCommands, getAllCommandCategories } from '@/lib/commands-server'
+import { getAllSubagents } from '@/lib/subagents-server'
+import { getAllCommands } from '@/lib/commands-server'
+import { getAllPlugins } from '@/lib/plugins-server'
+import { getAllSkills } from '@/lib/skills-server'
 import HomePageClient from './page-client'
 
 export default function Home() {
-  const allSubagents = getAllSubagents()
-  const featuredSubagents = allSubagents.slice(0, 6)
-  const categories = getAllCategories()
-  
-  const allCommands = getAllCommands()
-  const featuredCommands = allCommands.slice(0, 6)
-  const commandCategories = getAllCommandCategories()
+  const plugins = getAllPlugins()
+  const subagents = getAllSubagents()
+  const commands = getAllCommands()
+  const skills = getAllSkills()
 
   return (
-    <HomePageClient 
-      allSubagents={allSubagents} 
-      featuredSubagents={featuredSubagents} 
-      categories={categories}
-      allCommands={allCommands}
-      featuredCommands={featuredCommands}
-      commandCategories={commandCategories}
+    <HomePageClient
+      pluginCount={plugins.length}
+      subagentCount={subagents.length}
+      commandCount={commands.length}
+      skillCount={skills.length}
+      featuredPlugins={plugins.slice(0, 6)}
     />
   )
 }

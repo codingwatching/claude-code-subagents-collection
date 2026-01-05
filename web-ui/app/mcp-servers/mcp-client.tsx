@@ -3,10 +3,8 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MCPCard } from '@/components/mcp-card'
-import { CategoryFilter } from '@/components/category-filter'
-import { SearchBar } from '@/components/search-bar'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { ArrowUpDown, TrendingDown, TrendingUp, Calendar, CalendarDays, SortAsc, SortDesc } from 'lucide-react'
 import {
   DropdownMenu,
@@ -14,16 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
 import {
   type MCPServer,
   SOURCE_INDICATORS
@@ -38,8 +26,8 @@ interface MCPPageClientProps {
   trendingServers?: MCPServer[]
 }
 
-export default function MCPPageClient({ 
-  allServers, 
+export default function MCPPageClient({
+  allServers,
   categories,
   popularServers = [],
   featuredServers = [],
@@ -52,11 +40,9 @@ export default function MCPPageClient({
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortBy, setSortBy] = useState<'downloads-desc' | 'downloads-asc' | 'newest' | 'oldest' | 'name-asc' | 'name-desc'>('downloads-desc')
-  
-  // Pagination configuration
-  const ITEMS_PER_PAGE = 24 // Divisible by 2 and 3 for responsive grid
-  
-  // Set initial filters from URL parameters
+
+  const ITEMS_PER_PAGE = 24
+
   useEffect(() => {
     const categoryParam = searchParams.get('category')
     const sourceParam = searchParams.get('source')
@@ -74,17 +60,14 @@ export default function MCPPageClient({
       setSortBy(sortParam as typeof sortBy)
     }
   }, [searchParams, categories])
-  
-  // Handle category change and update URL
+
   const handleCategoryChange = (category: string | 'all') => {
     setSelectedCategory(category)
     updateURL({ category })
   }
 
-  // Handle source change
   const handleSourceChange = (source: string) => {
     setSelectedSource(source)
-    // Reset to name sort if switching to official-mcp while sorted by downloads
     if (source === 'official-mcp' && (sortBy === 'downloads-desc' || sortBy === 'downloads-asc')) {
       setSortBy('name-asc')
       updateURL({ source, sort: 'name-asc' })
@@ -93,7 +76,6 @@ export default function MCPPageClient({
     }
   }
 
-  // Update URL with new parameters
   const updateURL = (newParams: { category?: string | 'all', source?: string, sort?: string }) => {
     const params = new URLSearchParams(searchParams.toString())
 
@@ -115,7 +97,7 @@ export default function MCPPageClient({
 
     if (newParams.sort !== undefined) {
       if (newParams.sort === 'downloads-desc') {
-        params.delete('sort') // Remove if it's the default
+        params.delete('sort')
       } else {
         params.set('sort', newParams.sort)
       }
@@ -124,19 +106,16 @@ export default function MCPPageClient({
     const newUrl = params.toString() ? `/mcp-servers?${params.toString()}` : '/mcp-servers'
     router.replace(newUrl)
   }
-  
+
   const filteredServers = useMemo(() => {
     let filtered = allServers
 
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(server => server.category === selectedCategory)
     }
 
-    // Filter by source
     if (selectedSource !== 'all') {
       if (selectedSource === 'docker') {
-        // Show servers that are from Docker or have docker_mcp_available
         filtered = filtered.filter(server =>
           server.source_registry?.type === 'docker' || server.docker_mcp_available
         )
@@ -145,18 +124,16 @@ export default function MCPPageClient({
       }
     }
 
-    // Filter by search query
     if (searchQuery) {
-      const normalizedQuery = searchQuery.toLowerCase()
+      const q = searchQuery.toLowerCase()
       filtered = filtered.filter(server =>
-        server.name.toLowerCase().includes(normalizedQuery) ||
-        server.display_name.toLowerCase().includes(normalizedQuery) ||
-        server.description.toLowerCase().includes(normalizedQuery) ||
-        server.tags.some(tag => tag.toLowerCase().includes(normalizedQuery))
+        server.name.toLowerCase().includes(q) ||
+        server.display_name.toLowerCase().includes(q) ||
+        server.description.toLowerCase().includes(q) ||
+        server.tags.some(tag => tag.toLowerCase().includes(q))
       )
     }
 
-    // Apply sorting
     const sorted = [...filtered].sort((a, b) => {
       switch(sortBy) {
         case 'downloads-desc':
@@ -178,8 +155,7 @@ export default function MCPPageClient({
 
     return sorted
   }, [allServers, selectedCategory, selectedSource, searchQuery, sortBy])
-  
-  // Count servers by source
+
   const sourceCounts = useMemo(() => {
     const officialMcp = allServers.filter(server => server.source_registry?.type === 'official-mcp').length
     const docker = allServers.filter(server =>
@@ -187,145 +163,128 @@ export default function MCPPageClient({
     ).length
     return { 'official-mcp': officialMcp, docker }
   }, [allServers])
-  
-  // Check if any filters are active
+
   const hasActiveFilters = useMemo(() => {
-    return (
-      searchQuery !== '' ||
-      selectedCategory !== 'all' ||
-      selectedSource !== 'all'
-    )
+    return searchQuery !== '' || selectedCategory !== 'all' || selectedSource !== 'all'
   }, [searchQuery, selectedCategory, selectedSource])
-  
-  // Reset to first page when filters change
+
   useEffect(() => {
     setCurrentPage(1)
   }, [searchQuery, selectedCategory, selectedSource])
-  
-  // Calculate paginated servers
+
   const paginatedServers = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
     const endIndex = startIndex + ITEMS_PER_PAGE
     return filteredServers.slice(startIndex, endIndex)
   }, [filteredServers, currentPage])
-  
+
   const totalPages = Math.ceil(filteredServers.length / ITEMS_PER_PAGE)
-  
-  // Generate page numbers to display
-  const getPageNumbers = () => {
-    const pages = []
-    const maxVisible = 5 // Maximum number of page buttons to show
-    
-    if (totalPages <= maxVisible) {
-      // Show all pages if total is less than max
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-    } else {
-      // Always show first page
-      pages.push(1)
-      
-      // Calculate range around current page
-      const start = Math.max(2, currentPage - 1)
-      const end = Math.min(totalPages - 1, currentPage + 1)
-      
-      // Add ellipsis if needed
-      if (start > 2) pages.push('...')
-      
-      // Add pages around current
-      for (let i = start; i <= end; i++) {
-        pages.push(i)
-      }
-      
-      // Add ellipsis if needed
-      if (end < totalPages - 1) pages.push('...')
-      
-      // Always show last page
-      if (totalPages > 1) pages.push(totalPages)
-    }
-    
-    return pages
-  }
-  
-  // Scroll to top when page changes
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    // Smooth scroll to top of results
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
-  
+
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">MCP Servers</h1>
+        <div className="mb-10">
+          <h1 className="text-display-2 mb-2">MCP Servers</h1>
           <p className="text-muted-foreground">
-            Explore {allServers.length} Model Context Protocol (MCP) servers to extend Claude&apos;s capabilities. 
-            Connect to databases, APIs, and external tools seamlessly.
+            {allServers.length} Model Context Protocol servers
           </p>
         </div>
-        
+
         {/* Search */}
         <div className="mb-6">
-          <SearchBar 
+          <Input
+            type="text"
             value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search MCP servers by name, description, or tags..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search MCP servers..."
+            className="max-w-md bg-card border-border"
           />
         </div>
-        
-        {/* Filters */}
-        <div className="mb-6">
-          <CategoryFilter 
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange}
-            categories={categories}
-          />
-        </div>
-        
-        {/* Source Filter Tabs */}
-        <div className="flex justify-between mb-6 flex-wrap gap-4">
-          <Tabs value={selectedSource} onValueChange={handleSourceChange}>
-            <TabsList>
-              <TabsTrigger value="all">
-                All Sources
-                <Badge variant="secondary" className="ml-2">
-                  {allServers.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value="official-mcp">
-                {SOURCE_INDICATORS['official-mcp'].icon} Official MCP
-                <Badge variant="secondary" className="ml-2">
-                  {sourceCounts['official-mcp']}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value="docker">
-                {SOURCE_INDICATORS.docker.icon} Docker
-                <Badge variant="secondary" className="ml-2">
-                  {sourceCounts.docker}
-                </Badge>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
 
-          {/* Sort Dropdown - aligned to the right */}
+        {/* Category filters */}
+        <div className="flex gap-2 flex-wrap mb-4">
+          <button
+            onClick={() => handleCategoryChange('all')}
+            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              selectedCategory === 'all'
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            All
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedCategory === cat.id
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              {cat.displayName}
+            </button>
+          ))}
+        </div>
+
+        {/* Source and Sort controls */}
+        <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+          {/* Source filters */}
+          <div className="flex gap-2">
+            <span className="text-sm text-muted-foreground py-1.5">Source:</span>
+            <button
+              onClick={() => handleSourceChange('all')}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedSource === 'all'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }`}
+            >
+              All ({allServers.length})
+            </button>
+            <button
+              onClick={() => handleSourceChange('official-mcp')}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedSource === 'official-mcp'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }`}
+            >
+              {SOURCE_INDICATORS['official-mcp'].icon} Official ({sourceCounts['official-mcp']})
+            </button>
+            <button
+              onClick={() => handleSourceChange('docker')}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedSource === 'docker'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }`}
+            >
+              {SOURCE_INDICATORS.docker.icon} Docker ({sourceCounts.docker})
+            </button>
+          </div>
+
+          {/* Sort Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <ArrowUpDown className="h-4 w-4" />
-                Sort: {
-                  sortBy === 'downloads-desc' ? 'Most Downloaded' :
-                  sortBy === 'downloads-asc' ? 'Least Downloaded' :
-                  sortBy === 'newest' ? 'Newest First' :
-                  sortBy === 'oldest' ? 'Oldest First' :
-                  sortBy === 'name-asc' ? 'A to Z' :
-                  sortBy === 'name-desc' ? 'Z to A' :
-                  'Most Downloaded'
-                }
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <ArrowUpDown className="h-4 w-4 mr-2" />
+                {sortBy === 'downloads-desc' ? 'Most Downloaded' :
+                 sortBy === 'downloads-asc' ? 'Least Downloaded' :
+                 sortBy === 'newest' ? 'Newest' :
+                 sortBy === 'oldest' ? 'Oldest' :
+                 sortBy === 'name-asc' ? 'A to Z' :
+                 'Z to A'}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end">
               {selectedSource !== 'official-mcp' && (
                 <>
                   <DropdownMenuItem onClick={() => {
@@ -349,14 +308,14 @@ export default function MCPPageClient({
                 updateURL({ sort: 'newest' })
               }}>
                 <Calendar className="h-4 w-4 mr-2" />
-                Newest First
+                Newest
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 setSortBy('oldest')
                 updateURL({ sort: 'oldest' })
               }}>
                 <CalendarDays className="h-4 w-4 mr-2" />
-                Oldest First
+                Oldest
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 setSortBy('name-asc')
@@ -375,17 +334,13 @@ export default function MCPPageClient({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
-        {/* Featured Sections - Only show when no filters are active and on first page */}
-        {!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0 || trendingServers.length > 0) && (
+
+        {/* Featured Sections - Only show when no filters active and on first page */}
+        {!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0) && (
           <div className="mb-12">
-            {/* Popular Servers */}
             {popularServers.length > 0 && (
               <div className="mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-2xl font-bold">🔥 Popular</h2>
-                  <Badge variant="secondary">{popularServers.length}</Badge>
-                </div>
+                <h2 className="text-xl font-medium mb-4">Popular</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {popularServers.map((server) => (
                     <MCPCard key={server.path} server={server} />
@@ -393,14 +348,10 @@ export default function MCPPageClient({
                 </div>
               </div>
             )}
-            
-            {/* Featured Servers */}
+
             {featuredServers.length > 0 && (
               <div className="mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-2xl font-bold">⭐ Featured</h2>
-                  <Badge variant="secondary">{featuredServers.length}</Badge>
-                </div>
+                <h2 className="text-xl font-medium mb-4">Featured</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {featuredServers.map((server) => (
                     <MCPCard key={server.path} server={server} />
@@ -408,44 +359,24 @@ export default function MCPPageClient({
                 </div>
               </div>
             )}
-            
-            {/* Trending Servers */}
-            {trendingServers.length > 0 && (
-              <div className="mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-2xl font-bold">📈 Trending</h2>
-                  <Badge variant="secondary">{trendingServers.length}</Badge>
-                </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {trendingServers.map((server) => (
-                    <MCPCard key={server.path} server={server} />
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            <hr className="my-8 border-border/50" />
+
+            <hr className="border-border/50" />
           </div>
         )}
-        
-        {/* All Servers Section Header - Show when featured sections are visible on page 1 */}
-        {(!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0 || trendingServers.length > 0)) && (
-          <h2 className="text-2xl font-bold mb-4">All Servers</h2>
+
+        {/* All Servers header when featured visible */}
+        {(!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0)) && (
+          <h2 className="text-xl font-medium mb-4 mt-8">All Servers</h2>
         )}
-        
+
         {/* Results count */}
-        <div className="mb-4 text-sm text-muted-foreground">
-          {filteredServers.length > 0 && (
-            <span>
-              Showing {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, filteredServers.length)}-
-              {Math.min(currentPage * ITEMS_PER_PAGE, filteredServers.length)} of {filteredServers.length} servers
-              {hasActiveFilters && ` (filtered from ${allServers.length} total)`}
-              {selectedCategory !== 'all' && ` in ${categories.find(c => c.id === selectedCategory)?.displayName || selectedCategory}`}
-              {searchQuery && ` matching "${searchQuery}"`}
-            </span>
-          )}
-        </div>
-        
+        {hasActiveFilters && (
+          <p className="text-sm text-muted-foreground mb-6">
+            {filteredServers.length} result{filteredServers.length !== 1 ? 's' : ''}
+            {selectedCategory !== 'all' && ` in ${categories.find(c => c.id === selectedCategory)?.displayName || selectedCategory}`}
+          </p>
+        )}
+
         {/* Grid */}
         {filteredServers.length > 0 ? (
           <>
@@ -454,51 +385,37 @@ export default function MCPPageClient({
                 <MCPCard key={server.path} server={server} />
               ))}
             </div>
-            
+
             {/* Pagination */}
             {totalPages > 1 && (
-              <Pagination className="mb-8">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                      className={currentPage === 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
-                    />
-                  </PaginationItem>
-                  
-                  {getPageNumbers().map((page, index) => (
-                    <PaginationItem key={index}>
-                      {page === '...' ? (
-                        <PaginationEllipsis />
-                      ) : (
-                        <PaginationLink
-                          onClick={() => handlePageChange(page as number)}
-                          isActive={currentPage === page}
-                          className="cursor-pointer"
-                        >
-                          {page}
-                        </PaginationLink>
-                      )}
-                    </PaginationItem>
-                  ))}
-                  
-                  <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                      disabled={currentPage === totalPages}
-                      className={currentPage === totalPages ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              <div className="flex justify-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="text-muted-foreground"
+                >
+                  Previous
+                </Button>
+                <span className="px-4 py-2 text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="text-muted-foreground"
+                >
+                  Next
+                </Button>
+              </div>
             )}
           </>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              No MCP servers found matching your criteria.
-            </p>
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">No MCP servers found</p>
           </div>
         )}
       </div>

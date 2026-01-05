@@ -3,10 +3,8 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { HookCard } from '@/components/hook-card'
-import { CategoryFilter } from '@/components/category-filter'
-import { SearchBar } from '@/components/search-bar'
+import { Input } from '@/components/ui/input'
 import { type Hook, type CategoryMetadata, generateCategoryDisplayName } from '@/lib/hooks-types'
-import { Badge } from '@/components/ui/badge'
 
 interface HooksPageClientProps {
   allHooks: Hook[]
@@ -21,7 +19,6 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
   const [selectedEvent, setSelectedEvent] = useState<string | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Set initial filters from URL parameters
   useEffect(() => {
     const categoryParam = searchParams.get('category')
     const eventParam = searchParams.get('event')
@@ -33,17 +30,14 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
     }
   }, [searchParams, categories, eventTypes])
 
-  // Handle category change and update URL
   const handleCategoryChange = (category: string | 'all') => {
     setSelectedCategory(category)
     updateURL(category, selectedEvent)
   }
 
-  // Handle event change and update URL
-  const handleEventChange = (event: string) => {
-    const newEvent = event === selectedEvent ? 'all' : event
-    setSelectedEvent(newEvent)
-    updateURL(selectedCategory, newEvent)
+  const handleEventChange = (event: string | 'all') => {
+    setSelectedEvent(event)
+    updateURL(selectedCategory, event)
   }
 
   const updateURL = (category: string | 'all', event: string | 'all') => {
@@ -65,89 +59,111 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
   const filteredHooks = useMemo(() => {
     let filtered = allHooks
 
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(hook => hook.category === selectedCategory)
     }
 
-    // Filter by event type
     if (selectedEvent !== 'all') {
       filtered = filtered.filter(hook => hook.event === selectedEvent)
     }
 
-    // Filter by search query
     if (searchQuery) {
-      const normalizedQuery = searchQuery.toLowerCase()
+      const q = searchQuery.toLowerCase()
       filtered = filtered.filter(hook =>
-        hook.name.toLowerCase().includes(normalizedQuery) ||
-        hook.description.toLowerCase().includes(normalizedQuery) ||
-        hook.event.toLowerCase().includes(normalizedQuery) ||
-        hook.content.toLowerCase().includes(normalizedQuery)
+        hook.name.toLowerCase().includes(q) ||
+        hook.description.toLowerCase().includes(q) ||
+        hook.event.toLowerCase().includes(q)
       )
     }
 
     return filtered
   }, [allHooks, selectedCategory, selectedEvent, searchQuery])
 
-  const eventColors: Record<string, string> = {
-    'PostToolUse': 'border-green-500/50 text-green-400 bg-green-500/5 hover:bg-green-500/10',
-    'PreToolUse': 'border-yellow-500/50 text-yellow-400 bg-yellow-500/5 hover:bg-yellow-500/10',
-    'Stop': 'border-red-500/50 text-red-400 bg-red-500/5 hover:bg-red-500/10',
-    'Notification': 'border-blue-500/50 text-blue-400 bg-blue-500/5 hover:bg-blue-500/10'
-  }
-
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">Browse Hooks</h1>
+        <div className="mb-10">
+          <h1 className="text-display-2 mb-2">Hooks</h1>
           <p className="text-muted-foreground">
-            Explore our collection of {allHooks.length} automation hooks for Claude Code.
-            Hover over any card to instantly copy or download!
+            {allHooks.length} automation hooks for Claude Code
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="mb-8 space-y-4">
-          <SearchBar
+        {/* Search */}
+        <div className="mb-6">
+          <Input
+            type="text"
+            placeholder="Search hooks..."
             value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search hooks by name, description, or event..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="max-w-md bg-card border-border"
           />
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange}
-            categories={categories}
-          />
-
-          {/* Event Type Filter */}
-          <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-muted-foreground py-1">Event Type:</span>
-            {eventTypes.map((event) => (
-              <Badge
-                key={event}
-                variant="outline"
-                className={`cursor-pointer transition-colors ${
-                  selectedEvent === event
-                    ? eventColors[event] || 'border-primary text-primary bg-primary/10'
-                    : 'border-border hover:border-primary/50'
-                }`}
-                onClick={() => handleEventChange(event)}
-              >
-                {event}
-              </Badge>
-            ))}
-          </div>
         </div>
 
-        {/* Results */}
-        <div className="mb-4 text-sm text-muted-foreground">
-          Showing {filteredHooks.length} of {allHooks.length} hooks
-          {selectedCategory !== 'all' && ` in ${generateCategoryDisplayName(selectedCategory)}`}
-          {selectedEvent !== 'all' && ` for ${selectedEvent} events`}
-          {searchQuery && ` matching "${searchQuery}"`}
+        {/* Category filters */}
+        <div className="flex gap-2 flex-wrap mb-4">
+          <button
+            onClick={() => handleCategoryChange('all')}
+            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              selectedCategory === 'all'
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            All
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedCategory === cat.id
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              {cat.displayName}
+            </button>
+          ))}
         </div>
+
+        {/* Event type filters */}
+        <div className="flex gap-2 flex-wrap mb-8">
+          <span className="text-sm text-muted-foreground py-1.5">Event:</span>
+          <button
+            onClick={() => handleEventChange('all')}
+            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              selectedEvent === 'all'
+                ? 'bg-muted text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+            }`}
+          >
+            All
+          </button>
+          {eventTypes.map((event) => (
+            <button
+              key={event}
+              onClick={() => handleEventChange(event)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                selectedEvent === event
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }`}
+            >
+              {event}
+            </button>
+          ))}
+        </div>
+
+        {/* Results count */}
+        {(selectedCategory !== 'all' || selectedEvent !== 'all' || searchQuery) && (
+          <p className="text-sm text-muted-foreground mb-6">
+            {filteredHooks.length} result{filteredHooks.length !== 1 ? 's' : ''}
+            {selectedCategory !== 'all' && ` in ${generateCategoryDisplayName(selectedCategory)}`}
+            {selectedEvent !== 'all' && ` for ${selectedEvent}`}
+          </p>
+        )}
 
         {/* Grid */}
         {filteredHooks.length > 0 ? (
@@ -157,10 +173,8 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              No hooks found matching your criteria.
-            </p>
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">No hooks found</p>
           </div>
         )}
       </div>
