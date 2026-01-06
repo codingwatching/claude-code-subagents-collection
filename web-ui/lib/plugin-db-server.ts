@@ -60,9 +60,15 @@ export async function getPluginsPaginated(options: {
     conditions.push(eq(plugins.type, type))
   }
 
-  // Marketplace filter
+  // Marketplace filter - try both marketplaceId and marketplaceName
+  // (sources from plugins table use name as ID)
   if (marketplaceId) {
-    conditions.push(eq(plugins.marketplaceId, marketplaceId))
+    conditions.push(
+      or(
+        eq(plugins.marketplaceId, marketplaceId),
+        eq(plugins.marketplaceName, marketplaceId)
+      )
+    )
   }
 
   // Category filter
@@ -92,9 +98,10 @@ export async function getPluginsPaginated(options: {
       orderBy = desc(plugins.updatedAt)
       break
     case 'relevance':
-      // For relevance, prioritize name match, then description, then keywords
+      // For relevance, prioritize Build with Claude plugins first
       if (search) {
         orderBy = sql`
+          CASE WHEN ${plugins.marketplaceName} = 'Build with Claude' THEN 0 ELSE 1 END,
           CASE
             WHEN ${plugins.name} ILIKE ${search} THEN 0
             WHEN ${plugins.name} ILIKE ${`${search}%`} THEN 1
@@ -102,15 +109,20 @@ export async function getPluginsPaginated(options: {
             WHEN ${plugins.description} ILIKE ${`%${search}%`} THEN 3
             ELSE 4
           END,
-          ${plugins.stars} DESC
+          COALESCE(${plugins.stars}, 0) DESC
         `
       } else {
-        orderBy = desc(plugins.stars)
+        // When no search, prioritize Build with Claude plugins, then sort by name
+        orderBy = sql`
+          CASE WHEN ${plugins.marketplaceName} = 'Build with Claude' THEN 0 ELSE 1 END,
+          ${plugins.name} ASC
+        `
       }
       break
     case 'stars':
     default:
-      orderBy = desc(plugins.stars)
+      // Use COALESCE to put plugins without stars at the end
+      orderBy = sql`COALESCE(${plugins.stars}, 0) DESC`
       break
   }
 
@@ -179,9 +191,11 @@ export async function getPluginsPaginated(options: {
 
 /**
  * Get list of marketplaces for filter dropdown
+ * Includes both registered marketplaces and any marketplace names found in plugins
  */
 export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
-  const results = await db
+  // Get registered marketplaces from marketplaces table
+  const dbMarketplaces = await db
     .select({
       id: marketplaces.id,
       name: marketplaces.name,
@@ -192,12 +206,39 @@ export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
     .where(eq(marketplaces.active, true))
     .orderBy(desc(marketplaces.pluginCount))
 
-  return results.map((m) => ({
+  // Also get unique marketplaceNames from plugins (to include sources not in marketplaces table)
+  const pluginMarketplaces = await db
+    .select({
+      marketplaceName: plugins.marketplaceName,
+      count: sql<number>`count(*)`,
+    })
+    .from(plugins)
+    .where(eq(plugins.active, true))
+    .groupBy(plugins.marketplaceName)
+
+  // Map db marketplaces to result format
+  const results: MarketplaceOption[] = dbMarketplaces.map((m) => ({
     id: m.id,
     name: m.name,
     displayName: m.displayName,
     pluginCount: m.pluginCount,
   }))
+
+  // Add any marketplace names from plugins that aren't already in results
+  const existingNames = new Set(results.map((m) => m.displayName))
+  for (const pm of pluginMarketplaces) {
+    if (pm.marketplaceName && !existingNames.has(pm.marketplaceName)) {
+      results.push({
+        id: pm.marketplaceName, // Use name as ID for filtering by marketplaceName
+        name: pm.marketplaceName,
+        displayName: pm.marketplaceName,
+        pluginCount: Number(pm.count),
+      })
+    }
+  }
+
+  // Sort by plugin count descending
+  return results.sort((a, b) => b.pluginCount - a.pluginCount)
 }
 
 /**

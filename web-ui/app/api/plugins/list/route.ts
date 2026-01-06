@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0', 10)
   const search = searchParams.get('search') || undefined
   const sortParam = searchParams.get('sort') as SortOption | null
-  const sort = sortParam && validSortOptions.includes(sortParam) ? sortParam : 'stars'
+  const sort = sortParam && validSortOptions.includes(sortParam) ? sortParam : 'relevance'
   const typeParam = searchParams.get('type') as PluginType | 'all' | null
   const type = typeParam && validTypes.includes(typeParam) ? typeParam : 'all'
   const marketplaceId = searchParams.get('marketplaceId') || undefined

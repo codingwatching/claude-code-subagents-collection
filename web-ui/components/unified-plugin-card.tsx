@@ -1,9 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ExternalLink } from 'lucide-react'
+import { Check, Copy, ExternalLink } from 'lucide-react'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
 
 interface UnifiedPluginCardProps {
@@ -40,6 +41,15 @@ function isExternalPlugin(plugin: UnifiedPlugin): boolean {
   return !!plugin.repository && !plugin.file
 }
 
+function getInstallCommand(plugin: UnifiedPlugin): string {
+  const typeFlag = plugin.type === 'subagent' ? '--subagent'
+    : plugin.type === 'command' ? '--command'
+    : plugin.type === 'hook' ? '--hook'
+    : plugin.type === 'skill' ? '--skill'
+    : '--plugin'
+  return `bwc add ${typeFlag} ${plugin.name}`
+}
+
 function getDetailUrl(plugin: UnifiedPlugin): string {
   switch (plugin.type) {
     case 'subagent': return `/subagent/${plugin.name}`
@@ -52,11 +62,21 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
 }
 
 export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
+  const [copied, setCopied] = useState(false)
   const isExternal = isExternalPlugin(plugin)
 
   const githubUrl = isExternal
     ? plugin.repository
-    : `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${plugin.file}`
+    : `https://github.com/davepoon/buildwithclaude/tree/main/${plugin.file}`
+
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const cmd = getInstallCommand(plugin)
+    await navigator.clipboard.writeText(cmd)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleOpenRepo = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -91,6 +111,22 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
       {/* Action Buttons */}
       <TooltipProvider>
         <div className="flex gap-2">
+          {!isExternal && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={handleCopy}
+                >
+                  {copied ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                  {copied ? 'Copied' : 'Copy'}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Copy install command</TooltipContent>
+            </Tooltip>
+          )}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

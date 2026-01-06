@@ -70,7 +70,7 @@ export default function PluginsPageClient({
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [selectedType, setSelectedType] = useState<PluginType | 'all'>('all')
   const [selectedMarketplace, setSelectedMarketplace] = useState<string>('all')
-  const [sort, setSort] = useState<SortOption>('stars')
+  const [sort, setSort] = useState<SortOption>('relevance')
   const [marketplaceOpen, setMarketplaceOpen] = useState(false)
 
   // Refs

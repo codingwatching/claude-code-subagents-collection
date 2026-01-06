@@ -8,6 +8,8 @@ const matter = require('gray-matter');
 const REPO_ROOT = path.join(__dirname, '..', '..');
 const SUBAGENTS_DIR = path.join(REPO_ROOT, 'subagents');
 const COMMANDS_DIR = path.join(REPO_ROOT, 'commands');
+const HOOKS_DIR = path.join(REPO_ROOT, 'plugins', 'all-hooks', 'hooks');
+const SKILLS_DIR = path.join(REPO_ROOT, 'plugins', 'all-skills', 'skills');
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'registry.json');
 
 async function getSubagents() {
@@ -64,35 +66,111 @@ async function getCommands() {
   return commands.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+async function getHooks() {
+  try {
+    const files = await fs.readdir(HOOKS_DIR);
+    const hooks = [];
+
+    for (const file of files) {
+      if (!file.endsWith('.md')) continue;
+
+      const filePath = path.join(HOOKS_DIR, file);
+      const content = await fs.readFile(filePath, 'utf-8');
+      const { data } = matter(content);
+
+      const hookName = file.replace('.md', '');
+
+      hooks.push({
+        name: data.name || hookName,
+        category: data.category || 'uncategorized',
+        description: data.description || '',
+        version: data.version || '1.0.0',
+        file: `plugins/all-hooks/hooks/${file}`,
+        path: hookName,
+        event: data.event || '',
+        matcher: data.matcher || '',
+        language: data.language || 'bash',
+        tags: data.tags || []
+      });
+    }
+
+    return hooks.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.warn('Warning: Could not read hooks directory:', error.message);
+    return [];
+  }
+}
+
+async function getSkills() {
+  try {
+    const skillDirs = await fs.readdir(SKILLS_DIR);
+    const skills = [];
+
+    for (const dir of skillDirs) {
+      const skillPath = path.join(SKILLS_DIR, dir, 'SKILL.md');
+
+      try {
+        const content = await fs.readFile(skillPath, 'utf-8');
+        const { data } = matter(content);
+
+        skills.push({
+          name: data.name || dir,
+          category: data.category || 'uncategorized',
+          description: data.description || '',
+          version: data.version || '1.0.0',
+          file: `plugins/all-skills/skills/${dir}/SKILL.md`,
+          path: dir,
+          license: data.license || '',
+          tags: data.tags || []
+        });
+      } catch {
+        // Skip directories without SKILL.md
+        continue;
+      }
+    }
+
+    return skills.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.warn('Warning: Could not read skills directory:', error.message);
+    return [];
+  }
+}
+
 async function generateRegistry() {
   console.log('Generating registry.json...');
-  
+
   try {
-    const [subagents, commands] = await Promise.all([
+    const [subagents, commands, hooks, skills] = await Promise.all([
       getSubagents(),
-      getCommands()
+      getCommands(),
+      getHooks(),
+      getSkills()
     ]);
-    
+
     const registry = {
       $schema: 'https://buildwithclaude.com/schema/registry.json',
       version: '1.0.0',
       lastUpdated: new Date().toISOString(),
       subagents,
-      commands
+      commands,
+      hooks,
+      skills
     };
-    
+
     // Ensure public directory exists
     const publicDir = path.dirname(OUTPUT_PATH);
     await fs.mkdir(publicDir, { recursive: true });
-    
+
     await fs.writeFile(
-      OUTPUT_PATH, 
+      OUTPUT_PATH,
       JSON.stringify(registry, null, 2)
     );
-    
+
     console.log('✓ Registry generated successfully!');
     console.log(`  - ${subagents.length} subagents`);
     console.log(`  - ${commands.length} commands`);
+    console.log(`  - ${hooks.length} hooks`);
+    console.log(`  - ${skills.length} skills`);
     console.log(`  - Output: ${OUTPUT_PATH}`);
   } catch (error) {
     console.error('Error generating registry:', error);
