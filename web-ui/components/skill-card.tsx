@@ -51,10 +51,10 @@ export function SkillCard({ skill }: SkillCardProps) {
 
   return (
     <Link href={`/skill/${skill.slug}`}>
-      <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col">
+      <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col bg-card">
         <div className="mb-3">
           <h3 className="font-medium mb-1">{skill.name}</h3>
-          <span className="text-xs text-muted-foreground">{categoryName}</span>
+          <span className="px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground">{categoryName}</span>
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2 flex-1 mb-3">

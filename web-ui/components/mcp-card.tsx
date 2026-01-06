@@ -60,7 +60,7 @@ export function MCPCard({ server }: MCPCardProps) {
   return (
     <>
       <Link href={href}>
-        <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col">
+        <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col bg-card">
           {/* Header with logo and source indicators */}
           <div className="flex items-start gap-3 mb-3">
             {showLogo ? (

@@ -34,12 +34,12 @@ export function PluginCard({ plugin }: PluginCardProps) {
 
   return (
     <Link href={`/plugin/${plugin.name}`}>
-      <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col">
+      <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col bg-card">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0 flex-1">
             <h3 className="font-medium truncate">{plugin.name}</h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-muted-foreground">{categoryName}</span>
+              <span className="px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground">{categoryName}</span>
               <span className="text-xs text-muted-foreground">v{plugin.version}</span>
             </div>
           </div>
