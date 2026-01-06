@@ -34,16 +34,6 @@ export function MarketplaceRegistryItem({ marketplace }: MarketplaceRegistryItem
         <div className="flex items-center gap-2 min-w-0">
           <Package className="h-5 w-5 text-primary shrink-0" />
           <h3 className="font-medium truncate">{marketplace.displayName}</h3>
-          {marketplace.badges.includes('featured') && (
-            <span className="px-2 py-0.5 rounded-full bg-primary/10 text-xs text-primary font-medium">
-              Featured
-            </span>
-          )}
-          {marketplace.badges.includes('popular') && (
-            <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-xs text-amber-500 font-medium">
-              Popular
-            </span>
-          )}
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <span className="flex items-center gap-1 text-sm text-primary">
