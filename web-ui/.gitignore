@@ -34,5 +34,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-EOF < /dev/null
-./docs
+
+# Private API code (not shared)
+/lib/db/
+/lib/github/
+/lib/indexer/
+/app/api/admin/
+/app/api/cron/
+/app/api/marketplaces/
+drizzle.config.ts

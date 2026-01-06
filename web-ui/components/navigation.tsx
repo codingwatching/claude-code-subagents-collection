@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { GitHubLogoIcon, HamburgerMenuIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { useState } from "react";
@@ -9,14 +10,16 @@ import { cn } from "@/lib/utils";
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navigationLinks = [
     { href: "/plugins", label: "Plugins" },
+    { href: "/skills", label: "Skills" },
     { href: "/subagents", label: "Subagents" },
     { href: "/commands", label: "Commands" },
-    { href: "/skills", label: "Skills" },
     { href: "/hooks", label: "Hooks" },
     { href: "/mcp-servers", label: "MCP Servers" },
+    { href: "/marketplaces", label: "Marketplaces" },
   ];
 
   return (
@@ -29,15 +32,23 @@ export function Navigation() {
                 Build with Claude
               </Link>
               <div className="hidden lg:flex items-center gap-1">
-                {navigationLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navigationLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        "px-3 py-1.5 text-sm transition-colors rounded-md",
+                        isActive
+                          ? "text-primary bg-primary/10 font-medium"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -51,7 +62,7 @@ export function Navigation() {
                 <HamburgerMenuIcon className="h-4 w-4" />
               </Button>
               <a
-                href="https://github.com/davepoon/buildwithclaude"
+                href="https://github.com/anthropics/claude-code"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -59,6 +70,19 @@ export function Navigation() {
                   <GitHubLogoIcon className="h-4 w-4" />
                   <span className="hidden sm:inline text-sm">GitHub</span>
                 </Button>
+              </a>
+              <a
+                href="https://github.com/anthropics/claude-code"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://img.shields.io/github/stars/davepoon/buildwithclaude.svg?style=social&label=Star"
+                  alt="GitHub stars"
+                  className="h-5"
+                />
               </a>
             </div>
           </div>
@@ -96,22 +120,30 @@ export function Navigation() {
 
               <nav className="flex-1 p-4">
                 <div className="space-y-1">
-                  {navigationLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+                  {navigationLinks.map((link) => {
+                    const isActive = pathname === link.href;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={cn(
+                          "block px-3 py-2 text-sm rounded-md transition-colors",
+                          isActive
+                            ? "text-primary bg-primary/10 font-medium"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
                 </div>
               </nav>
 
-              <div className="border-t border-border p-4">
+              <div className="border-t border-border p-4 space-y-3">
                 <a
-                  href="https://github.com/davepoon/buildwithclaude"
+                  href="https://github.com/anthropics/claude-code"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"
@@ -121,6 +153,20 @@ export function Navigation() {
                     View on GitHub
                   </Button>
                 </a>
+                <div className="flex justify-center">
+                  <a
+                    href="https://github.com/anthropics/claude-code"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://img.shields.io/github/stars/davepoon/buildwithclaude.svg?style=social&label=Star"
+                      alt="GitHub stars"
+                      className="h-5"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </DialogPrimitive.Content>

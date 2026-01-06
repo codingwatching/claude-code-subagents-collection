@@ -40,6 +40,7 @@ function transformRow(row: {
   maintainerName: string | null
   maintainerGithub: string | null
   stars: number
+  installs: number
   verified: boolean
   lastIndexedAt: Date | null
   updatedAt: Date
@@ -61,6 +62,7 @@ function transformRow(row: {
       github: row.maintainerGithub || '',
     },
     stars: row.stars,
+    installs: row.installs,
     verified: row.verified,
     lastIndexedAt: row.lastIndexedAt?.toISOString(),
     updatedAt: row.updatedAt?.toISOString(),
@@ -73,7 +75,8 @@ function transformRow(row: {
 function getOrderBy(sort: SortOption, marketplaces: any) {
   switch (sort) {
     case 'relevance':
-      return [desc(marketplaces.pluginCount), desc(marketplaces.stars)]
+      // Primary: installs (actual usage), Secondary: stars (popularity proxy)
+      return [desc(marketplaces.installs), desc(marketplaces.stars)]
     case 'stars':
       return desc(marketplaces.stars)
     case 'newest':
@@ -97,8 +100,9 @@ function sortMarketplaces(marketplaces: MarketplaceRegistry[], sort: SortOption)
   switch (sort) {
     case 'relevance':
       return sorted.sort((a, b) => {
-        const pluginDiff = b.pluginCount - a.pluginCount
-        if (pluginDiff !== 0) return pluginDiff
+        // Primary: installs (actual usage), Secondary: stars
+        const installDiff = (b.installs || 0) - (a.installs || 0)
+        if (installDiff !== 0) return installDiff
         return (b.stars || 0) - (a.stars || 0)
       })
     case 'stars':

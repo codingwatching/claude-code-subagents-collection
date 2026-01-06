@@ -1,10 +1,13 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { HookCard } from '@/components/hook-card'
 import { Input } from '@/components/ui/input'
+import { Webhook, Loader2 } from 'lucide-react'
 import { type Hook, type CategoryMetadata, generateCategoryDisplayName } from '@/lib/hooks-types'
+
+const ITEMS_PER_PAGE = 24
 
 interface HooksPageClientProps {
   allHooks: Hook[]
@@ -18,6 +21,8 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
   const [selectedEvent, setSelectedEvent] = useState<string | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryParam = searchParams.get('category')
@@ -79,12 +84,42 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
     return filtered
   }, [allHooks, selectedCategory, selectedEvent, searchQuery])
 
+  // Items to display (sliced for infinite scroll)
+  const displayedHooks = filteredHooks.slice(0, displayCount)
+  const hasMore = displayCount < filteredHooks.length
+
+  // Reset display count when filters change
+  useEffect(() => {
+    setDisplayCount(ITEMS_PER_PAGE)
+  }, [selectedCategory, selectedEvent, searchQuery])
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    )
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasMore])
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-display-2 mb-2">Hooks</h1>
+          <h1 className="text-display-2 mb-2 flex items-center gap-3">
+            <Webhook className="h-8 w-8 text-orange-500" />
+            Hooks
+          </h1>
           <p className="text-muted-foreground">
             {allHooks.length} automation hooks for Claude Code
           </p>
@@ -168,7 +203,7 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
         {/* Grid */}
         {filteredHooks.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredHooks.map((hook) => (
+            {displayedHooks.map((hook) => (
               <HookCard key={hook.slug} hook={hook} />
             ))}
           </div>
@@ -177,6 +212,18 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
             <p className="text-muted-foreground">No hooks found</p>
           </div>
         )}
+
+        {/* Load more trigger / Loading indicator */}
+        <div ref={loadMoreRef} className="py-8 flex justify-center">
+          {hasMore && (
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          )}
+          {!hasMore && displayedHooks.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Showing all {filteredHooks.length} hooks
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

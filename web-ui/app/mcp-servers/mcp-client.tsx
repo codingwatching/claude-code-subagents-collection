@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MCPCard } from '@/components/mcp-card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ArrowUpDown, TrendingDown, TrendingUp, Calendar, CalendarDays, SortAsc, SortDesc } from 'lucide-react'
+import { ArrowUpDown, TrendingDown, TrendingUp, Calendar, CalendarDays, SortAsc, SortDesc, Loader2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,8 @@ import {
   SOURCE_INDICATORS
 } from '@/lib/mcp-types'
 import { type MCPCategoryMetadata } from '@/lib/mcp-server'
+
+const ITEMS_PER_PAGE = 24
 
 interface MCPPageClientProps {
   allServers: MCPServer[]
@@ -38,10 +40,9 @@ export default function MCPPageClient({
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
   const [selectedSource, setSelectedSource] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
   const [sortBy, setSortBy] = useState<'downloads-desc' | 'downloads-asc' | 'newest' | 'oldest' | 'name-asc' | 'name-desc'>('downloads-desc')
-
-  const ITEMS_PER_PAGE = 24
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryParam = searchParams.get('category')
@@ -168,22 +169,32 @@ export default function MCPPageClient({
     return searchQuery !== '' || selectedCategory !== 'all' || selectedSource !== 'all'
   }, [searchQuery, selectedCategory, selectedSource])
 
+  // Items to display (sliced for infinite scroll)
+  const displayedServers = filteredServers.slice(0, displayCount)
+  const hasMore = displayCount < filteredServers.length
+
+  // Reset display count when filters change
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery, selectedCategory, selectedSource])
+    setDisplayCount(ITEMS_PER_PAGE)
+  }, [searchQuery, selectedCategory, selectedSource, sortBy])
 
-  const paginatedServers = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const endIndex = startIndex + ITEMS_PER_PAGE
-    return filteredServers.slice(startIndex, endIndex)
-  }, [filteredServers, currentPage])
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    )
 
-  const totalPages = Math.ceil(filteredServers.length / ITEMS_PER_PAGE)
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    return () => observer.disconnect()
+  }, [hasMore])
 
   return (
     <div className="min-h-screen">
@@ -335,8 +346,8 @@ export default function MCPPageClient({
           </DropdownMenu>
         </div>
 
-        {/* Featured Sections - Only show when no filters active and on first page */}
-        {!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0) && (
+        {/* Featured Sections - Only show when no filters active */}
+        {!hasActiveFilters && (popularServers.length > 0 || featuredServers.length > 0) && (
           <div className="mb-12">
             {popularServers.length > 0 && (
               <div className="mb-10">
@@ -365,7 +376,7 @@ export default function MCPPageClient({
         )}
 
         {/* All Servers header when featured visible */}
-        {(!hasActiveFilters && currentPage === 1 && (popularServers.length > 0 || featuredServers.length > 0)) && (
+        {(!hasActiveFilters && (popularServers.length > 0 || featuredServers.length > 0)) && (
           <h2 className="text-xl font-medium mb-4 mt-8">All Servers</h2>
         )}
 
@@ -379,45 +390,28 @@ export default function MCPPageClient({
 
         {/* Grid */}
         {filteredServers.length > 0 ? (
-          <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {paginatedServers.map((server) => (
-                <MCPCard key={server.path} server={server} />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  className="text-muted-foreground"
-                >
-                  Previous
-                </Button>
-                <span className="px-4 py-2 text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
-                  className="text-muted-foreground"
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-          </>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayedServers.map((server) => (
+              <MCPCard key={server.path} server={server} />
+            ))}
+          </div>
         ) : (
           <div className="text-center py-16">
             <p className="text-muted-foreground">No MCP servers found</p>
           </div>
         )}
+
+        {/* Load more trigger / Loading indicator */}
+        <div ref={loadMoreRef} className="py-8 flex justify-center">
+          {hasMore && (
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          )}
+          {!hasMore && displayedServers.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Showing all {filteredServers.length} MCP servers
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

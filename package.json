@@ -11,6 +11,8 @@
     "validate:subagents": "node scripts/validate-subagents.js",
     "validate:hooks": "node scripts/validate-hooks.js",
     "generate:registry": "node scripts/generate-registry.js",
+    "fetch:plugins": "node scripts/fetch-plugins.js",
+    "fetch:all": "npm run fetch:plugins && npm run generate:registry",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish"

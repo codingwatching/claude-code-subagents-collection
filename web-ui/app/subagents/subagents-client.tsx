@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { SubagentCard } from '@/components/subagent-card'
 import { Input } from '@/components/ui/input'
+import { Bot, Loader2 } from 'lucide-react'
 import { generateCategoryDisplayName } from '@/lib/subagents-types'
 import type { Subagent, CategoryMetadata } from '@/lib/subagents-types'
+
+const ITEMS_PER_PAGE = 24
 
 interface SubagentsPageClientProps {
   allSubagents: Subagent[]
@@ -17,6 +20,8 @@ export default function SubagentsPageClient({ allSubagents, categories }: Subage
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryParam = searchParams.get('category')
@@ -56,12 +61,42 @@ export default function SubagentsPageClient({ allSubagents, categories }: Subage
     return filtered
   }, [allSubagents, selectedCategory, searchQuery])
 
+  // Items to display (sliced for infinite scroll)
+  const displayedSubagents = filteredSubagents.slice(0, displayCount)
+  const hasMore = displayCount < filteredSubagents.length
+
+  // Reset display count when filters change
+  useEffect(() => {
+    setDisplayCount(ITEMS_PER_PAGE)
+  }, [selectedCategory, searchQuery])
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    )
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasMore])
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-display-2 mb-2">Subagents</h1>
+          <h1 className="text-display-2 mb-2 flex items-center gap-3">
+            <Bot className="h-8 w-8 text-blue-500" />
+            Subagents
+          </h1>
           <p className="text-muted-foreground">
             {allSubagents.length} specialized AI agents
           </p>
@@ -116,7 +151,7 @@ export default function SubagentsPageClient({ allSubagents, categories }: Subage
         {/* Grid */}
         {filteredSubagents.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSubagents.map((subagent) => (
+            {displayedSubagents.map((subagent) => (
               <SubagentCard key={subagent.slug} subagent={subagent} />
             ))}
           </div>
@@ -125,6 +160,18 @@ export default function SubagentsPageClient({ allSubagents, categories }: Subage
             <p className="text-muted-foreground">No subagents found</p>
           </div>
         )}
+
+        {/* Load more trigger / Loading indicator */}
+        <div ref={loadMoreRef} className="py-8 flex justify-center">
+          {hasMore && (
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          )}
+          {!hasMore && displayedSubagents.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Showing all {filteredSubagents.length} subagents
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

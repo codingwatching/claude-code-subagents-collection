@@ -35,19 +35,19 @@ export function MarketplaceRegistryItem({ marketplace }: MarketplaceRegistryItem
           <Package className="h-5 w-5 text-primary shrink-0" />
           <h3 className="font-medium truncate">{marketplace.displayName}</h3>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="flex items-center gap-1 text-sm text-primary">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
             <Package className="h-3.5 w-3.5" />
-            {formatNumber(marketplace.pluginCount)} plugins
+            {formatNumber(marketplace.pluginCount)}
           </span>
           {marketplace.skillCount > 0 && (
-            <span className="flex items-center gap-1 text-sm text-amber-500">
+            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500">
               <Sparkles className="h-3.5 w-3.5" />
-              {formatNumber(marketplace.skillCount)} skills
+              {formatNumber(marketplace.skillCount)}
             </span>
           )}
           {marketplace.stars !== undefined && marketplace.stars > 0 && (
-            <span className="flex items-center gap-1 text-sm text-yellow-500">
+            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-500">
               <Star className="h-3.5 w-3.5" />
               {formatNumber(marketplace.stars)}
             </span>

@@ -6,6 +6,7 @@ const matter = require('gray-matter');
 const { fetchDockerMCPServers } = require('./fetch-docker-mcp');
 const { fetchOfficialMCPServers } = require('./fetch-official-mcp');
 const { enhanceMCPServersWithDockerStats } = require('./enhance-docker-stats');
+const { KNOWN_MARKETPLACES } = require('./fetch-plugins');
 
 const REPO_ROOT = path.join(__dirname, '..');
 const SUBAGENTS_DIR = path.join(REPO_ROOT, 'plugins/all-agents/agents');
@@ -13,6 +14,7 @@ const COMMANDS_DIR = path.join(REPO_ROOT, 'plugins/all-commands/commands');
 const HOOKS_DIR = path.join(REPO_ROOT, 'plugins/all-hooks/hooks');
 const MCP_SERVERS_DIR = path.join(REPO_ROOT, 'mcp-servers');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'web-ui', 'public', 'registry.json');
+const DISCOVERED_PLUGINS_PATH = path.join(__dirname, '.discovered-plugins.json');
 
 async function getSubagents() {
   const files = await fs.readdir(SUBAGENTS_DIR);
@@ -107,17 +109,73 @@ async function getMCPServers() {
   return [];
 }
 
+/**
+ * Get discovered plugins data from cache file (created by fetch-plugins.js)
+ */
+async function getDiscoveredPlugins() {
+  try {
+    const content = await fs.readFile(DISCOVERED_PLUGINS_PATH, 'utf-8');
+    return JSON.parse(content);
+  } catch {
+    // No discovered plugins file - use defaults
+    return { marketplaces: [], plugins: [] };
+  }
+}
+
+/**
+ * Get marketplaces from discovered data or fallback to known marketplaces
+ */
+async function getMarketplaces() {
+  const discovered = await getDiscoveredPlugins();
+
+  // If we have discovered marketplaces, use them
+  if (discovered.marketplaces && discovered.marketplaces.length > 0) {
+    console.log(`  Using ${discovered.marketplaces.length} discovered marketplaces`);
+    return discovered.marketplaces;
+  }
+
+  // Fallback to known marketplaces (static list)
+  console.log('  Using fallback known marketplaces');
+  return KNOWN_MARKETPLACES.map(m => ({
+    name: m.repo.split('/')[1],
+    displayName: m.displayName,
+    description: m.description,
+    url: m.url || `https://github.com/${m.repo}`,
+    repository: `https://github.com/${m.repo}`,
+    installCommand: `/plugin marketplace add ${m.repo}`,
+    pluginCount: 100, // Estimate
+    skillCount: 50,   // Estimate
+    stars: 0,
+    categories: m.categories || [],
+    badges: m.badges || [],
+    maintainer: {
+      name: m.repo.split('/')[0],
+      github: m.repo.split('/')[0]
+    }
+  }));
+}
+
+/**
+ * Get external plugins from discovered data
+ */
+async function getExternalPlugins() {
+  const discovered = await getDiscoveredPlugins();
+  return discovered.plugins || [];
+}
+
 async function generateRegistry() {
   try {
     console.log('Generating registry.json...');
 
-    const [subagents, commands, hooks, mcpServers, dockerMCPServers, officialMCPServers] = await Promise.all([
+    const [subagents, commands, hooks, mcpServers, dockerMCPServers, officialMCPServers, marketplaces, externalPlugins] = await Promise.all([
       getSubagents(),
       getCommands(),
       getHooks(),
       getMCPServers(),
       fetchDockerMCPServers(),
-      fetchOfficialMCPServers()
+      fetchOfficialMCPServers(),
+      getMarketplaces(),
+      getExternalPlugins()
     ]);
 
     // Merge all MCP servers: Official MCP > Docker MCP > Local
@@ -164,7 +222,9 @@ async function generateRegistry() {
       subagents,
       commands,
       hooks,
-      mcpServers: enhancedServers.sort((a, b) => a.name.localeCompare(b.name))
+      mcpServers: enhancedServers.sort((a, b) => a.name.localeCompare(b.name)),
+      marketplaces,
+      externalPlugins: externalPlugins.sort((a, b) => (b.stars || 0) - (a.stars || 0))
     };
 
     // Ensure the public directory exists
@@ -180,6 +240,8 @@ async function generateRegistry() {
     console.log(`  - ${uniqueServers.length} MCP servers`);
     console.log(`    - ${officialMCPServers.length} from Official MCP Registry`);
     console.log(`    - ${dockerMCPServers.length} from Docker MCP`);
+    console.log(`  - ${marketplaces.length} marketplaces`);
+    console.log(`  - ${externalPlugins.length} external plugins`);
     console.log(`  - Output: ${OUTPUT_PATH}`);
   } catch (error) {
     console.error('Error generating registry:', error);

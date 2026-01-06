@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Check, Copy, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { generateCategoryDisplayName } from '@/lib/category-utils'
 import type { Plugin } from '@/lib/plugins-types'
 
@@ -13,18 +12,7 @@ interface PluginCardProps {
 }
 
 export function PluginCard({ plugin }: PluginCardProps) {
-  const [copied, setCopied] = useState(false)
-
   const categoryName = generateCategoryDisplayName(plugin.category)
-  const installCommand = `bwc add --plugin ${plugin.name}`
-
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    await navigator.clipboard.writeText(installCommand)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
 
   const handleOpenRepo = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -51,20 +39,6 @@ export function PluginCard({ plugin }: PluginCardProps) {
 
         <TooltipProvider>
           <div className="flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleCopy}
-                >
-                  {copied ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
-                  {copied ? 'Copied' : 'Copy'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Copy install command</TooltipContent>
-            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

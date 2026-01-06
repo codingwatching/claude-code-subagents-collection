@@ -69,7 +69,7 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 18 55% 52%;            /* #c96442 - Warm terracotta */
+    --primary: 18 55% 48%;            /* #be6a42 - Darker terracotta for button contrast */
     --primary-foreground: 0 0% 98%;
 
     --secondary: 0 0% 12%;            /* #1f1f1f - Subtle gray */
@@ -78,7 +78,7 @@
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 55%;     /* #8c8c8c - Softer muted */
 
-    --accent: 18 55% 52%;             /* Same as primary */
+    --accent: 18 55% 48%;             /* Same as primary */
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
@@ -86,7 +86,7 @@
 
     --border: 0 0% 14%;               /* #242424 - Subtle borders */
     --input: 0 0% 14%;
-    --ring: 18 55% 52%;               /* Matches accent */
+    --ring: 18 55% 48%;               /* Matches accent */
 
     --radius: 0.5rem;                 /* Slightly smaller radius for cleaner look */
   }
@@ -99,25 +99,29 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
-    --primary: 18 55% 52%;
+    --primary: 18 55% 48%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 55%;
-    --accent: 18 55% 52%;
+    --accent: 18 55% 48%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14%;
     --input: 0 0% 14%;
-    --ring: 18 55% 52%;
+    --ring: 18 55% 48%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+
+  a, button, [role="button"] {
+    cursor: pointer;
   }
 
   html {

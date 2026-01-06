@@ -4,6 +4,16 @@
   "framework": "nextjs",
   "installCommand": "npm install",
   "regions": ["iad1"],
+  "crons": [
+    {
+      "path": "/api/cron/index-marketplaces",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/index-plugins",
+      "schedule": "0 7 * * *"
+    }
+  ],
   "functions": {
     "app/page.tsx": {
       "maxDuration": 10
@@ -13,6 +23,15 @@
     },
     "app/subagent/[slug]/page.tsx": {
       "maxDuration": 10
+    },
+    "app/api/cron/index-marketplaces/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/admin/reindex/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-plugins/route.ts": {
+      "maxDuration": 300
     }
   }
 }

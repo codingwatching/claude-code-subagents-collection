@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Check, Copy, Download, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
 
 interface UnifiedPluginCardProps {
@@ -52,68 +51,12 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
   }
 }
 
-function generatePluginMarkdown(plugin: UnifiedPlugin): string {
-  const lines: string[] = []
-  lines.push(`# ${plugin.name}`)
-  lines.push('')
-  lines.push(`**Type:** ${typeLabels[plugin.type]}`)
-  lines.push(`**Category:** ${plugin.category}`)
-  lines.push('')
-  lines.push('## Description')
-  lines.push('')
-  lines.push(plugin.description)
-  lines.push('')
-
-  if (plugin.installCommand) {
-    lines.push('## Installation')
-    lines.push('')
-    lines.push('```bash')
-    lines.push(plugin.installCommand)
-    lines.push('```')
-    lines.push('')
-  }
-
-  if (plugin.tags && plugin.tags.length > 0) {
-    lines.push('## Tags')
-    lines.push('')
-    lines.push(plugin.tags.join(', '))
-    lines.push('')
-  }
-
-  return lines.join('\n')
-}
-
 export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
-  const [copied, setCopied] = useState(false)
   const isExternal = isExternalPlugin(plugin)
 
   const githubUrl = isExternal
     ? plugin.repository
     : `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${plugin.file}`
-
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const markdown = generatePluginMarkdown(plugin)
-    await navigator.clipboard.writeText(markdown)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleDownload = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const markdown = generatePluginMarkdown(plugin)
-    const blob = new Blob([markdown], { type: 'text/markdown' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${plugin.name}.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
 
   const handleOpenRepo = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -148,34 +91,6 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
       {/* Action Buttons */}
       <TooltipProvider>
         <div className="flex gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                onClick={handleCopy}
-              >
-                {copied ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
-                {copied ? 'Copied' : 'Copy'}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Copy markdown</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                onClick={handleDownload}
-              >
-                <Download className="h-3 w-3 mr-1" />
-                Download
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Download markdown</TooltipContent>
-          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

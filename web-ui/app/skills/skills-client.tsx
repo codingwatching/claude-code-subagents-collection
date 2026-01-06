@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { SkillCard } from '@/components/skill-card'
 import { Input } from '@/components/ui/input'
+import { Sparkles, Loader2 } from 'lucide-react'
 import { generateCategoryDisplayName } from '@/lib/category-utils'
 import type { Skill, CategoryMetadata } from '@/lib/skills-types'
+
+const ITEMS_PER_PAGE = 24
 
 interface SkillsPageClientProps {
   skills: Skill[]
@@ -17,6 +20,8 @@ export default function SkillsPageClient({ skills, categories }: SkillsPageClien
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const categoryParam = searchParams.get('category')
@@ -55,12 +60,42 @@ export default function SkillsPageClient({ skills, categories }: SkillsPageClien
     return filtered
   }, [skills, selectedCategory, searchQuery])
 
+  // Items to display (sliced for infinite scroll)
+  const displayedSkills = filteredSkills.slice(0, displayCount)
+  const hasMore = displayCount < filteredSkills.length
+
+  // Reset display count when filters change
+  useEffect(() => {
+    setDisplayCount(ITEMS_PER_PAGE)
+  }, [selectedCategory, searchQuery])
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    )
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasMore])
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-display-2 mb-2">Skills</h1>
+          <h1 className="text-display-2 mb-2 flex items-center gap-3">
+            <Sparkles className="h-8 w-8 text-yellow-500" />
+            Skills
+          </h1>
           <p className="text-muted-foreground">
             {skills.length} skills for Claude Code
           </p>
@@ -115,7 +150,7 @@ export default function SkillsPageClient({ skills, categories }: SkillsPageClien
         {/* Grid */}
         {filteredSkills.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSkills.map((skill) => (
+            {displayedSkills.map((skill) => (
               <SkillCard key={skill.slug} skill={skill} />
             ))}
           </div>
@@ -124,6 +159,18 @@ export default function SkillsPageClient({ skills, categories }: SkillsPageClien
             <p className="text-muted-foreground">No skills found</p>
           </div>
         )}
+
+        {/* Load more trigger / Loading indicator */}
+        <div ref={loadMoreRef} className="py-8 flex justify-center">
+          {hasMore && (
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          )}
+          {!hasMore && displayedSkills.length > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Showing all {filteredSkills.length} skills
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -15,6 +15,7 @@ export interface MarketplaceRegistry {
     github: string
   }
   stars?: number
+  installs?: number
   verified?: boolean
   lastIndexedAt?: string
   updatedAt?: string
