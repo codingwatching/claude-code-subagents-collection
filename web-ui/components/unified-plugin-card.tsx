@@ -16,7 +16,29 @@ const typeLabels: Record<string, string> = {
   command: 'Command',
   hook: 'Hook',
   skill: 'Skill',
-  external: 'Plugin',
+  plugin: 'Plugin',
+}
+
+function getTypeBadgeClasses(type: string): string {
+  switch (type) {
+    case 'subagent':
+      return 'bg-blue-500/10 text-blue-500'
+    case 'command':
+      return 'bg-green-500/10 text-green-500'
+    case 'hook':
+      return 'bg-orange-500/10 text-orange-500'
+    case 'skill':
+      return 'bg-yellow-500/10 text-yellow-500'
+    case 'plugin':
+      return 'bg-purple-500/10 text-purple-500'
+    default:
+      return 'bg-muted text-muted-foreground'
+  }
+}
+
+function isExternalPlugin(plugin: UnifiedPlugin): boolean {
+  // External plugins have a repository URL and no local file path
+  return !!plugin.repository && !plugin.file
 }
 
 function getDetailUrl(plugin: UnifiedPlugin): string {
@@ -25,7 +47,8 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
     case 'command': return `/command/${plugin.name}`
     case 'hook': return `/hook/${plugin.name}`
     case 'skill': return `/skill/${plugin.name}`
-    case 'external': return plugin.repository || '#'
+    case 'plugin': return plugin.repository || '#'
+    default: return '#'
   }
 }
 
@@ -41,7 +64,7 @@ function generatePluginMarkdown(plugin: UnifiedPlugin): string {
   lines.push(plugin.description)
   lines.push('')
 
-  if (plugin.isExternal && plugin.installCommand) {
+  if (plugin.installCommand) {
     lines.push('## Installation')
     lines.push('')
     lines.push('```bash')
@@ -62,8 +85,9 @@ function generatePluginMarkdown(plugin: UnifiedPlugin): string {
 
 export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
   const [copied, setCopied] = useState(false)
+  const isExternal = isExternalPlugin(plugin)
 
-  const githubUrl = plugin.isExternal
+  const githubUrl = isExternal
     ? plugin.repository
     : `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${plugin.file}`
 
@@ -101,17 +125,19 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
 
   const cardContent = (
     <div className="p-5 rounded-lg border border-border hover:border-primary/40 transition-colors h-full flex flex-col bg-card">
-      {/* Header: Name + Type Badge + External Badge */}
+      {/* Header: Name + Type Badge + Marketplace Badge */}
       <div className="mb-3">
         <h3 className="font-medium mb-1">{plugin.name}</h3>
-        <span className="px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground">
-          {typeLabels[plugin.type]}
-        </span>
-        {plugin.isExternal && (
-          <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-xs text-purple-500 font-medium ml-1">
-            External
+        <div className="flex flex-wrap items-center gap-1">
+          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClasses(plugin.type)}`}>
+            {typeLabels[plugin.type]}
           </span>
-        )}
+          {plugin.marketplaceName && (
+            <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-xs text-indigo-500 font-medium truncate max-w-[140px]">
+              {plugin.marketplaceName}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Description */}
@@ -170,7 +196,7 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
   )
 
   // Use Link for internal plugins, <a> for external
-  if (plugin.isExternal) {
+  if (isExternal) {
     return (
       <a href={plugin.repository || '#'} target="_blank" rel="noopener noreferrer">
         {cardContent}
