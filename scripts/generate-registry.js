@@ -12,6 +12,7 @@ const REPO_ROOT = path.join(__dirname, '..');
 const SUBAGENTS_DIR = path.join(REPO_ROOT, 'plugins/all-agents/agents');
 const COMMANDS_DIR = path.join(REPO_ROOT, 'plugins/all-commands/commands');
 const HOOKS_DIR = path.join(REPO_ROOT, 'plugins/all-hooks/hooks');
+const PLUGINS_DIR = path.join(REPO_ROOT, 'plugins');
 const MCP_SERVERS_DIR = path.join(REPO_ROOT, 'mcp-servers');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'web-ui', 'public', 'registry.json');
 const DISCOVERED_PLUGINS_PATH = path.join(__dirname, '.discovered-plugins.json');
@@ -103,6 +104,46 @@ async function getHooks() {
   }
 }
 
+/**
+ * Get actual Claude Code plugins by scanning for .claude-plugin/plugin.json files
+ */
+async function getPlugins() {
+  try {
+    const dirs = await fs.readdir(PLUGINS_DIR);
+    const plugins = [];
+
+    for (const dir of dirs) {
+      const pluginJsonPath = path.join(PLUGINS_DIR, dir, '.claude-plugin', 'plugin.json');
+
+      try {
+        const content = await fs.readFile(pluginJsonPath, 'utf-8');
+        const data = JSON.parse(content);
+
+        plugins.push({
+          name: data.name,
+          description: data.description || '',
+          version: data.version || '1.0.0',
+          file: `plugins/${dir}/.claude-plugin/plugin.json`,
+          path: dir,
+          repository: data.repository || '',
+          license: data.license || '',
+          keywords: data.keywords || [],
+          author: data.author || {},
+          installCommand: `/plugin install ${data.name}@buildwithclaude`
+        });
+      } catch {
+        // Skip directories without .claude-plugin/plugin.json
+        continue;
+      }
+    }
+
+    return plugins.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.warn('Warning: Could not read plugins directory:', error.message);
+    return [];
+  }
+}
+
 async function getMCPServers() {
   // We only use Docker MCP servers now, no markdown files
   // All MCP servers come from fetchDockerMCPServers()
@@ -167,10 +208,11 @@ async function generateRegistry() {
   try {
     console.log('Generating registry.json...');
 
-    const [subagents, commands, hooks, mcpServers, dockerMCPServers, officialMCPServers, marketplaces, externalPlugins] = await Promise.all([
+    const [subagents, commands, hooks, plugins, mcpServers, dockerMCPServers, officialMCPServers, marketplaces, externalPlugins] = await Promise.all([
       getSubagents(),
       getCommands(),
       getHooks(),
+      getPlugins(),
       getMCPServers(),
       fetchDockerMCPServers(),
       fetchOfficialMCPServers(),
@@ -222,6 +264,7 @@ async function generateRegistry() {
       subagents,
       commands,
       hooks,
+      plugins,
       mcpServers: enhancedServers.sort((a, b) => a.name.localeCompare(b.name)),
       marketplaces,
       externalPlugins: externalPlugins.sort((a, b) => (b.stars || 0) - (a.stars || 0))
@@ -237,6 +280,7 @@ async function generateRegistry() {
     console.log(`  - ${subagents.length} subagents`);
     console.log(`  - ${commands.length} commands`);
     console.log(`  - ${hooks.length} hooks`);
+    console.log(`  - ${plugins.length} plugins`);
     console.log(`  - ${uniqueServers.length} MCP servers`);
     console.log(`    - ${officialMCPServers.length} from Official MCP Registry`);
     console.log(`    - ${dockerMCPServers.length} from Docker MCP`);
