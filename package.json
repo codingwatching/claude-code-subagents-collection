@@ -12,10 +12,7 @@
     "validate:hooks": "node scripts/validate-hooks.js",
     "generate:registry": "node scripts/generate-registry.js",
     "fetch:plugins": "node scripts/fetch-plugins.js",
-    "fetch:all": "npm run fetch:plugins && npm run generate:registry",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "changeset publish"
+    "fetch:all": "npm run fetch:plugins && npm run generate:registry"
   },
   "workspaces": [
     "web-ui"
@@ -38,8 +35,5 @@
     "glob": "^11.0.3",
     "gray-matter": "^4.0.3"
   },
-  "devDependencies": {
-    "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.29.5"
-  }
+  "devDependencies": {}
 }
