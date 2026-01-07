@@ -43,3 +43,6 @@ next-env.d.ts
 /app/api/cron/
 /app/api/marketplaces/
 drizzle.config.ts
+
+# Generated registry (no longer needed - data comes from database)
+/public/registry.json
