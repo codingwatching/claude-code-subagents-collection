@@ -36,7 +36,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Private API code (not shared)
-/lib/db/
 /lib/github/
 /lib/indexer/
 /app/api/admin/
