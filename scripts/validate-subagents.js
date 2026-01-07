@@ -50,7 +50,7 @@ subagentFiles.forEach(file => {
     }
     
     // Validate against appropriate schema
-    const isCommand = file.startsWith('commands/');
+    const isCommand = file.includes('/commands/');
     const validator = isCommand ? validateCommand : validateSubagent;
     const valid = validator(parsed.data);
     
