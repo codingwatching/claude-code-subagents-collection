@@ -3,7 +3,7 @@ import { plugins, skills, marketplaces } from '@/lib/db/schema'
 import { eq, ilike, or, sql, desc, asc, and, inArray } from 'drizzle-orm'
 import type { UnifiedPlugin, PluginType } from './plugin-types'
 
-export type SortOption = 'stars' | 'name' | 'updated' | 'relevance'
+export type SortOption = 'relevance' | 'stars' | 'newest' | 'oldest' | 'name' | 'name-desc' | 'updated'
 
 export interface PluginFilters {
   search?: string
@@ -94,7 +94,17 @@ export async function getPluginsPaginated(options: {
     case 'name':
       orderBy = asc(plugins.name)
       break
+    case 'name-desc':
+      orderBy = desc(plugins.name)
+      break
+    case 'newest':
+      orderBy = desc(plugins.updatedAt)
+      break
+    case 'oldest':
+      orderBy = asc(plugins.updatedAt)
+      break
     case 'updated':
+      // Keep for backwards compatibility
       orderBy = desc(plugins.updatedAt)
       break
     case 'relevance':

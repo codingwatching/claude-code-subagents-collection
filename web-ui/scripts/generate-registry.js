@@ -10,6 +10,7 @@ const SUBAGENTS_DIR = path.join(REPO_ROOT, 'subagents');
 const COMMANDS_DIR = path.join(REPO_ROOT, 'commands');
 const HOOKS_DIR = path.join(REPO_ROOT, 'plugins', 'all-hooks', 'hooks');
 const SKILLS_DIR = path.join(REPO_ROOT, 'plugins', 'all-skills', 'skills');
+const PLUGINS_DIR = path.join(REPO_ROOT, 'plugins');
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'registry.json');
 
 async function getSubagents() {
@@ -136,15 +137,53 @@ async function getSkills() {
   }
 }
 
+async function getPlugins() {
+  try {
+    const dirs = await fs.readdir(PLUGINS_DIR);
+    const plugins = [];
+
+    for (const dir of dirs) {
+      const pluginJsonPath = path.join(PLUGINS_DIR, dir, '.claude-plugin', 'plugin.json');
+
+      try {
+        const content = await fs.readFile(pluginJsonPath, 'utf-8');
+        const data = JSON.parse(content);
+
+        plugins.push({
+          name: data.name,
+          description: data.description || '',
+          version: data.version || '1.0.0',
+          file: `plugins/${dir}/.claude-plugin/plugin.json`,
+          path: dir,
+          repository: data.repository || '',
+          license: data.license || '',
+          keywords: data.keywords || [],
+          author: data.author || {},
+          installCommand: `/plugin install ${data.name}@buildwithclaude`
+        });
+      } catch {
+        // Skip directories without .claude-plugin/plugin.json
+        continue;
+      }
+    }
+
+    return plugins.sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    console.warn('Warning: Could not read plugins directory:', error.message);
+    return [];
+  }
+}
+
 async function generateRegistry() {
   console.log('Generating registry.json...');
 
   try {
-    const [subagents, commands, hooks, skills] = await Promise.all([
+    const [subagents, commands, hooks, skills, plugins] = await Promise.all([
       getSubagents(),
       getCommands(),
       getHooks(),
-      getSkills()
+      getSkills(),
+      getPlugins()
     ]);
 
     const registry = {
@@ -154,7 +193,8 @@ async function generateRegistry() {
       subagents,
       commands,
       hooks,
-      skills
+      skills,
+      plugins
     };
 
     // Ensure public directory exists
@@ -171,6 +211,7 @@ async function generateRegistry() {
     console.log(`  - ${commands.length} commands`);
     console.log(`  - ${hooks.length} hooks`);
     console.log(`  - ${skills.length} skills`);
+    console.log(`  - ${plugins.length} plugins`);
     console.log(`  - Output: ${OUTPUT_PATH}`);
   } catch (error) {
     console.error('Error generating registry:', error);

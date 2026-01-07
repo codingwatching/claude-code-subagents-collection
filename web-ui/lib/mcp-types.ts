@@ -80,9 +80,10 @@ export interface MCPStats {
 }
 
 export interface MCPInstallationMethod {
-  type: 'docker' | 'npm' | 'manual' | 'binary' | 'claude-cli' | 'docker-mcp'
+  type: 'docker' | 'npm' | 'manual' | 'binary' | 'claude-cli' | 'docker-mcp' | 'remote'
   recommended?: boolean
   command?: string
+  claudeCode?: string | null // Claude Code CLI command for installation
   config_example?: string
   steps?: string[]
   requirements?: string[]

@@ -6,12 +6,8 @@
   "regions": ["iad1"],
   "crons": [
     {
-      "path": "/api/cron/index-marketplaces",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/index-plugins",
-      "schedule": "0 7 * * *"
+      "path": "/api/cron/index-all",
+      "schedule": "0 5 * * *"
     }
   ],
   "functions": {
@@ -31,6 +27,15 @@
       "maxDuration": 300
     },
     "app/api/cron/index-plugins/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-mcp-servers/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/sync-mcp-stats/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-all/route.ts": {
       "maxDuration": 300
     }
   }

@@ -4,14 +4,14 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MCPCard } from '@/components/mcp-card'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { ArrowUpDown, TrendingDown, TrendingUp, Calendar, CalendarDays, SortAsc, SortDesc, Loader2 } from 'lucide-react'
+import { ArrowUpDown, Loader2 } from 'lucide-react'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   type MCPServer,
   SOURCE_INDICATORS
@@ -41,7 +41,7 @@ export default function MCPPageClient({
   const [selectedSource, setSelectedSource] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
-  const [sortBy, setSortBy] = useState<'downloads-desc' | 'downloads-asc' | 'newest' | 'oldest' | 'name-asc' | 'name-desc'>('downloads-desc')
+  const [sortBy, setSortBy] = useState<'stars' | 'newest' | 'oldest' | 'name' | 'name-desc'>('stars')
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function MCPPageClient({
       setSelectedSource(sourceParam)
     }
 
-    if (sortParam && ['downloads-desc', 'downloads-asc', 'newest', 'oldest', 'name-asc', 'name-desc'].includes(sortParam)) {
+    if (sortParam && ['stars', 'newest', 'oldest', 'name', 'name-desc'].includes(sortParam)) {
       setSortBy(sortParam as typeof sortBy)
     }
   }, [searchParams, categories])
@@ -69,9 +69,9 @@ export default function MCPPageClient({
 
   const handleSourceChange = (source: string) => {
     setSelectedSource(source)
-    if (source === 'official-mcp' && (sortBy === 'downloads-desc' || sortBy === 'downloads-asc')) {
-      setSortBy('name-asc')
-      updateURL({ source, sort: 'name-asc' })
+    if (source === 'official-mcp' && sortBy === 'stars') {
+      setSortBy('name')
+      updateURL({ source, sort: 'name' })
     } else {
       updateURL({ source })
     }
@@ -97,7 +97,7 @@ export default function MCPPageClient({
     }
 
     if (newParams.sort !== undefined) {
-      if (newParams.sort === 'downloads-desc') {
+      if (newParams.sort === 'stars') {
         params.delete('sort')
       } else {
         params.set('sort', newParams.sort)
@@ -137,15 +137,13 @@ export default function MCPPageClient({
 
     const sorted = [...filtered].sort((a, b) => {
       switch(sortBy) {
-        case 'downloads-desc':
-          return (b.stats?.docker_pulls || 0) - (a.stats?.docker_pulls || 0)
-        case 'downloads-asc':
-          return (a.stats?.docker_pulls || 0) - (b.stats?.docker_pulls || 0)
+        case 'stars':
+          return (b.stats?.github_stars || 0) - (a.stats?.github_stars || 0)
         case 'newest':
           return new Date(b.stats?.last_updated || 0).getTime() - new Date(a.stats?.last_updated || 0).getTime()
         case 'oldest':
           return new Date(a.stats?.last_updated || 0).getTime() - new Date(b.stats?.last_updated || 0).getTime()
-        case 'name-asc':
+        case 'name':
           return a.display_name.localeCompare(b.display_name)
         case 'name-desc':
           return b.display_name.localeCompare(a.display_name)
@@ -283,67 +281,25 @@ export default function MCPPageClient({
           </div>
 
           {/* Sort Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                <ArrowUpDown className="h-4 w-4 mr-2" />
-                {sortBy === 'downloads-desc' ? 'Most Downloaded' :
-                 sortBy === 'downloads-asc' ? 'Least Downloaded' :
-                 sortBy === 'newest' ? 'Newest' :
-                 sortBy === 'oldest' ? 'Oldest' :
-                 sortBy === 'name-asc' ? 'A to Z' :
-                 'Z to A'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {selectedSource !== 'official-mcp' && (
-                <>
-                  <DropdownMenuItem onClick={() => {
-                    setSortBy('downloads-desc')
-                    updateURL({ sort: 'downloads-desc' })
-                  }}>
-                    <TrendingUp className="h-4 w-4 mr-2" />
-                    Most Downloaded
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {
-                    setSortBy('downloads-asc')
-                    updateURL({ sort: 'downloads-asc' })
-                  }}>
-                    <TrendingDown className="h-4 w-4 mr-2" />
-                    Least Downloaded
-                  </DropdownMenuItem>
-                </>
-              )}
-              <DropdownMenuItem onClick={() => {
-                setSortBy('newest')
-                updateURL({ sort: 'newest' })
-              }}>
-                <Calendar className="h-4 w-4 mr-2" />
-                Newest
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSortBy('oldest')
-                updateURL({ sort: 'oldest' })
-              }}>
-                <CalendarDays className="h-4 w-4 mr-2" />
-                Oldest
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSortBy('name-asc')
-                updateURL({ sort: 'name-asc' })
-              }}>
-                <SortAsc className="h-4 w-4 mr-2" />
-                A to Z
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSortBy('name-desc')
-                updateURL({ sort: 'name-desc' })
-              }}>
-                <SortDesc className="h-4 w-4 mr-2" />
-                Z to A
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Select
+            value={sortBy}
+            onValueChange={(value) => {
+              setSortBy(value as typeof sortBy)
+              updateURL({ sort: value })
+            }}
+          >
+            <SelectTrigger className="w-[150px] bg-card border-border">
+              <ArrowUpDown className="h-4 w-4 mr-2 text-muted-foreground" />
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="stars">Most Stars</SelectItem>
+              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="oldest">Oldest</SelectItem>
+              <SelectItem value="name">A to Z</SelectItem>
+              <SelectItem value="name-desc">Z to A</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Featured Sections - Only show when no filters active */}

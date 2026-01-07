@@ -3,8 +3,8 @@ import { getMCPServerBySlug, getAllMCPServers } from '@/lib/mcp-server'
 import MCPServerPageClient from './page-client'
 
 export async function generateStaticParams() {
-  const servers = getAllMCPServers()
-  
+  const servers = await getAllMCPServers()
+
   return servers.map((server) => ({
     slug: server.path.replace(/\//g, '-')
   }))
@@ -12,11 +12,11 @@ export async function generateStaticParams() {
 
 export default async function MCPServerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const server = getMCPServerBySlug(slug)
-  
+  const server = await getMCPServerBySlug(slug)
+
   if (!server) {
     notFound()
   }
-  
+
   return <MCPServerPageClient server={server} />
 }

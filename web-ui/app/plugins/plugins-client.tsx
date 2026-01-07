@@ -336,10 +336,12 @@ export default function PluginsPageClient({
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="stars">Most Stars</SelectItem>
-              <SelectItem value="name">Name (A-Z)</SelectItem>
-              <SelectItem value="updated">Recently Updated</SelectItem>
               <SelectItem value="relevance">Relevance</SelectItem>
+              <SelectItem value="stars">Most Stars</SelectItem>
+              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="oldest">Oldest</SelectItem>
+              <SelectItem value="name">A to Z</SelectItem>
+              <SelectItem value="name-desc">Z to A</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -6,7 +6,7 @@ import type { MarketplaceRegistry } from './marketplace-types'
 // Check if we have a database configured
 const hasDatabase = !!process.env.POSTGRES_URL
 
-export type SortOption = 'relevance' | 'stars' | 'newest' | 'oldest' | 'a-z' | 'z-a'
+export type SortOption = 'relevance' | 'stars' | 'newest' | 'oldest' | 'name' | 'name-desc'
 
 export interface PaginatedMarketplaces {
   marketplaces: MarketplaceRegistry[]
@@ -83,9 +83,9 @@ function getOrderBy(sort: SortOption, marketplaces: any) {
       return desc(marketplaces.updatedAt)
     case 'oldest':
       return asc(marketplaces.updatedAt)
-    case 'a-z':
+    case 'name':
       return asc(marketplaces.displayName)
-    case 'z-a':
+    case 'name-desc':
       return desc(marketplaces.displayName)
     default:
       return desc(marketplaces.stars)
@@ -119,9 +119,9 @@ function sortMarketplaces(marketplaces: MarketplaceRegistry[], sort: SortOption)
         const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
         return dateA - dateB
       })
-    case 'a-z':
+    case 'name':
       return sorted.sort((a, b) => a.displayName.localeCompare(b.displayName))
-    case 'z-a':
+    case 'name-desc':
       return sorted.sort((a, b) => b.displayName.localeCompare(a.displayName))
     default:
       return sorted

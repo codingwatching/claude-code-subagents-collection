@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Package, Sparkles, Loader2 } from 'lucide-react'
+import { Package, Sparkles, Loader2, ArrowUpDown } from 'lucide-react'
 import type { MarketplaceRegistry } from '@/lib/marketplace-types'
 import type { SortOption } from '@/lib/marketplace-server'
 
@@ -172,7 +172,8 @@ export default function MarketplacesPageClient({
             className="max-w-md bg-card border-border"
           />
           <Select value={sort} onValueChange={(value) => setSort(value as SortOption)}>
-            <SelectTrigger className="w-40 bg-card border-border">
+            <SelectTrigger className="w-[150px] bg-card border-border">
+              <ArrowUpDown className="h-4 w-4 mr-2 text-muted-foreground" />
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -180,8 +181,8 @@ export default function MarketplacesPageClient({
               <SelectItem value="stars">Most Stars</SelectItem>
               <SelectItem value="newest">Newest</SelectItem>
               <SelectItem value="oldest">Oldest</SelectItem>
-              <SelectItem value="a-z">A to Z</SelectItem>
-              <SelectItem value="z-a">Z to A</SelectItem>
+              <SelectItem value="name">A to Z</SelectItem>
+              <SelectItem value="name-desc">Z to A</SelectItem>
             </SelectContent>
           </Select>
         </div>

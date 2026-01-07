@@ -4,14 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Copy, Check, ExternalLink, Github, Box, Package, Terminal, AlertCircle } from 'lucide-react'
-import { HiMiniCheckBadge } from 'react-icons/hi2'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   MCPServer,
-  VERIFICATION_STATUS,
   SOURCE_INDICATORS,
   getMCPCategoryDisplayName,
   getMCPCategoryIcon
@@ -26,7 +24,6 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
   const [logoError, setLogoError] = useState(false)
 
-  const verificationStatus = VERIFICATION_STATUS[server.verification.status]
   const categoryName = getMCPCategoryDisplayName(server.category)
   const categoryIcon = getMCPCategoryIcon(server.category)
 
@@ -69,12 +66,7 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
               <span className="text-4xl flex-shrink-0">{categoryIcon}</span>
             )}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
-                {server.display_name}
-                {server.verification.status === 'verified' && (
-                  <HiMiniCheckBadge className="h-7 w-7 text-blue-500" />
-                )}
-              </h1>
+              <h1 className="text-3xl font-bold mb-2">{server.display_name}</h1>
               <p className="text-lg text-muted-foreground">{server.description}</p>
             </div>
           </div>

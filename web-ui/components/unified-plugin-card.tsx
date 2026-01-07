@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Check, Copy, ExternalLink } from 'lucide-react'
+import { Check, Copy, Github } from 'lucide-react'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
 
 interface UnifiedPluginCardProps {
@@ -37,17 +37,26 @@ function getTypeBadgeClasses(type: string): string {
 }
 
 function isExternalPlugin(plugin: UnifiedPlugin): boolean {
+  // Build with Claude plugins are always internal (even when loaded from DB without file path)
+  if (plugin.marketplaceName === 'Build with Claude') return false
   // External plugins have a repository URL and no local file path
   return !!plugin.repository && !plugin.file
 }
 
 function getInstallCommand(plugin: UnifiedPlugin): string {
-  const typeFlag = plugin.type === 'subagent' ? '--subagent'
-    : plugin.type === 'command' ? '--command'
-    : plugin.type === 'hook' ? '--hook'
-    : plugin.type === 'skill' ? '--skill'
-    : '--plugin'
-  return `bwc add ${typeFlag} ${plugin.name}`
+  // Use installCommand from DB if available
+  if (plugin.installCommand) return plugin.installCommand
+  // For actual plugins (type='plugin'), use the plugin name directly
+  if (plugin.type === 'plugin') {
+    return `/plugin install ${plugin.name}@buildwithclaude`
+  }
+  // Build install command based on type and category (parent plugin)
+  const prefix = plugin.type === 'subagent' ? 'agents'
+    : plugin.type === 'command' ? 'commands'
+    : plugin.type === 'hook' ? 'hooks'
+    : plugin.type === 'skill' ? 'all-skills'
+    : 'plugins'
+  return `/plugin install ${prefix}-${plugin.category}@buildwithclaude`
 }
 
 function getDetailUrl(plugin: UnifiedPlugin): string {
@@ -56,7 +65,13 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
     case 'command': return `/command/${plugin.name}`
     case 'hook': return `/hook/${plugin.name}`
     case 'skill': return `/skill/${plugin.name}`
-    case 'plugin': return plugin.repository || '#'
+    case 'plugin':
+      // For actual plugins, link to the plugin directory on GitHub
+      if (plugin.file?.includes('.claude-plugin')) {
+        const dirName = plugin.file.split('/')[1] // Extract directory name from path like "plugins/agents-blockchain-web3/.claude-plugin/plugin.json"
+        return `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${dirName}`
+      }
+      return plugin.repository || '#'
     default: return '#'
   }
 }
@@ -65,9 +80,9 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
   const [copied, setCopied] = useState(false)
   const isExternal = isExternalPlugin(plugin)
 
-  const githubUrl = isExternal
-    ? plugin.repository
-    : `https://github.com/davepoon/buildwithclaude/tree/main/${plugin.file}`
+  const githubUrl = plugin.file
+    ? `https://github.com/davepoon/buildwithclaude/tree/main/${plugin.file}`
+    : plugin.repository || 'https://github.com/davepoon/buildwithclaude'
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -135,7 +150,7 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
                 className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
                 onClick={handleOpenRepo}
               >
-                <ExternalLink className="h-3 w-3 mr-1" />
+                <Github className="h-3 w-3 mr-1" />
                 GitHub
               </Button>
             </TooltipTrigger>
