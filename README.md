@@ -21,9 +21,9 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 /plugin install hooks-notifications@buildwithclaude
 
 # Or install complete bundles
-/plugin install all-agents@buildwithclaude      # All 117 agents
-/plugin install all-commands@buildwithclaude    # All 174 commands
-/plugin install all-hooks@buildwithclaude       # All 28 hooks
+/plugin install all-agents@buildwithclaude      # All 317+ agents
+/plugin install all-commands@buildwithclaude    # All 192 commands
+/plugin install all-hooks@buildwithclaude       # All 40 hooks
 
 # Verify installation
 /help
@@ -31,7 +31,7 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 
 ### Available Plugin Categories
 
-**Agent Plugins (117 agents in 11 categories):**
+**Agent Plugins (317+ agents in 11 categories):**
 - `agents-development-architecture` - Backend, frontend, mobile, GraphQL experts
 - `agents-language-specialists` - Python, Go, Rust, TypeScript, C/C++ experts
 - `agents-quality-security` - Code review, security audit, debugging
@@ -39,14 +39,14 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 - `agents-infrastructure-operations` - DevOps, cloud, database optimization
 - [View all categories on buildwithclaude.com](https://www.buildwithclaude.com/browse)
 
-**Command Plugins (174 commands in 22 categories):**
+**Command Plugins (192 commands in 22 categories):**
 - `commands-version-control-git` - Commit, PR, branch management
 - `commands-code-analysis-testing` - Code review, testing, analysis
 - `commands-ci-deployment` - CI/CD, containerization, deployment
 - `commands-documentation-changelogs` - Docs, changelogs, API docs
 - [View all categories on buildwithclaude.com](https://www.buildwithclaude.com/commands)
 
-**Hook Plugins (28 hooks in 8 categories):**
+**Hook Plugins (40 hooks in 8 categories):**
 - `hooks-notifications` - Slack, Discord, Telegram notifications
 - `hooks-git` - Auto-staging, smart commits
 - `hooks-development` - Lint on save, auto-format
@@ -59,7 +59,7 @@ This collection is now available as an official **Claude Code Plugin Marketplace
 
 ## 🌐 Web UI for Browsing
 
-Browse, search, and explore all subagents, commands, hooks, and MCP servers at [buildwithclaude.com](https://www.buildwithclaude.com)
+Browse, search, and explore all agents, commands, hooks, MCP servers, community plugins, skills, and plugin marketplaces at [buildwithclaude.com](https://www.buildwithclaude.com)
 
 ![Claude Code Subagents Homepage](buildwithclaude-homepage.png)
 
@@ -85,13 +85,28 @@ Install all MCP servers via the plugin marketplace:
 
 Or browse individual servers at [buildwithclaude.com/mcp-servers](https://www.buildwithclaude.com/mcp-servers)
 
+### 🧩 Community Plugins
+
+Discover plugins from the community! Browse indexed plugins from various plugin marketplaces at [buildwithclaude.com/plugins](https://www.buildwithclaude.com/plugins)
+
+### ⚡ Skills
+
+Browse individual skills from plugins. Skills are specialized capabilities that can be invoked with slash commands. Explore at [buildwithclaude.com/skills](https://www.buildwithclaude.com/skills)
+
+### 🏪 Community Plugin Marketplaces
+
+Discover third-party plugin marketplaces and sources. Add new marketplaces to expand your available plugins at [buildwithclaude.com/marketplaces](https://www.buildwithclaude.com/marketplaces)
+
 ## Overview
 
 This repository contains:
-- **117 Specialized Subagents**: AI experts in specific domains across 11 categories, automatically invoked based on context or explicitly called when needed
-- **174 Slash Commands**: Community-contributed commands across 22 categories for automating tasks, managing projects, and enhancing workflows
-- **28 Automation Hooks**: Event-driven hooks for notifications, formatting, security, and git automation
+- **317+ Specialized Agents**: AI experts in specific domains across 11 categories, automatically invoked based on context or explicitly called when needed
+- **192 Slash Commands**: Community-contributed commands across 22 categories for automating tasks, managing projects, and enhancing workflows
+- **40 Automation Hooks**: Event-driven hooks for notifications, formatting, security, and git automation
 - **199 MCP Servers**: Secure connections to databases, APIs, and external tools via Docker containers
+- **20.3k+ Community Plugins**: Indexed from 1,158 plugin marketplaces (browse at buildwithclaude.com/plugins)
+- **2k+ Skills**: Individual skills from plugins (browse at buildwithclaude.com/skills)
+- **1,158 Plugin Marketplaces**: Third-party plugin sources (browse at buildwithclaude.com/marketplaces)
 
 ## Quick Start
 
@@ -103,27 +118,27 @@ This repository contains:
 git clone https://github.com/davepoon/buildwithclaude.git
 cd buildwithclaude
 
-# Install all subagents
-find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
+# Install all agents (from plugins/agents-*/agents/)
+find plugins/agents-*/agents -name "*.md" -exec cp {} ~/.claude/agents/ \;
 
-# Install all commands
-find commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
+# Install all commands (from plugins/commands-*/commands/)
+find plugins/commands-*/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
 
 # Restart Claude Code to load everything
 ```
 
-### Install Only Subagents
+### Install Only Agents
 ```bash
-# Clone and install subagents
+# Clone and install agents
 git clone https://github.com/davepoon/buildwithclaude.git
-find buildwithclaude/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
+find buildwithclaude/plugins/agents-*/agents -name "*.md" -exec cp {} ~/.claude/agents/ \;
 ```
 
 ### Install Only Commands
 ```bash
 # Clone and install commands
 git clone https://github.com/davepoon/buildwithclaude.git
-find buildwithclaude/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
+find buildwithclaude/plugins/commands-*/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
 ```
 
 ## Available Subagents
@@ -205,86 +220,80 @@ Visit our [Web UI](https://www.buildwithclaude.com) to browse all subagents and 
    cd buildwithclaude
    ```
 
-2. **Install Subagents:**
+2. **Install Agents:**
 
-   **Option A: Install as User Subagents (available in all projects):**
+   **Option A: Install as User Agents (available in all projects):**
    ```bash
-   # macOS/Linux - Copy all subagent files from the subagents directory
-   find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \;
-   
-   # Alternative for macOS/Linux (if in the repository directory)
-   cp subagents/*.md ~/.claude/agents/
-   
-   # Windows - Copy all subagent files from the subagents directory
-   for %f in (subagents\*.md) do copy "%f" %USERPROFILE%\.claude\agents\
+   # macOS/Linux - Copy all agent files from the plugins/agents-*/agents/ directories
+   find plugins/agents-*/agents -name "*.md" -exec cp {} ~/.claude/agents/ \;
+
+   # Windows - Copy all agent files
+   for /R plugins\agents- %f in (*.md) do copy "%f" %USERPROFILE%\.claude\agents\
    ```
 
-   **Option B: Install as Project Subagents (only for current project):**
+   **Option B: Install as Project Agents (only for current project):**
    ```bash
    # Navigate to your project directory first
    cd /path/to/your/project
-   
+
    # Create the .claude/agents directory if it doesn't exist
    mkdir -p .claude/agents
-   
-   # macOS/Linux - Copy specific subagents you need
-   find /path/to/buildwithclaude/subagents -name "*.md" -exec cp {} .claude/agents/ \;
-   
-   # Windows - Copy specific subagents you need
+
+   # macOS/Linux - Copy specific agents you need
+   find /path/to/buildwithclaude/plugins/agents-*/agents -name "*.md" -exec cp {} .claude/agents/ \;
+
+   # Windows - Copy specific agents you need
    mkdir .claude\agents 2>nul
-   for %f in (\path\to\buildwithclaude\subagents\*.md) do copy "%f" .claude\agents\
+   for /R \path\to\buildwithclaude\plugins\agents- %f in (*.md) do copy "%f" .claude\agents\
    ```
-   
-   > **Note**: Project subagents are only available in the specific project where they're installed. Use this option when you want subagents tailored to a particular project or when testing new subagents.
+
+   > **Note**: Project agents are only available in the specific project where they're installed. Use this option when you want agents tailored to a particular project or when testing new agents.
 
 3. **Install Commands:**
 
    **Option A: Install as User Commands (available in all projects):**
    ```bash
-   # macOS/Linux - Copy all command files from the commands directory
-   find commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
-   
-   # Alternative for macOS/Linux (if in the repository directory)
-   cp commands/*.md ~/.claude/commands/
-   
-   # Windows - Copy all command files from the commands directory
-   for %f in (commands\*.md) do copy "%f" %USERPROFILE%\.claude\commands\
+   # macOS/Linux - Copy all command files from the plugins/commands-*/commands/ directories
+   find plugins/commands-*/commands -name "*.md" -exec cp {} ~/.claude/commands/ \;
+
+   # Windows - Copy all command files
+   for /R plugins\commands- %f in (*.md) do copy "%f" %USERPROFILE%\.claude\commands\
    ```
 
    **Option B: Install as Project Commands (only for current project):**
    ```bash
    # Navigate to your project directory first
    cd /path/to/your/project
-   
+
    # Create the .claude/commands directory if it doesn't exist
    mkdir -p .claude/commands
-   
+
    # macOS/Linux - Copy specific commands you need
-   find /path/to/buildwithclaude/commands -name "*.md" -exec cp {} .claude/commands/ \;
-   
+   find /path/to/buildwithclaude/plugins/commands-*/commands -name "*.md" -exec cp {} .claude/commands/ \;
+
    # Windows - Copy specific commands you need
    mkdir .claude\commands 2>nul
-   for %f in (\path\to\buildwithclaude\commands\*.md) do copy "%f" .claude\commands\
+   for /R \path\to\buildwithclaude\plugins\commands- %f in (*.md) do copy "%f" .claude\commands\
    ```
-   
+
    > **Note**: Project commands are only available in the specific project where they're installed. Use this option for project-specific commands or when testing new commands.
 
 4. **Verify installation:**
    ```bash
-   # For user subagents
+   # For user agents
    ls ~/.claude/agents/
-   
-   # For project subagents
+
+   # For project agents
    ls .claude/agents/
-   
+
    # For user commands
    ls ~/.claude/commands/
-   
+
    # For project commands
    ls .claude/commands/
    ```
 
-5. **Restart Claude Code** to load the new subagents and commands
+5. **Restart Claude Code** to load the new agents and commands
 
 ## Usage
 
@@ -397,38 +406,38 @@ Claude: [Generates documentation based on project structure]
 - `/create-prd` - Create product requirement documents
 - `/create-jtbd` - Create Jobs-to-be-Done documentation
 
-[View all 174 commands on the Web UI](https://www.buildwithclaude.com/commands)
+[View all 192 commands on the Web UI](https://www.buildwithclaude.com/commands)
 
-## Subagent Format
+## Agent Format
 
-Each subagent follows this structure:
+Each agent follows this structure (located in `plugins/agents-*/agents/*.md`):
 
 ```markdown
 ---
-name: subagent-name
-description: When this subagent should be invoked
+name: agent-name
+description: When this agent should be invoked
 category: category-name  # Required - see CONTRIBUTING.md for valid categories
 tools: tool1, tool2  # Optional - defaults to all tools
 ---
 
-System prompt defining the subagent's role and capabilities
+System prompt defining the agent's role and capabilities
 ```
 
-### Subagent Components:
-- **name**: Unique identifier for the subagent
+### Agent Components:
+- **name**: Unique identifier for the agent
 - **description**: Triggers automatic invocation
 - **category**: Organizational category (e.g., development-architecture, quality-security)
-- **tools**: Specific tools the subagent can use (optional)
+- **tools**: Specific tools the agent can use (optional)
 - **system prompt**: Detailed instructions and expertise
 
 ## Command Format
 
-Each command follows this structure:
+Each command follows this structure (located in `plugins/commands-*/commands/*.md`):
 
 ```markdown
 ---
 description: Brief explanation of what the command does
-category: category-name  # Required - see commands/README.md for categories
+category: category-name  # Required - see CONTRIBUTING.md for categories
 argument-hint: <optional-args>  # Optional
 allowed-tools: tool1, tool2  # Optional
 model: opus|sonnet|haiku  # Optional
@@ -508,24 +517,24 @@ Command instructions and implementation details
 
 We welcome contributions for both subagents and commands!
 
-### Contributing Subagents
+### Contributing Agents
 
-To add a new subagent:
+To add a new agent:
 
-1. **Create a new file** in `subagents/`: `subagent-name.md`
+1. **Create a new file** in `plugins/agents-<category>/agents/`: `agent-name.md`
 2. **Follow the format**:
    ```markdown
    ---
-   name: your-subagent
+   name: your-agent
    description: Clear description of when to use
    category: appropriate-category
    ---
-   
+
    You are a [role description]...
    ```
 
 3. **Submit a PR** with:
-   - The new subagent file in `subagents/` directory
+   - The new agent file in the appropriate `plugins/agents-*/agents/` directory
    - Updated README listing
    - Example usage scenarios
 
@@ -533,7 +542,7 @@ To add a new subagent:
 
 To add a new command:
 
-1. **Create a new file** in `commands/`: `command-name.md`
+1. **Create a new file** in `plugins/commands-<category>/commands/`: `command-name.md`
 2. **Follow the format**:
    ```markdown
    ---
@@ -541,12 +550,12 @@ To add a new command:
    category: appropriate-category
    argument-hint: <optional-args>  # if applicable
    ---
-   
+
    Command implementation details...
    ```
 
 3. **Submit a PR** with:
-   - The new command file in `commands/` directory
+   - The new command file in the appropriate `plugins/commands-*/commands/` directory
    - Clear documentation and examples
 
 ### Guidelines for Both:
