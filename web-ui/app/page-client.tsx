@@ -3,25 +3,86 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Bot, Terminal, Webhook, Sparkles, Package } from 'lucide-react'
 import type { Plugin } from '@/lib/plugins-types'
+import type { Skill } from '@/lib/skills-types'
+import type { Subagent } from '@/lib/subagents-types'
+import type { Command } from '@/lib/commands-types'
+import type { Hook } from '@/lib/hooks-types'
 
 interface HomePageClientProps {
   pluginCount: number
   subagentCount: number
   commandCount: number
   skillCount: number
+  hookCount: number
   featuredPlugins: Plugin[]
+  featuredSkills: Skill[]
+  featuredSubagents: Subagent[]
+  featuredCommands: Command[]
+  featuredHooks: Hook[]
 }
 
 const words = ['plugins', 'skills', 'tools', 'agents']
+
+interface FeaturedSectionProps {
+  title: string
+  href: string
+  icon: React.ElementType
+  color: 'purple' | 'yellow' | 'blue' | 'green' | 'orange'
+  items: Array<{ name?: string; slug: string; description: string }>
+  itemLinkPrefix: string
+}
+
+function FeaturedSection({ title, href, icon: Icon, color, items, itemLinkPrefix }: FeaturedSectionProps) {
+  const colorClasses = {
+    purple: 'text-purple-500',
+    yellow: 'text-yellow-500',
+    blue: 'text-blue-500',
+    green: 'text-green-500',
+    orange: 'text-orange-500',
+  }
+
+  return (
+    <section className="py-16">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-display-3 flex items-center gap-3">
+            <Icon className={`h-7 w-7 ${colorClasses[color]}`} />
+            {title}
+          </h2>
+          <Link href={href} className="text-sm text-muted-foreground hover:text-accent transition-colors">
+            View all →
+          </Link>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((item) => (
+            <Link key={item.slug} href={`${itemLinkPrefix}/${item.slug}`}>
+              <div className="p-6 rounded-lg border border-border hover:border-primary/40 transition-colors h-full">
+                <h3 className="font-medium mb-2">{item.name || item.slug}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {item.description}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default function HomePageClient({
   pluginCount,
   subagentCount,
   commandCount,
   skillCount,
+  hookCount,
   featuredPlugins,
+  featuredSkills,
+  featuredSubagents,
+  featuredCommands,
+  featuredHooks,
 }: HomePageClientProps) {
   const [wordIndex, setWordIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(true)
@@ -38,10 +99,11 @@ export default function HomePageClient({
   }, [])
 
   const categories = [
-    { href: '/plugins', label: 'Plugins', count: pluginCount },
-    { href: '/subagents', label: 'Subagents', count: subagentCount },
-    { href: '/commands', label: 'Commands', count: commandCount },
-    { href: '/skills', label: 'Skills', count: skillCount },
+    { href: '/plugins', label: 'Plugins', count: pluginCount, icon: Package, color: 'purple' as const },
+    { href: '/skills', label: 'Skills', count: skillCount, icon: Sparkles, color: 'yellow' as const },
+    { href: '/subagents', label: 'Subagents', count: subagentCount, icon: Bot, color: 'blue' as const },
+    { href: '/commands', label: 'Commands', count: commandCount, icon: Terminal, color: 'green' as const },
+    { href: '/hooks', label: 'Hooks', count: hookCount, icon: Webhook, color: 'orange' as const },
   ]
 
   return (
@@ -63,7 +125,7 @@ export default function HomePageClient({
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
-                A collection of {pluginCount + subagentCount + commandCount + skillCount}+ practical extensions
+                A collection of {pluginCount + subagentCount + commandCount + skillCount + hookCount}+ practical extensions
                 to enhance your productivity across Claude.ai, Claude Code, and the Claude API.
               </p>
               <div className="flex gap-4 flex-wrap">
@@ -191,51 +253,85 @@ export default function HomePageClient({
           <p className="text-sm text-muted-foreground mb-8 text-center tracking-wide uppercase">
             Browse by type
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            {categories.map((cat) => (
-              <Link key={cat.href} href={cat.href}>
-                <div className="p-6 rounded-lg border border-border hover:border-primary/40 transition-colors group text-center">
-                  <div className="text-3xl font-serif text-primary mb-2">
-                    {cat.count}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
+            {categories.map((cat) => {
+              const Icon = cat.icon
+              const colorClasses = {
+                blue: 'bg-blue-500/10 text-blue-500 group-hover:bg-blue-500/20',
+                green: 'bg-green-500/10 text-green-500 group-hover:bg-green-500/20',
+                orange: 'bg-orange-500/10 text-orange-500 group-hover:bg-orange-500/20',
+                yellow: 'bg-yellow-500/10 text-yellow-500 group-hover:bg-yellow-500/20',
+                purple: 'bg-purple-500/10 text-purple-500 group-hover:bg-purple-500/20',
+              }
+              return (
+                <Link key={cat.href} href={cat.href}>
+                  <div className="p-6 rounded-lg border border-border hover:border-primary/40 transition-all group text-center">
+                    <div className={`w-12 h-12 rounded-full ${colorClasses[cat.color]} flex items-center justify-center mx-auto mb-4 transition-colors`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div className="text-3xl font-serif text-foreground mb-1">
+                      {cat.count}
+                    </div>
+                    <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                      {cat.label}
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                    {cat.label}
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* Featured plugins */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-display-3">Featured Plugins</h2>
-            <Link href="/plugins" className="text-sm text-muted-foreground hover:text-accent transition-colors">
-              View all →
-            </Link>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredPlugins.map((plugin) => (
-              <Link key={plugin.name} href={`/plugin/${plugin.name}`}>
-                <div className="p-6 rounded-lg border border-border hover:border-primary/40 transition-colors h-full">
-                  <div className="flex items-start justify-between gap-4 mb-3">
-                    <h3 className="font-medium">{plugin.name}</h3>
-                    <span className="text-xs text-muted-foreground/70">
-                      v{plugin.version}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {plugin.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Featured Plugins */}
+      <FeaturedSection
+        title="Plugins"
+        href="/plugins"
+        icon={Package}
+        color="purple"
+        items={featuredPlugins.map(p => ({ slug: p.name, name: p.name, description: p.description }))}
+        itemLinkPrefix="/plugin"
+      />
+
+      {/* Featured Skills */}
+      <FeaturedSection
+        title="Skills"
+        href="/skills"
+        icon={Sparkles}
+        color="yellow"
+        items={featuredSkills}
+        itemLinkPrefix="/skill"
+      />
+
+      {/* Featured Subagents */}
+      <FeaturedSection
+        title="Subagents"
+        href="/subagents"
+        icon={Bot}
+        color="blue"
+        items={featuredSubagents}
+        itemLinkPrefix="/subagent"
+      />
+
+      {/* Featured Commands */}
+      <FeaturedSection
+        title="Commands"
+        href="/commands"
+        icon={Terminal}
+        color="green"
+        items={featuredCommands}
+        itemLinkPrefix="/command"
+      />
+
+      {/* Featured Hooks */}
+      <FeaturedSection
+        title="Hooks"
+        href="/hooks"
+        icon={Webhook}
+        color="orange"
+        items={featuredHooks}
+        itemLinkPrefix="/hook"
+      />
 
       {/* Quick install */}
       <section className="py-20 border-t border-border">
