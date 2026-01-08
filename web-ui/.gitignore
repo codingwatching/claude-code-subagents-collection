@@ -35,13 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Private API code (not shared)
-/lib/github/
-/lib/indexer/
-/app/api/admin/
-/app/api/cron/
-/app/api/marketplaces/
-drizzle.config.ts
-
 # Generated registry (no longer needed - data comes from database)
 /public/registry.json
