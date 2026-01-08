@@ -26,14 +26,14 @@
       "message": "Version: 1.0.0"
     },
     {
-      "name": "subagents_dir",
+      "name": "agents_dir",
       "status": "passed",
-      "message": "117 subagent files"
+      "message": "117 agent files"
     },
     {
       "name": "commands_dir",
       "status": "passed",
-      "message": "175 command files"
+      "message": "182 command files"
     },
     {
       "name": "hooks_dir",
@@ -48,7 +48,7 @@
     {
       "name": "claude_cli",
       "status": "passed",
-      "message": "Version: 2.0.76 (Claude Code)"
+      "message": "Version: 2.1.1 (Claude Code)"
     },
     {
       "name": "claude_plugin_load",
@@ -62,14 +62,14 @@
     },
     {
       "name": "claude_agents_registered",
-      "status": "passed",
-      "message": "Agents visible"
+      "status": "warning",
+      "message": "Agents not detected"
     }
   ],
-  "timestamp": "2026-01-04T00:04:13Z",
+  "timestamp": "2026-01-08T08:29:20Z",
   "summary": {
-    "passed": 13,
+    "passed": 12,
     "failed": 0,
-    "warnings": 0
+    "warnings": 1
   }
 }

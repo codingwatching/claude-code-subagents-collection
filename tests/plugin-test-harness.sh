@@ -135,38 +135,52 @@ else
     add_result "plugin_manifest_exists" "failed" "No manifest file found"
 fi
 
-# Test 3: Check component directories
+# Test 3: Check component directories (monorepo structure)
 log_info "Test 3: Checking component directories..."
 
-SUBAGENTS_DIR="$PLUGIN_DIR/subagents"
-COMMANDS_DIR="$PLUGIN_DIR/commands"
-HOOKS_DIR="$PLUGIN_DIR/hooks"
+# For monorepo structure, search in plugins/agents-*/agents/, etc.
+PLUGINS_DIR="$PLUGIN_DIR/plugins"
 
-if [ -d "$SUBAGENTS_DIR" ]; then
-    SUBAGENT_COUNT=$(find "$SUBAGENTS_DIR" -name "*.md" | wc -l | tr -d ' ')
-    log_success "Subagents directory exists: $SUBAGENT_COUNT files"
-    add_result "subagents_dir" "passed" "$SUBAGENT_COUNT subagent files"
-else
-    log_failure "Subagents directory missing"
-    add_result "subagents_dir" "failed" "Directory missing"
+# Count agents across all agent plugins (exclude bundle plugins to avoid double-counting)
+SUBAGENT_COUNT=0
+if [ -d "$PLUGINS_DIR" ]; then
+    SUBAGENT_COUNT=$(find "$PLUGINS_DIR" -path "*/agents/*.md" ! -path "*/all-agents/*" 2>/dev/null | wc -l | tr -d ' ')
 fi
 
-if [ -d "$COMMANDS_DIR" ]; then
-    COMMAND_COUNT=$(find "$COMMANDS_DIR" -name "*.md" | wc -l | tr -d ' ')
-    log_success "Commands directory exists: $COMMAND_COUNT files"
+if [ "$SUBAGENT_COUNT" -gt 0 ]; then
+    log_success "Agents found: $SUBAGENT_COUNT files (in plugins/agents-*/agents/)"
+    add_result "agents_dir" "passed" "$SUBAGENT_COUNT agent files"
+else
+    log_failure "No agents found in plugins/agents-*/agents/"
+    add_result "agents_dir" "failed" "No agent files found"
+fi
+
+# Count commands across all command plugins
+COMMAND_COUNT=0
+if [ -d "$PLUGINS_DIR" ]; then
+    COMMAND_COUNT=$(find "$PLUGINS_DIR" -path "*/commands/*.md" ! -path "*/all-commands/*" 2>/dev/null | wc -l | tr -d ' ')
+fi
+
+if [ "$COMMAND_COUNT" -gt 0 ]; then
+    log_success "Commands found: $COMMAND_COUNT files (in plugins/commands-*/commands/)"
     add_result "commands_dir" "passed" "$COMMAND_COUNT command files"
 else
-    log_failure "Commands directory missing"
-    add_result "commands_dir" "failed" "Directory missing"
+    log_failure "No commands found in plugins/commands-*/commands/"
+    add_result "commands_dir" "failed" "No command files found"
 fi
 
-if [ -d "$HOOKS_DIR" ]; then
-    HOOK_COUNT=$(find "$HOOKS_DIR" -name "*.md" | wc -l | tr -d ' ')
-    log_success "Hooks directory exists: $HOOK_COUNT files"
+# Count hooks across all hook plugins
+HOOK_COUNT=0
+if [ -d "$PLUGINS_DIR" ]; then
+    HOOK_COUNT=$(find "$PLUGINS_DIR" -path "*/hooks/*.md" ! -path "*/all-hooks/*" 2>/dev/null | wc -l | tr -d ' ')
+fi
+
+if [ "$HOOK_COUNT" -gt 0 ]; then
+    log_success "Hooks found: $HOOK_COUNT files (in plugins/hooks-*/hooks/)"
     add_result "hooks_dir" "passed" "$HOOK_COUNT hook files"
 else
-    log_failure "Hooks directory missing"
-    add_result "hooks_dir" "failed" "Directory missing"
+    log_failure "No hooks found in plugins/hooks-*/hooks/"
+    add_result "hooks_dir" "failed" "No hook files found"
 fi
 
 # Test 4: Run schema validation
