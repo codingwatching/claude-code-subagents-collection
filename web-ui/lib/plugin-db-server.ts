@@ -3,6 +3,13 @@ import { plugins, skills, marketplaces } from '@/lib/db/schema'
 import { eq, ilike, or, sql, desc, asc, and, inArray } from 'drizzle-orm'
 import type { UnifiedPlugin, PluginType } from './plugin-types'
 
+// Import local plugin loaders for Build with Claude plugins
+import { getAllSubagents } from './subagents-server'
+import { getAllCommands } from './commands-server'
+import { getAllHooks } from './hooks-server'
+import { getAllSkills } from './skills-server'
+import { getAllPlugins as getLocalPlugins } from './plugins-server'
+
 export type SortOption = 'relevance' | 'stars' | 'newest' | 'oldest' | 'name' | 'name-desc' | 'updated'
 
 export interface PluginFilters {
@@ -27,8 +34,206 @@ export interface MarketplaceOption {
   pluginCount: number
 }
 
+const BUILD_WITH_CLAUDE_MARKETPLACE = 'Build with Claude'
+const BUILD_WITH_CLAUDE_ID = 'build-with-claude'
+
 /**
- * Get paginated plugins from the database with optional filters
+ * Load all local Build with Claude plugins and convert to UnifiedPlugin format
+ */
+function getLocalBuildWithClaudePlugins(): UnifiedPlugin[] {
+  const results: UnifiedPlugin[] = []
+
+  // Load subagents
+  try {
+    const subagents = getAllSubagents()
+    for (const s of subagents) {
+      results.push({
+        type: 'subagent',
+        name: s.name,
+        description: s.description,
+        category: s.category,
+        tags: [],
+        marketplaceId: BUILD_WITH_CLAUDE_ID,
+        marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
+      })
+    }
+  } catch (e) {
+    console.warn('Error loading local subagents:', e)
+  }
+
+  // Load commands
+  try {
+    const commands = getAllCommands()
+    for (const c of commands) {
+      results.push({
+        type: 'command',
+        name: c.slug,
+        description: c.description,
+        category: c.category,
+        tags: [],
+        marketplaceId: BUILD_WITH_CLAUDE_ID,
+        marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
+      })
+    }
+  } catch (e) {
+    console.warn('Error loading local commands:', e)
+  }
+
+  // Load hooks
+  try {
+    const hooks = getAllHooks()
+    for (const h of hooks) {
+      results.push({
+        type: 'hook',
+        name: h.name,
+        description: h.description,
+        category: h.category,
+        tags: [],
+        marketplaceId: BUILD_WITH_CLAUDE_ID,
+        marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
+      })
+    }
+  } catch (e) {
+    console.warn('Error loading local hooks:', e)
+  }
+
+  // Load skills
+  try {
+    const skills = getAllSkills()
+    for (const s of skills) {
+      results.push({
+        type: 'skill',
+        name: s.name,
+        description: s.description,
+        category: s.category,
+        tags: [],
+        marketplaceId: BUILD_WITH_CLAUDE_ID,
+        marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
+      })
+    }
+  } catch (e) {
+    console.warn('Error loading local skills:', e)
+  }
+
+  // Load plugins from marketplace.json
+  try {
+    const localPlugins = getLocalPlugins()
+    for (const p of localPlugins) {
+      results.push({
+        type: 'plugin',
+        name: p.name,
+        description: p.description,
+        category: p.category,
+        tags: p.keywords || [],
+        marketplaceId: BUILD_WITH_CLAUDE_ID,
+        marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
+        repository: p.repository,
+        author: p.author?.name,
+        version: p.version,
+      })
+    }
+  } catch (e) {
+    console.warn('Error loading local plugins:', e)
+  }
+
+  return results
+}
+
+/**
+ * Filter local plugins based on search/type/marketplace criteria
+ */
+function filterLocalPlugins(
+  plugins: UnifiedPlugin[],
+  options: {
+    search?: string
+    type?: PluginType | 'all'
+    marketplaceId?: string
+    category?: string
+  }
+): UnifiedPlugin[] {
+  let filtered = plugins
+
+  // Type filter
+  if (options.type && options.type !== 'all') {
+    filtered = filtered.filter(p => p.type === options.type)
+  }
+
+  // Marketplace filter - only include if 'all' or matching Build with Claude
+  if (options.marketplaceId && options.marketplaceId !== 'all') {
+    if (options.marketplaceId !== BUILD_WITH_CLAUDE_ID &&
+        options.marketplaceId !== BUILD_WITH_CLAUDE_MARKETPLACE) {
+      return [] // Not Build with Claude marketplace, return empty
+    }
+  }
+
+  // Category filter
+  if (options.category) {
+    filtered = filtered.filter(p => p.category === options.category)
+  }
+
+  // Search filter
+  if (options.search) {
+    const searchLower = options.search.toLowerCase()
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(searchLower) ||
+      p.description.toLowerCase().includes(searchLower) ||
+      p.tags?.some(t => t.toLowerCase().includes(searchLower))
+    )
+  }
+
+  return filtered
+}
+
+/**
+ * Sort plugins by the given sort option
+ */
+function sortPlugins(plugins: UnifiedPlugin[], sort: SortOption, search?: string): UnifiedPlugin[] {
+  const sorted = [...plugins]
+
+  switch (sort) {
+    case 'name':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name))
+    case 'stars':
+      return sorted.sort((a, b) => (b.stars || 0) - (a.stars || 0))
+    case 'newest':
+    case 'oldest':
+    case 'updated':
+      // Local plugins don't have dates, keep current order
+      return sorted
+    case 'relevance':
+    default:
+      if (search) {
+        const searchLower = search.toLowerCase()
+        return sorted.sort((a, b) => {
+          // Exact name match first
+          const aExact = a.name.toLowerCase() === searchLower ? 0 : 1
+          const bExact = b.name.toLowerCase() === searchLower ? 0 : 1
+          if (aExact !== bExact) return aExact - bExact
+
+          // Name starts with search
+          const aStarts = a.name.toLowerCase().startsWith(searchLower) ? 0 : 1
+          const bStarts = b.name.toLowerCase().startsWith(searchLower) ? 0 : 1
+          if (aStarts !== bStarts) return aStarts - bStarts
+
+          // Name contains search
+          const aContains = a.name.toLowerCase().includes(searchLower) ? 0 : 1
+          const bContains = b.name.toLowerCase().includes(searchLower) ? 0 : 1
+          if (aContains !== bContains) return aContains - bContains
+
+          // Fall back to alphabetical
+          return a.name.localeCompare(b.name)
+        })
+      }
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+  }
+}
+
+/**
+ * Get paginated plugins from local files and database with optional filters
+ * Hybrid approach: Local Build with Claude plugins are always loaded from files,
+ * merged with database plugins from external marketplaces
  */
 export async function getPluginsPaginated(options: {
   limit?: number
@@ -43,16 +248,44 @@ export async function getPluginsPaginated(options: {
     limit = 50,
     offset = 0,
     search,
-    sort = 'stars',
+    sort = 'relevance',
     type = 'all',
     marketplaceId,
     category,
   } = options
 
-  // Build where conditions
-  const conditions = []
+  // Check if filtering to Build with Claude only
+  const isBWCOnly = marketplaceId === BUILD_WITH_CLAUDE_ID ||
+                    marketplaceId === BUILD_WITH_CLAUDE_MARKETPLACE
 
-  // Active plugins only
+  // Check if filtering to a non-BWC marketplace (skip local plugins)
+  const isOtherMarketplace = marketplaceId &&
+                             marketplaceId !== 'all' &&
+                             !isBWCOnly
+
+  // 1. Get local Build with Claude plugins (always loaded from files)
+  let localPlugins: UnifiedPlugin[] = []
+  if (!isOtherMarketplace) {
+    const allLocalPlugins = getLocalBuildWithClaudePlugins()
+    localPlugins = filterLocalPlugins(allLocalPlugins, { search, type, marketplaceId, category })
+    localPlugins = sortPlugins(localPlugins, sort, search)
+  }
+
+  // 2. If only Build with Claude, return local results directly
+  if (isBWCOnly) {
+    const paginatedLocal = localPlugins.slice(offset, offset + limit)
+    return {
+      plugins: paginatedLocal,
+      total: localPlugins.length,
+      limit,
+      offset,
+      hasMore: offset + paginatedLocal.length < localPlugins.length,
+    }
+  }
+
+  // 3. For 'all' marketplaces or other marketplaces, also query database
+  // Build where conditions for database query
+  const conditions = []
   conditions.push(eq(plugins.active, true))
 
   // Type filter
@@ -60,9 +293,8 @@ export async function getPluginsPaginated(options: {
     conditions.push(eq(plugins.type, type))
   }
 
-  // Marketplace filter - try both marketplaceId and marketplaceName
-  // (sources from plugins table use name as ID)
-  if (marketplaceId) {
+  // Marketplace filter for database (skip BWC since we handle it locally)
+  if (marketplaceId && marketplaceId !== 'all') {
     conditions.push(
       or(
         eq(plugins.marketplaceId, marketplaceId),
@@ -88,7 +320,7 @@ export async function getPluginsPaginated(options: {
     )
   }
 
-  // Determine sort order
+  // Determine sort order for database
   let orderBy
   switch (sort) {
     case 'name':
@@ -104,14 +336,15 @@ export async function getPluginsPaginated(options: {
       orderBy = asc(plugins.updatedAt)
       break
     case 'updated':
-      // Keep for backwards compatibility
       orderBy = desc(plugins.updatedAt)
       break
+    case 'stars':
+      orderBy = sql`COALESCE(${plugins.stars}, 0) DESC`
+      break
     case 'relevance':
-      // For relevance, prioritize Build with Claude plugins first
+    default:
       if (search) {
         orderBy = sql`
-          CASE WHEN ${plugins.marketplaceName} = 'Build with Claude' THEN 0 ELSE 1 END,
           CASE
             WHEN ${plugins.name} ILIKE ${search} THEN 0
             WHEN ${plugins.name} ILIKE ${`${search}%`} THEN 1
@@ -122,24 +355,15 @@ export async function getPluginsPaginated(options: {
           COALESCE(${plugins.stars}, 0) DESC
         `
       } else {
-        // When no search, prioritize Build with Claude plugins, then sort by name
-        orderBy = sql`
-          CASE WHEN ${plugins.marketplaceName} = 'Build with Claude' THEN 0 ELSE 1 END,
-          ${plugins.name} ASC
-        `
+        orderBy = asc(plugins.name)
       }
-      break
-    case 'stars':
-    default:
-      // Use COALESCE to put plugins without stars at the end
-      orderBy = sql`COALESCE(${plugins.stars}, 0) DESC`
       break
   }
 
-  // Execute query
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-  const [results, countResult] = await Promise.all([
+  // Query database
+  const [dbResults, dbCountResult] = await Promise.all([
     db
       .select({
         id: plugins.id,
@@ -162,8 +386,7 @@ export async function getPluginsPaginated(options: {
       .from(plugins)
       .where(whereClause)
       .orderBy(orderBy)
-      .limit(limit)
-      .offset(offset),
+      .limit(1000), // Get more to allow merging and deduplication
 
     db
       .select({ count: sql<number>`count(*)` })
@@ -171,10 +394,8 @@ export async function getPluginsPaginated(options: {
       .where(whereClause),
   ])
 
-  const total = Number(countResult[0]?.count || 0)
-
-  // Transform to UnifiedPlugin format
-  const unifiedPlugins: UnifiedPlugin[] = results.map((p) => ({
+  // Transform database results to UnifiedPlugin format
+  const dbPlugins: UnifiedPlugin[] = dbResults.map((p) => ({
     type: (p.type as PluginType) || 'plugin',
     name: p.name,
     description: p.description || '',
@@ -190,20 +411,54 @@ export async function getPluginsPaginated(options: {
     version: p.version || undefined,
   }))
 
+  // 4. Merge local and DB plugins (local first for relevance sort)
+  // Deduplicate by name+type (local takes precedence)
+  const seen = new Set<string>()
+  const merged: UnifiedPlugin[] = []
+
+  // Add local plugins first
+  for (const p of localPlugins) {
+    const key = `${p.type}:${p.name.toLowerCase()}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      merged.push(p)
+    }
+  }
+
+  // Add database plugins (skip duplicates)
+  for (const p of dbPlugins) {
+    const key = `${p.type}:${p.name.toLowerCase()}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      merged.push(p)
+    }
+  }
+
+  // 5. Re-sort the merged list
+  const sortedMerged = sortPlugins(merged, sort, search)
+
+  // 6. Paginate
+  const total = sortedMerged.length
+  const paginatedResults = sortedMerged.slice(offset, offset + limit)
+
   return {
-    plugins: unifiedPlugins,
+    plugins: paginatedResults,
     total,
     limit,
     offset,
-    hasMore: offset + results.length < total,
+    hasMore: offset + paginatedResults.length < total,
   }
 }
 
 /**
  * Get list of marketplaces for filter dropdown
- * Includes both registered marketplaces and any marketplace names found in plugins
+ * Includes Build with Claude (from local files), registered marketplaces, and plugin sources
  */
 export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
+  // Get local Build with Claude plugin count
+  const localPlugins = getLocalBuildWithClaudePlugins()
+  const localCount = localPlugins.length
+
   // Get registered marketplaces from marketplaces table
   const dbMarketplaces = await db
     .select({
@@ -226,33 +481,48 @@ export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
     .where(eq(plugins.active, true))
     .groupBy(plugins.marketplaceName)
 
-  // Map db marketplaces to result format
-  const results: MarketplaceOption[] = dbMarketplaces.map((m) => ({
-    id: m.id,
-    name: m.name,
-    displayName: m.displayName,
-    pluginCount: m.pluginCount,
-  }))
+  // Start with Build with Claude from local files
+  const results: MarketplaceOption[] = [{
+    id: BUILD_WITH_CLAUDE_ID,
+    name: BUILD_WITH_CLAUDE_ID,
+    displayName: BUILD_WITH_CLAUDE_MARKETPLACE,
+    pluginCount: localCount,
+  }]
+
+  // Map db marketplaces to result format (skip Build with Claude as we handle it locally)
+  const existingNames = new Set([BUILD_WITH_CLAUDE_MARKETPLACE])
+  for (const m of dbMarketplaces) {
+    if (!existingNames.has(m.displayName)) {
+      results.push({
+        id: m.id,
+        name: m.name,
+        displayName: m.displayName,
+        pluginCount: m.pluginCount,
+      })
+      existingNames.add(m.displayName)
+    }
+  }
 
   // Add any marketplace names from plugins that aren't already in results
-  const existingNames = new Set(results.map((m) => m.displayName))
   for (const pm of pluginMarketplaces) {
     if (pm.marketplaceName && !existingNames.has(pm.marketplaceName)) {
       results.push({
-        id: pm.marketplaceName, // Use name as ID for filtering by marketplaceName
+        id: pm.marketplaceName,
         name: pm.marketplaceName,
         displayName: pm.marketplaceName,
         pluginCount: Number(pm.count),
       })
+      existingNames.add(pm.marketplaceName)
     }
   }
 
-  // Sort by plugin count descending
+  // Sort by plugin count descending (Build with Claude will naturally be at top if it has most plugins)
   return results.sort((a, b) => b.pluginCount - a.pluginCount)
 }
 
 /**
  * Get plugin stats for the UI (matching plugin-server.ts format)
+ * Merges local Build with Claude plugins with database plugins
  */
 export async function getPluginStatsForUI(): Promise<{
   total: number
@@ -262,6 +532,40 @@ export async function getPluginStatsForUI(): Promise<{
   skills: number
   plugins: number
 }> {
+  // Get local Build with Claude plugins
+  const localPlugins = getLocalBuildWithClaudePlugins()
+
+  // Count local plugins by type
+  const localCounts = {
+    subagents: 0,
+    commands: 0,
+    hooks: 0,
+    skills: 0,
+    plugins: 0,
+  }
+
+  for (const p of localPlugins) {
+    switch (p.type) {
+      case 'subagent':
+        localCounts.subagents++
+        break
+      case 'command':
+        localCounts.commands++
+        break
+      case 'hook':
+        localCounts.hooks++
+        break
+      case 'skill':
+        localCounts.skills++
+        break
+      case 'plugin':
+      default:
+        localCounts.plugins++
+        break
+    }
+  }
+
+  // Get database stats
   const typeStats = await db
     .select({
       type: plugins.type,
@@ -271,8 +575,7 @@ export async function getPluginStatsForUI(): Promise<{
     .where(eq(plugins.active, true))
     .groupBy(plugins.type)
 
-  const counts = {
-    total: 0,
+  const dbCounts = {
     subagents: 0,
     commands: 0,
     hooks: 0,
@@ -282,28 +585,41 @@ export async function getPluginStatsForUI(): Promise<{
 
   for (const stat of typeStats) {
     const count = Number(stat.count)
-    counts.total += count
 
     switch (stat.type) {
       case 'subagent':
-        counts.subagents = count
+        dbCounts.subagents = count
         break
       case 'command':
-        counts.commands = count
+        dbCounts.commands = count
         break
       case 'hook':
-        counts.hooks = count
+        dbCounts.hooks = count
         break
       case 'skill':
-        counts.skills = count
+        dbCounts.skills = count
         break
       case 'plugin':
       case 'mcp':
       default:
-        counts.plugins += count
+        dbCounts.plugins += count
         break
     }
   }
+
+  // Use local counts as the primary source (since we always load from local files)
+  // Add database counts for types that might have additional external plugins
+  // Note: We use MAX of local and db counts since local files are authoritative for BWC
+  const counts = {
+    total: 0,
+    subagents: Math.max(localCounts.subagents, dbCounts.subagents),
+    commands: Math.max(localCounts.commands, dbCounts.commands),
+    hooks: Math.max(localCounts.hooks, dbCounts.hooks),
+    skills: Math.max(localCounts.skills, dbCounts.skills),
+    plugins: localCounts.plugins + dbCounts.plugins, // Plugins can be additive (external plugins)
+  }
+
+  counts.total = counts.subagents + counts.commands + counts.hooks + counts.skills + counts.plugins
 
   return counts
 }
