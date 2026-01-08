@@ -496,8 +496,8 @@ Validation Report
 
 ## Questions?
 
-- Check existing [issues](https://github.com/davepoon/claude-code-subagents-collection/issues)
-- Join the discussion in [pull requests](https://github.com/davepoon/claude-code-subagents-collection/pulls)
+- Check existing [issues](https://github.com/davepoon/buildwithclaude/issues)
+- Join the discussion in [pull requests](https://github.com/davepoon/buildwithclaude/pulls)
 - Refer to [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents)
 
 Thank you for contributing to make Claude Code more powerful for everyone!

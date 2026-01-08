@@ -26,7 +26,7 @@ export default function DocsPage() {
       icon: Terminal,
       title: 'Getting Started',
       description: 'Quick start guide for using Claude Code Subagents',
-      href: 'https://github.com/davepoon/claude-code-subagents-collection#quick-start',
+      href: 'https://github.com/davepoon/buildwithclaude#quick-start',
       color: 'text-blue-400',
       external: true
     },
@@ -34,7 +34,7 @@ export default function DocsPage() {
       icon: FileText,
       title: 'Creating Subagents',
       description: 'How to create your own custom subagents',
-      href: 'https://github.com/davepoon/claude-code-subagents-collection/blob/main/CONTRIBUTING.md#creating-a-new-subagent',
+      href: 'https://github.com/davepoon/buildwithclaude/blob/main/CONTRIBUTING.md#creating-a-new-subagent',
       color: 'text-purple-400',
       external: true
     },
@@ -50,7 +50,7 @@ export default function DocsPage() {
       icon: Shield,
       title: 'Best Practices',
       description: 'Security and performance best practices',
-      href: 'https://github.com/davepoon/claude-code-subagents-collection/blob/main/CONTRIBUTING.md#writing-guidelines',
+      href: 'https://github.com/davepoon/buildwithclaude/blob/main/CONTRIBUTING.md#writing-guidelines',
       color: 'text-red-400',
       external: true
     },
@@ -58,7 +58,7 @@ export default function DocsPage() {
       icon: Users,
       title: 'Community',
       description: 'Join the Claude Code community',
-      href: 'https://github.com/davepoon/claude-code-subagents-collection/discussions',
+      href: 'https://github.com/davepoon/buildwithclaude/discussions',
       color: 'text-indigo-400',
       external: true
     }
@@ -66,9 +66,9 @@ export default function DocsPage() {
   
   const quickLinks = [
     { title: 'View all subagents', href: '/browse' },
-    { title: 'GitHub repository', href: 'https://github.com/davepoon/claude-code-subagents-collection' },
-    { title: 'Report an issue', href: 'https://github.com/davepoon/claude-code-subagents-collection/issues' },
-    { title: 'Request a feature', href: 'https://github.com/davepoon/claude-code-subagents-collection/issues/new' }
+    { title: 'GitHub repository', href: 'https://github.com/davepoon/buildwithclaude' },
+    { title: 'Report an issue', href: 'https://github.com/davepoon/buildwithclaude/issues' },
+    { title: 'Request a feature', href: 'https://github.com/davepoon/buildwithclaude/issues/new' }
   ]
   
   return (
@@ -138,7 +138,7 @@ export default function DocsPage() {
                   <div>
                     <p className="font-medium">Clone the repository</p>
                     <code className="text-sm text-muted-foreground bg-background/50 px-2 py-0.5 rounded">
-                      git clone https://github.com/davepoon/claude-code-subagents-collection.git
+                      git clone https://github.com/davepoon/buildwithclaude.git
                     </code>
                   </div>
                 </li>
@@ -203,7 +203,7 @@ export default function DocsPage() {
                 </p>
                 <div className="space-y-2">
                   <a
-                    href="https://github.com/davepoon/claude-code-subagents-collection/issues"
+                    href="https://github.com/davepoon/buildwithclaude/issues"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

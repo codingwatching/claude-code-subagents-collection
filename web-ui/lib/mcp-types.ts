@@ -1,8 +1,10 @@
 export interface MCPServer {
   name: string
   display_name: string
+  full_name?: string
   category: string
   description: string
+  version?: string
   server_type: 'stdio' | 'http' | 'websocket' | 'sse' | 'streaming-http'
   protocol_version: string
   execution_type?: 'local' | 'remote'
@@ -19,6 +21,33 @@ export interface MCPServer {
   path: string
   vendor?: string
   logo_url?: string
+  icons?: string[]
+  // New fields for installation commands
+  claude_mcp_add_command?: string
+  docker_mcp_available?: boolean
+  docker_mcp_command?: string
+  packages?: MCPPackage[]
+  remotes?: MCPRemote[]
+  environment_variables?: MCPEnvironmentVariable[]
+}
+
+export interface MCPPackage {
+  registryType: 'npm' | 'oci'
+  identifier: string
+  runtimeHint?: string
+  transport: 'stdio' | 'streamable-http' | 'http' | 'sse'
+  environmentVariables?: { name: string; description?: string; required?: boolean }[]
+}
+
+export interface MCPRemote {
+  type: 'streamable-http' | 'http' | 'sse'
+  url: string
+}
+
+export interface MCPEnvironmentVariable {
+  name: string
+  description?: string
+  required?: boolean
 }
 
 export interface MCPVerification {
@@ -51,9 +80,10 @@ export interface MCPStats {
 }
 
 export interface MCPInstallationMethod {
-  type: 'docker' | 'npm' | 'manual' | 'binary' | 'bwc' | 'claude-cli' | 'docker-mcp'
+  type: 'docker' | 'npm' | 'manual' | 'binary' | 'claude-cli' | 'docker-mcp' | 'remote'
   recommended?: boolean
   command?: string
+  claudeCode?: string | null // Claude Code CLI command for installation
   config_example?: string
   steps?: string[]
   requirements?: string[]
@@ -228,7 +258,7 @@ export function getVerificationBadge(status: VerificationStatus) {
 
 // Source registry metadata
 export interface SourceRegistry {
-  type: 'docker' | 'mcpmarket' | 'manual' | 'community'
+  type: 'official-mcp' | 'docker' | 'mcpmarket' | 'manual' | 'community'
   url?: string
   id?: string
   last_fetched?: string
@@ -260,6 +290,12 @@ export interface UserInput {
 
 // Source registry indicators
 export const SOURCE_INDICATORS = {
+  'official-mcp': {
+    icon: '✨',
+    label: 'Official MCP',
+    color: '#8b5cf6',
+    description: 'Official MCP Registry',
+  },
   docker: {
     icon: '🐳',
     label: 'Docker',

@@ -86,7 +86,6 @@ git commit -m "chore: update auto-imported MCP servers"
 ```
 
 3. **Servers are now available**:
-- In BWC CLI: `bwc add --mcp <server-name>`
 - In Web UI: https://buildwithclaude.com/mcp-servers
 
 ## Adding New Registry Fetchers
@@ -100,6 +99,5 @@ To add support for a new registry:
 
 ## Notes
 
-- These are internal maintenance scripts, not part of the public BWC CLI
-- The BWC CLI is for end users to find and install servers from our curated registry
+- These are internal maintenance scripts
 - API keys are only needed for these maintenance scripts, not for end users

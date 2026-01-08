@@ -28,16 +28,16 @@ export function InstallationModal({ open, onOpenChange }: InstallationModalProps
   
   const installCommands = {
     allUser: {
-      mac: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-find claude-code-subagents-collection/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;`,
-      windows: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-for %f in (claude-code-subagents-collection\\subagents\\*.md) do copy "%f" %USERPROFILE%\\.claude\\agents\\`
+      mac: `git clone https://github.com/davepoon/buildwithclaude.git
+find buildwithclaude/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;`,
+      windows: `git clone https://github.com/davepoon/buildwithclaude.git
+for %f in (buildwithclaude\\subagents\\*.md) do copy "%f" %USERPROFILE%\\.claude\\agents\\`
     },
     allProject: {
       mac: `mkdir -p .claude/agents
-find /path/to/claude-code-subagents-collection/subagents -name "*.md" -exec cp {} .claude/agents/ \\;`,
+find /path/to/buildwithclaude/subagents -name "*.md" -exec cp {} .claude/agents/ \\;`,
       windows: `mkdir .claude\\agents 2>nul
-for %f in (\\path\\to\\claude-code-subagents-collection\\subagents\\*.md) do copy "%f" .claude\\agents\\`
+for %f in (\\path\\to\\buildwithclaude\\subagents\\*.md) do copy "%f" .claude\\agents\\`
     },
     singleUser: {
       mac: `cp subagent-name.md ~/.claude/agents/`,

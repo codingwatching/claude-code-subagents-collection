@@ -16,6 +16,12 @@ const SPECIAL_CASES: Record<string, string> = {
 
 // Icon mappings for categories
 export const CATEGORY_ICONS: Record<string, string> = {
+  // Plugin categories
+  'utilities': '🔧',
+  'agents': '🤖',
+  'commands': '⌨️',
+  'hooks': '🪝',
+  'mcp-servers': '🔌',
   // Subagent categories
   'development-architecture': '🏗️',
   'language-specialists': '💻',
@@ -51,6 +57,21 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'utilities-debugging': '🐛',
   'version-control-git': '🌿',
   'workflow-orchestration': '🎭',
+  // Hook categories
+  'git': '🌿',
+  'automation': '⚙️',
+  'notifications': '🔔',
+  'formatting': '✨',
+  'security': '🔒',
+  'testing': '🧪',
+  'development': '💻',
+  'performance': '⚡',
+  // Skill categories
+  'document-processing': '📄',
+  'development-code': '💻',
+  'business-productivity': '📊',
+  'creative-collaboration': '🎨',
+  'uncategorized': '📦',
   // Default icon for unknown categories
   'default': '📦'
 };

@@ -3,17 +3,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, Copy, Check, ExternalLink, Github, Box, Package } from 'lucide-react'
-import { HiMiniCheckBadge } from 'react-icons/hi2'
+import { ArrowLeft, Copy, Check, ExternalLink, Github, Box, Package, Terminal, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   MCPServer,
-  VERIFICATION_STATUS,
   SOURCE_INDICATORS,
-  EXECUTION_INDICATORS,
   getMCPCategoryDisplayName,
   getMCPCategoryIcon
 } from '@/lib/mcp-types'
@@ -27,7 +24,6 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
   const [logoError, setLogoError] = useState(false)
 
-  const verificationStatus = VERIFICATION_STATUS[server.verification.status]
   const categoryName = getMCPCategoryDisplayName(server.category)
   const categoryIcon = getMCPCategoryIcon(server.category)
 
@@ -70,12 +66,7 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
               <span className="text-4xl flex-shrink-0">{categoryIcon}</span>
             )}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
-                {server.display_name}
-                {server.verification.status === 'verified' && (
-                  <HiMiniCheckBadge className="h-7 w-7 text-blue-500" />
-                )}
-              </h1>
+              <h1 className="text-3xl font-bold mb-2">{server.display_name}</h1>
               <p className="text-lg text-muted-foreground">{server.description}</p>
             </div>
           </div>
@@ -269,42 +260,55 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
         {/* Installation Methods */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Installation Methods</CardTitle>
+            <CardTitle>Installation</CardTitle>
             <CardDescription>
               Choose your preferred installation method below
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue={server.installation_methods[0]?.type}>
-              <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${server.installation_methods.length}, 1fr)` }}>
-                {server.installation_methods.map((method) => (
-                  <TabsTrigger key={method.type} value={method.type}>
-                    {method.type === 'bwc' ? 'BWC CLI' : method.type.charAt(0).toUpperCase() + method.type.slice(1)}
-                    {method.recommended && ' ⭐'}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+            {(() => {
+              const hasClaudeCommand = !!server.claude_mcp_add_command
+              const hasDockerMcp = !!server.docker_mcp_available
+              const claudeCommand = server.claude_mcp_add_command || `claude mcp add ${server.name}`
+              const dockerCommand = server.docker_mcp_command || `docker mcp server enable mcp/${server.name}`
+              const hasEnvVars = server.environment_variables && server.environment_variables.length > 0
 
-              {server.installation_methods.map((method) => {
-                // Add --docker-mcp flag for Docker-sourced servers with BWC installation
-                const displayCommand = method.type === 'bwc' && server.source_registry?.type === 'docker' 
-                  ? `${method.command} --docker-mcp`
-                  : method.command;
-                
-                return (
-                  <TabsContent key={method.type} value={method.type} className="space-y-4">
-                    {method.command && (
+              // Determine default tab and grid columns
+              const showBothTabs = hasClaudeCommand && hasDockerMcp
+              const defaultTab = hasClaudeCommand ? 'claude' : hasDockerMcp ? 'docker' : 'claude'
+
+              return (
+                <Tabs defaultValue={defaultTab}>
+                  <TabsList className={`grid w-full ${showBothTabs ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                    {hasClaudeCommand && (
+                      <TabsTrigger value="claude" className="flex items-center gap-2">
+                        <Terminal className="h-4 w-4" />
+                        Claude CLI {!hasDockerMcp && '(Recommended)'}
+                      </TabsTrigger>
+                    )}
+                    {hasDockerMcp && (
+                      <TabsTrigger value="docker" className="flex items-center gap-2">
+                        <Terminal className="h-4 w-4" />
+                        Docker MCP {!hasClaudeCommand && '(Recommended)'}
+                      </TabsTrigger>
+                    )}
+                  </TabsList>
+
+                  {hasClaudeCommand && (
+                    <TabsContent value="claude" className="space-y-4">
                       <div>
-                        <h4 className="font-semibold mb-2">Installation Command:</h4>
-                        <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-center justify-between">
-                          <code>{displayCommand}</code>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Install using Claude Code CLI <span className="text-primary font-medium">(Recommended)</span>:
+                        </p>
+                        <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-start justify-between">
+                          <code className="font-mono text-sm whitespace-pre-wrap break-all">{claudeCommand}</code>
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => handleCopyCommand(method.type, displayCommand!)}
+                            onClick={() => handleCopyCommand('claude', claudeCommand)}
                             className="ml-2 flex-shrink-0"
                           >
-                            {copiedCommand === method.type ? (
+                            {copiedCommand === 'claude' ? (
                               <Check className="h-4 w-4 text-green-600" />
                             ) : (
                               <Copy className="h-4 w-4" />
@@ -312,70 +316,103 @@ export default function MCPServerPageClient({ server }: MCPServerPageClientProps
                           </Button>
                         </div>
                       </div>
-                    )}
-                  
 
-                  {method.type === 'bwc' && (
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground">This command will:</p>
-                      <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
-                        <li>Enable the MCP server in Docker MCP Toolkit</li>
-                        <li>Make it available through the Docker MCP gateway</li>
-                        <li>Allow Claude Code to access the server</li>
-                      </ul>
-                    </div>
+                      {hasEnvVars && (
+                        <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm">
+                          <p className="font-semibold mb-2 text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                            <AlertCircle className="h-4 w-4" />
+                            Required Configuration
+                          </p>
+                          <p className="text-muted-foreground mb-2">
+                            Replace the following placeholders with your actual values:
+                          </p>
+                          <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                            {server.environment_variables!.map((env) => (
+                              <li key={env.name}>
+                                <code className="bg-muted px-1 rounded">{env.name}</code>
+                                {env.description && <span> - {env.description}</span>}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">This command will:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
+                          <li>Add the MCP server to your Claude Code configuration</li>
+                          <li>Configure the transport and connection settings</li>
+                          <li>Make it available in Claude Code immediately</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-3 bg-secondary/50 rounded-lg text-sm">
+                        <p className="font-semibold mb-2 text-foreground">Prerequisites:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                          <li>Claude Code CLI must be installed</li>
+                          {claudeCommand.includes('npx') && <li>Node.js must be installed</li>}
+                          {claudeCommand.includes('docker run') && <li>Docker Desktop must be installed and running</li>}
+                        </ul>
+                      </div>
+                    </TabsContent>
                   )}
 
-                  {method.config_example && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Configuration:</h4>
-                      <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-start justify-between">
-                        <code className="whitespace-pre">{method.config_example}</code>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleCopyConfig(method.type, method.config_example!)}
-                          className="ml-2 flex-shrink-0"
-                        >
-                          {copiedConfig === method.type ? (
-                            <Check className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
+                  {hasDockerMcp && (
+                    <TabsContent value="docker" className="space-y-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Enable using Docker MCP Toolkit:
+                        </p>
+                        <div className="bg-muted p-4 rounded-lg overflow-x-auto flex items-center justify-between">
+                          <code className="font-mono">{dockerCommand}</code>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleCopyCommand('docker', dockerCommand)}
+                            className="ml-2 flex-shrink-0"
+                          >
+                            {copiedCommand === 'docker' ? (
+                              <Check className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">This command will:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2 text-sm text-muted-foreground">
+                          <li>Enable the MCP server in Docker MCP Toolkit</li>
+                          <li>Pull and configure the Docker container</li>
+                          <li>Make it available through the Docker MCP gateway</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-3 bg-secondary/50 rounded-lg text-sm">
+                        <p className="font-semibold mb-2 text-foreground">Prerequisites:</p>
+                        <ul className="list-disc list-inside space-y-1 ml-2 text-muted-foreground">
+                          <li>Docker Desktop must be installed and running</li>
+                          <li>Docker MCP Toolkit must be enabled</li>
+                        </ul>
+                      </div>
+                    </TabsContent>
+                  )}
+
+                  {!hasClaudeCommand && !hasDockerMcp && (
+                    <div className="flex items-center justify-center p-8 text-center">
+                      <div className="space-y-2">
+                        <AlertCircle className="h-8 w-8 mx-auto text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Installation instructions are not available for this server.
+                          Please check the server&apos;s documentation.
+                        </p>
                       </div>
                     </div>
                   )}
-
-                  {method.steps && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Manual Installation Steps:</h4>
-                      <ol className="list-decimal list-inside space-y-2">
-                        {method.steps.map((step, idx) => (
-                          <li key={idx} className="text-muted-foreground">
-                            {step}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-
-                  {method.requirements && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Requirements:</h4>
-                      <ul className="list-disc list-inside space-y-1">
-                        {method.requirements.map((req, idx) => (
-                          <li key={idx} className="text-muted-foreground">
-                            {req}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </TabsContent>
-                )
-              })}
-            </Tabs>
+                </Tabs>
+              )
+            })()}
           </CardContent>
         </Card>
 

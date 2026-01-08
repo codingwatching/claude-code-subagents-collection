@@ -23,7 +23,7 @@ const errors = [];
 const warnings = [];
 
 // Find all subagent and command markdown files
-const subagentFiles = globSync(['subagents/*.md', 'commands/*.md'])
+const subagentFiles = globSync(['plugins/all-agents/agents/*.md', 'plugins/all-commands/commands/*.md'])
   .filter(file => !file.endsWith('README.md') && !file.endsWith('INDEX.md'));
 
 console.log(`\n\x1b[34mValidating ${subagentFiles.length} subagent files...\x1b[0m\n`);
@@ -50,7 +50,7 @@ subagentFiles.forEach(file => {
     }
     
     // Validate against appropriate schema
-    const isCommand = file.startsWith('commands/');
+    const isCommand = file.includes('/commands/');
     const validator = isCommand ? validateCommand : validateSubagent;
     const valid = validator(parsed.data);
     

@@ -480,7 +480,7 @@ Detailed instructions for how the command should work...`}</pre>
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <a 
-                  href="https://github.com/davepoon/claude-code-subagents-collection/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/davepoon/buildwithclaude/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -490,7 +490,7 @@ Detailed instructions for how the command should work...`}</pre>
                   </Button>
                 </a>
                 <a 
-                  href="https://github.com/davepoon/claude-code-subagents-collection"
+                  href="https://github.com/davepoon/buildwithclaude"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

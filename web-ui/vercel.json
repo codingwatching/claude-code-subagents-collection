@@ -4,15 +4,39 @@
   "framework": "nextjs",
   "installCommand": "npm install",
   "regions": ["iad1"],
+  "crons": [
+    {
+      "path": "/api/cron/index-all",
+      "schedule": "0 5 * * *"
+    }
+  ],
   "functions": {
     "app/page.tsx": {
       "maxDuration": 10
     },
-    "app/browse/page.tsx": {
+    "app/subagents/page.tsx": {
       "maxDuration": 10
     },
     "app/subagent/[slug]/page.tsx": {
       "maxDuration": 10
+    },
+    "app/api/cron/index-marketplaces/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/admin/reindex/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-plugins/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-mcp-servers/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/sync-mcp-stats/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/index-all/route.ts": {
+      "maxDuration": 300
     }
   }
 }

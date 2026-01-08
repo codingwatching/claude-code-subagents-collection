@@ -4,7 +4,6 @@ mise.toml
 yarn.lock
 .DS_Store
 .claude
-bwc.config.json
 
 # Environment files
 .env

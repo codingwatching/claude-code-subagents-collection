@@ -18,27 +18,27 @@ export default function InstallationPage() {
   const installCommands = {
     // Quick install everything
     everything: {
-      mac: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-cd claude-code-subagents-collection
+      mac: `git clone https://github.com/davepoon/buildwithclaude.git
+cd buildwithclaude
 find subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;
 find commands -name "*.md" -exec cp {} ~/.claude/commands/ \\;`,
-      windows: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-cd claude-code-subagents-collection
+      windows: `git clone https://github.com/davepoon/buildwithclaude.git
+cd buildwithclaude
 for %f in (subagents\\*.md) do copy "%f" %USERPROFILE%\\.claude\\agents\\
 for %f in (commands\\*.md) do copy "%f" %USERPROFILE%\\.claude\\commands\\`
     },
     // Subagents only
     allSubagentsUser: {
-      mac: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-find claude-code-subagents-collection/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;`,
-      windows: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-for %f in (claude-code-subagents-collection\\subagents\\*.md) do copy "%f" %USERPROFILE%\\.claude\\agents\\`
+      mac: `git clone https://github.com/davepoon/buildwithclaude.git
+find buildwithclaude/subagents -name "*.md" -exec cp {} ~/.claude/agents/ \\;`,
+      windows: `git clone https://github.com/davepoon/buildwithclaude.git
+for %f in (buildwithclaude\\subagents\\*.md) do copy "%f" %USERPROFILE%\\.claude\\agents\\`
     },
     allSubagentsProject: {
       mac: `mkdir -p .claude/agents
-find /path/to/claude-code-subagents-collection/subagents -name "*.md" -exec cp {} .claude/agents/ \\;`,
+find /path/to/buildwithclaude/subagents -name "*.md" -exec cp {} .claude/agents/ \\;`,
       windows: `mkdir .claude\\agents 2>nul
-for %f in (\\path\\to\\claude-code-subagents-collection\\subagents\\*.md) do copy "%f" .claude\\agents\\`
+for %f in (\\path\\to\\buildwithclaude\\subagents\\*.md) do copy "%f" .claude\\agents\\`
     },
     singleSubagentUser: {
       mac: `cp subagent-name.md ~/.claude/agents/`,
@@ -50,16 +50,16 @@ for %f in (\\path\\to\\claude-code-subagents-collection\\subagents\\*.md) do cop
     },
     // Commands only
     allCommandsUser: {
-      mac: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-find claude-code-subagents-collection/commands -name "*.md" -exec cp {} ~/.claude/commands/ \\;`,
-      windows: `git clone https://github.com/davepoon/claude-code-subagents-collection.git
-for %f in (claude-code-subagents-collection\\commands\\*.md) do copy "%f" %USERPROFILE%\\.claude\\commands\\`
+      mac: `git clone https://github.com/davepoon/buildwithclaude.git
+find buildwithclaude/commands -name "*.md" -exec cp {} ~/.claude/commands/ \\;`,
+      windows: `git clone https://github.com/davepoon/buildwithclaude.git
+for %f in (buildwithclaude\\commands\\*.md) do copy "%f" %USERPROFILE%\\.claude\\commands\\`
     },
     allCommandsProject: {
       mac: `mkdir -p .claude/commands
-find /path/to/claude-code-subagents-collection/commands -name "*.md" -exec cp {} .claude/commands/ \\;`,
+find /path/to/buildwithclaude/commands -name "*.md" -exec cp {} .claude/commands/ \\;`,
       windows: `mkdir .claude\\commands 2>nul
-for %f in (\\path\\to\\claude-code-subagents-collection\\commands\\*.md) do copy "%f" .claude\\commands\\`
+for %f in (\\path\\to\\buildwithclaude\\commands\\*.md) do copy "%f" .claude\\commands\\`
     },
     singleCommandUser: {
       mac: `cp command-name.md ~/.claude/commands/`,
@@ -94,15 +94,33 @@ for %f in (\\path\\to\\claude-code-subagents-collection\\commands\\*.md) do copy
       </div>
       
       <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Quick Tip */}
+        {/* Plugin Marketplace - Recommended */}
+        <div className="mb-8 p-6 bg-green-500/10 rounded-xl border border-green-500/20">
+          <div className="flex items-start gap-3">
+            <Download className="h-5 w-5 text-green-500 mt-0.5" />
+            <div>
+              <p className="font-semibold text-green-500 mb-1">Recommended: Plugin Marketplace</p>
+              <p className="text-sm mb-3">
+                The easiest way to install is via Claude Code&apos;s built-in plugin system:
+              </p>
+              <pre className="bg-background/50 border border-border/50 p-3 rounded-lg overflow-x-auto mb-3">
+                <code className="text-sm font-mono">/plugin marketplace add davepoon/buildwithclaude</code>
+              </pre>
+              <p className="text-sm text-muted-foreground">
+                Then install plugins: <code className="bg-background px-1 rounded">/plugin install all-agents@buildwithclaude</code>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Manual Installation Tip */}
         <div className="mb-8 p-6 bg-primary/10 rounded-xl border border-primary/20">
           <div className="flex items-start gap-3">
             <Download className="h-5 w-5 text-primary mt-0.5" />
             <div>
-              <p className="font-semibold text-primary mb-1">Quick Installation Tip</p>
+              <p className="font-semibold text-primary mb-1">Alternative: Manual Installation</p>
               <p className="text-sm">
-                The easiest way to install individual subagents or commands is directly from their pages!
-                Each page has platform-specific installation instructions with copy buttons for quick setup.
+                If you prefer manual installation, browse individual items and copy the markdown files directly.
               </p>
               <div className="flex gap-2 mt-3">
                 <Link href="/browse">
@@ -848,7 +866,7 @@ for %f in (\\path\\to\\claude-code-subagents-collection\\commands\\*.md) do copy
             </Button>
           </Link>
           <a 
-            href="https://github.com/davepoon/claude-code-subagents-collection" 
+            href="https://github.com/davepoon/buildwithclaude" 
             target="_blank" 
             rel="noopener noreferrer"
           >
