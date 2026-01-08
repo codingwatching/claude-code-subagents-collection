@@ -24,5 +24,15 @@ None required
 
 ## Requirements
 
-None
+- Test framework appropriate for your project
 
+### Script
+
+```bash
+file_path=$(jq -r '.tool_input.file_path // empty')
+if [[ "$file_path" =~ \.(ts|tsx|js|jsx)$ ]]; then
+  npm test --passWithNoTests 2>/dev/null || true
+elif [[ "$file_path" =~ \.py$ ]]; then
+  python3 -m pytest --collect-only 2>/dev/null || true
+fi
+```

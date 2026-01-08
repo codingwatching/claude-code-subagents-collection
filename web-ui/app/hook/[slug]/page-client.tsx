@@ -3,8 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Copy, Download, Check, ExternalLink } from 'lucide-react'
-import { generateHookMarkdown } from '@/lib/utils'
+import { ArrowLeft, Copy, Download, Check, ExternalLink, FileArchive } from 'lucide-react'
+import {
+  generateHookConfigString,
+  generateHookZipBundle,
+  extractScriptFromContent,
+  isSimpleScript
+} from '@/lib/hook-utils'
 import { generateCategoryDisplayName, type Hook } from '@/lib/hooks-types'
 
 interface HookPageClientProps {
@@ -14,52 +19,59 @@ interface HookPageClientProps {
 export function HookPageClient({ hook }: HookPageClientProps) {
   const [copied, setCopied] = useState(false)
   const [copiedConfig, setCopiedConfig] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   const categoryName = generateCategoryDisplayName(hook.category)
 
+  // Determine if hook needs ZIP (complex script)
+  const script = hook.script || extractScriptFromContent(hook.content)
+  const needsZip = script ? !isSimpleScript(script) : false
+
+  // Generate the JSON config string
+  const configString = generateHookConfigString(hook)
+
   const handleCopy = async () => {
-    const markdown = generateHookMarkdown(hook)
-    await navigator.clipboard.writeText(markdown)
+    await navigator.clipboard.writeText(configString)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
-  const handleDownload = () => {
-    const markdown = generateHookMarkdown(hook)
-    const blob = new Blob([markdown], { type: 'text/markdown' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${hook.slug}.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
-
-  const hookConfig = {
-    hooks: {
-      [hook.event]: [
-        {
-          matcher: hook.matcher,
-          hooks: [
-            {
-              type: hook.language === 'bash' ? 'command' : 'prompt',
-              command: hook.language === 'bash' ? `# Add your command here based on ${hook.slug}` : undefined,
-              prompt: hook.language !== 'bash' ? hook.content.trim().split('\n')[0] : undefined
-            }
-          ]
-        }
-      ]
-    }
-  }
-
-  const configString = JSON.stringify(hookConfig, null, 2)
 
   const handleCopyConfig = async () => {
     await navigator.clipboard.writeText(configString)
     setCopiedConfig(true)
     setTimeout(() => setCopiedConfig(false), 2000)
+  }
+
+  const handleDownload = async () => {
+    setDownloading(true)
+
+    try {
+      if (needsZip) {
+        // Download as ZIP bundle
+        const blob = await generateHookZipBundle(hook)
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${hook.slug}-hook.zip`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } else {
+        // Download as JSON file only
+        const blob = new Blob([configString], { type: 'application/json' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${hook.slug}-hook.json`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      }
+    } finally {
+      setDownloading(false)
+    }
   }
 
   const lines = hook.content.split('\n')
@@ -112,11 +124,17 @@ export function HookPageClient({ hook }: HookPageClientProps) {
           <div className="flex items-start justify-between gap-4 mb-4">
             <h1 className="text-display-2">{hook.name}</h1>
             <div className="flex gap-2">
-              <Button size="sm" variant="ghost" onClick={handleCopy}>
+              <Button size="sm" variant="ghost" onClick={handleCopy} title="Copy JSON config">
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
-              <Button size="sm" variant="ghost" onClick={handleDownload}>
-                <Download className="h-4 w-4" />
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleDownload}
+                disabled={downloading}
+                title={needsZip ? 'Download ZIP with config and script' : 'Download JSON config'}
+              >
+                {needsZip ? <FileArchive className="h-4 w-4" /> : <Download className="h-4 w-4" />}
               </Button>
             </div>
           </div>
@@ -152,6 +170,14 @@ export function HookPageClient({ hook }: HookPageClientProps) {
               {copiedConfig ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </Button>
           </div>
+
+          {needsZip && (
+            <div className="mt-4 p-3 bg-amber-500/10 rounded border border-amber-500/20">
+              <p className="text-sm text-amber-600 dark:text-amber-400">
+                This hook includes a script file. Download the ZIP bundle for complete installation with script and instructions.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -170,13 +196,18 @@ export function HookPageClient({ hook }: HookPageClientProps) {
             {hook.event === 'PreToolUse' && 'PreToolUse hooks run before a tool executes. They can validate, modify, or block the tool call.'}
             {hook.event === 'Stop' && 'Stop hooks run when Claude Code finishes its response. They can perform cleanup or final actions.'}
             {hook.event === 'Notification' && 'Notification hooks run when Claude Code sends a notification. They can customize how notifications are displayed.'}
+            {hook.event === 'SessionStart' && 'SessionStart hooks run when Claude Code starts a new session. They can perform initialization tasks.'}
+            {hook.event === 'SessionEnd' && 'SessionEnd hooks run when Claude Code ends a session. They can perform cleanup tasks.'}
+            {hook.event === 'UserPromptSubmit' && 'UserPromptSubmit hooks run when the user submits a prompt. They can modify or validate the input.'}
+            {hook.event === 'PreCompact' && 'PreCompact hooks run before Claude Code compacts the conversation. They can preserve important context.'}
+            {hook.event === 'SubagentStop' && 'SubagentStop hooks run when a subagent task completes. They can process or log results.'}
           </p>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3 flex-wrap">
           <a
-            href={`https://github.com/davepoon/buildwithclaude/blob/main/hooks/${hook.slug}.md`}
+            href={`https://github.com/davepoon/buildwithclaude/blob/main/plugins/all-hooks/hooks/${hook.slug}.md`}
             target="_blank"
             rel="noopener noreferrer"
           >

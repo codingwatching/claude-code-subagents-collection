@@ -26,3 +26,17 @@ None required
 
 None
 
+### Script
+
+```bash
+tool_name=$(jq -r '.tool_name // "unknown"')
+log_file=".claude/performance.log"
+mkdir -p "$(dirname "$log_file")"
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  mem_usage=$(vm_stat | awk '/Pages active/ {print $3}' | sed 's/\.//')
+else
+  mem_usage=$(free -m | awk '/Mem:/ {print $3}')
+fi
+echo "[$timestamp] Tool: $tool_name, Memory: ${mem_usage}MB" >> "$log_file"
+```

@@ -24,5 +24,13 @@ None required
 
 ## Requirements
 
-None
+- prettier (npm install -g prettier or npx prettier)
 
+### Script
+
+```bash
+file_path=$(jq -r '.tool_input.file_path // empty')
+if [[ "$file_path" =~ \.(js|jsx|ts|tsx|mjs|cjs)$ ]]; then
+  npx prettier --write "$file_path" 2>/dev/null || true
+fi
+```

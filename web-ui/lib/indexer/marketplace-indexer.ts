@@ -4,7 +4,8 @@ import { getGitHubClient, GitHubRepo } from '@/lib/github/client'
 import { parseMarketplaceJson, extractCounts, extractCategories as extractPluginCategories } from './parser'
 import { eq, sql } from 'drizzle-orm'
 
-// Known/seed marketplaces (from scripts/fetch-plugins.js)
+// Known/seed marketplaces with accurate fallback counts
+// Fallback counts are used when marketplace.json parsing fails
 const KNOWN_MARKETPLACES = [
   {
     repo: 'davepoon/buildwithclaude',
@@ -13,6 +14,8 @@ const KNOWN_MARKETPLACES = [
     description: 'Curated collection of Claude Code plugins, skills, subagents, commands, and hooks.',
     categories: ['subagents', 'commands', 'hooks', 'skills'],
     badges: ['featured'],
+    fallbackPluginCount: 50, // 50 plugins in marketplace.json
+    fallbackSkillCount: 26, // 26 skills across plugins
   },
   {
     repo: 'Kamalnrf/claude-plugins',
@@ -21,6 +24,8 @@ const KNOWN_MARKETPLACES = [
     description: 'Community registry with CLI for discovering and installing Claude Code plugins.',
     categories: ['plugins', 'skills'],
     badges: ['popular', 'featured'],
+    fallbackPluginCount: 100,
+    fallbackSkillCount: 50,
   },
   {
     repo: 'ananddtyagi/claude-code-marketplace',
@@ -29,6 +34,8 @@ const KNOWN_MARKETPLACES = [
     description: 'Community-driven marketplace for Claude Code commands and plugins.',
     categories: ['commands', 'agents'],
     badges: [],
+    fallbackPluginCount: 50,
+    fallbackSkillCount: 20,
   },
   {
     repo: 'jeremylongshore/claude-code-plugins-plus-skills',
@@ -37,6 +44,8 @@ const KNOWN_MARKETPLACES = [
     description: 'Production-ready Agent Skills with interactive Jupyter tutorials.',
     categories: ['skills', 'tutorials'],
     badges: [],
+    fallbackPluginCount: 10,
+    fallbackSkillCount: 15,
   },
   {
     repo: 'anthropics/claude-code-plugins',
@@ -45,6 +54,8 @@ const KNOWN_MARKETPLACES = [
     description: 'Official Claude Code plugins from Anthropic.',
     categories: ['official', 'plugins'],
     badges: ['official'],
+    fallbackPluginCount: 5,
+    fallbackSkillCount: 5,
   },
 ]
 
@@ -157,8 +168,11 @@ async function processRepository(repoFullName: string): Promise<boolean> {
       pluginCount = counts.pluginCount
       skillCount = counts.skillCount
       jsonCategories = extractPluginCategories(marketplace)
+      console.log(`  Parsed ${repoFullName}: ${pluginCount} plugins, ${skillCount} skills`)
+    } else {
+      console.log(`  Failed to parse marketplace.json from ${repoFullName}`)
     }
-  } catch {
+  } catch (error) {
     // Try alternate path
     try {
       const content = await github.fetchFileContent(repoFullName, 'marketplace.json')
@@ -169,9 +183,13 @@ async function processRepository(repoFullName: string): Promise<boolean> {
         pluginCount = counts.pluginCount
         skillCount = counts.skillCount
         jsonCategories = extractPluginCategories(marketplace)
+        console.log(`  Parsed ${repoFullName} (alt path): ${pluginCount} plugins, ${skillCount} skills`)
+      } else {
+        console.log(`  Failed to parse marketplace.json from ${repoFullName} (alt path)`)
       }
     } catch {
       // No marketplace.json found, use estimated counts from known marketplaces
+      console.log(`  No marketplace.json found in ${repoFullName}, using fallback counts`)
     }
   }
 
@@ -190,8 +208,8 @@ async function processRepository(repoFullName: string): Promise<boolean> {
       url: known?.url || repoMeta.homepage || repoMeta.html_url,
       repository: repoMeta.html_url,
       installCommand: `/plugin marketplace add ${repoFullName}`,
-      pluginCount: pluginCount || (known ? 100 : 0),
-      skillCount: skillCount || (known ? 50 : 0),
+      pluginCount: pluginCount || known?.fallbackPluginCount || 0,
+      skillCount: skillCount || known?.fallbackSkillCount || 0,
       description: known?.description || repoMeta.description || '',
       categories: known?.categories || jsonCategories.length > 0 ? jsonCategories : extractRepoCategories(repoMeta),
       badges: known?.badges || [],

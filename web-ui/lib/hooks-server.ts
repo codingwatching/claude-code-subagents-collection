@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { Hook } from './hooks-types'
 import { CategoryMetadata, generateCategoryMetadata } from './category-utils'
+import { extractScriptFromContent } from './hook-utils'
 
 export function getAllHooks(): Hook[] {
   const hooksDirectory = path.join(process.cwd(), '../plugins/all-hooks/hooks')
@@ -32,7 +33,8 @@ export function getAllHooks(): Hook[] {
         matcher: data.matcher || '*',
         language: data.language,
         version: data.version,
-        content
+        content,
+        script: extractScriptFromContent(content) || undefined
       }
     })
 
@@ -60,7 +62,8 @@ export function getHookBySlug(slug: string): Hook | null {
     matcher: data.matcher || '*',
     language: data.language,
     version: data.version,
-    content
+    content,
+    script: extractScriptFromContent(content) || undefined
   }
 }
 

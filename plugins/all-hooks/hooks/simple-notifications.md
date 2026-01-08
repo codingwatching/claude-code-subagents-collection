@@ -24,5 +24,16 @@ Send simple desktop notifications when Claude Code operations complete
 
 ## Requirements
 
-None
+- macOS: Uses built-in osascript
+- Linux: Uses notify-send (install with: sudo apt install libnotify-bin)
 
+### Script
+
+```bash
+tool_name=$(jq -r '.tool_name // "unknown"')
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  osascript -e "display notification \"Tool '$tool_name' completed\" with title \"Claude Code\""
+else
+  notify-send "Claude Code" "Tool '$tool_name' completed" 2>/dev/null || true
+fi
+```

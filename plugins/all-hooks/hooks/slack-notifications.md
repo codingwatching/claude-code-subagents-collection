@@ -27,3 +27,18 @@ Send Slack notifications when Claude Code finishes working
 - curl
 - Slack webhook URL configured
 
+### Script
+
+```bash
+#!/bin/bash
+if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+  exit 0
+fi
+
+message="Claude Code has finished working on your request."
+payload=$(jq -n --arg text "$message" '{"text": $text}')
+
+curl -s -X POST "$SLACK_WEBHOOK_URL" \
+  -H "Content-Type: application/json" \
+  -d "$payload" >/dev/null 2>&1
+```

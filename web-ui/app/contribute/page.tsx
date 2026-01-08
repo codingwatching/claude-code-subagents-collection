@@ -94,7 +94,18 @@ Description of the hook's purpose.
 
 ## Requirements
 
-List any requirements...`
+List any requirements...
+
+### Script
+
+\`\`\`bash
+#!/bin/bash
+# Hook receives JSON via stdin with tool_input, tool_name, tool_result fields
+# Use jq to parse: jq -r '.tool_input.file_path'
+
+tool_name=$(jq -r '.tool_name // empty')
+echo "Hook triggered by: $tool_name"
+\`\`\``
 
   const skillTemplate = `---
 name: skill-name

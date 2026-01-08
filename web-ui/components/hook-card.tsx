@@ -4,9 +4,14 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Check, Copy, Download } from 'lucide-react'
+import { Check, Copy, Download, FileArchive } from 'lucide-react'
 import { generateCategoryDisplayName } from '@/lib/hooks-types'
-import { generateHookMarkdown } from '@/lib/utils'
+import {
+  generateHookConfigString,
+  generateHookZipBundle,
+  extractScriptFromContent,
+  isSimpleScript
+} from '@/lib/hook-utils'
 import type { Hook } from '@/lib/hooks-types'
 
 interface HookCardProps {
@@ -15,31 +20,56 @@ interface HookCardProps {
 
 export function HookCard({ hook }: HookCardProps) {
   const [copied, setCopied] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   const categoryName = generateCategoryDisplayName(hook.category)
+
+  // Determine if hook needs ZIP (complex script)
+  const script = hook.script || extractScriptFromContent(hook.content)
+  const needsZip = script ? !isSimpleScript(script) : false
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    const markdown = generateHookMarkdown(hook)
-    await navigator.clipboard.writeText(markdown)
+    const configJson = generateHookConfigString(hook)
+    await navigator.clipboard.writeText(configJson)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    const markdown = generateHookMarkdown(hook)
-    const blob = new Blob([markdown], { type: 'text/markdown' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${hook.slug}.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
+    setDownloading(true)
+
+    try {
+      if (needsZip) {
+        // Download as ZIP bundle
+        const blob = await generateHookZipBundle(hook)
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${hook.slug}-hook.zip`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } else {
+        // Download as JSON file only
+        const configJson = generateHookConfigString(hook)
+        const blob = new Blob([configJson], { type: 'application/json' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${hook.slug}-hook.json`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      }
+    } finally {
+      setDownloading(false)
+    }
   }
 
   return (
@@ -77,7 +107,7 @@ export function HookCard({ hook }: HookCardProps) {
                   {copied ? 'Copied' : 'Copy'}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Copy markdown</TooltipContent>
+              <TooltipContent>Copy JSON config</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -86,12 +116,19 @@ export function HookCard({ hook }: HookCardProps) {
                   variant="ghost"
                   className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
                   onClick={handleDownload}
+                  disabled={downloading}
                 >
-                  <Download className="h-3 w-3 mr-1" />
-                  Download
+                  {needsZip ? (
+                    <FileArchive className="h-3 w-3 mr-1" />
+                  ) : (
+                    <Download className="h-3 w-3 mr-1" />
+                  )}
+                  {downloading ? '...' : needsZip ? 'ZIP' : 'Download'}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Download markdown</TooltipContent>
+              <TooltipContent>
+                {needsZip ? 'Download ZIP with config and script' : 'Download JSON config'}
+              </TooltipContent>
             </Tooltip>
           </div>
         </TooltipProvider>

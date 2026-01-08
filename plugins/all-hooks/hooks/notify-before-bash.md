@@ -24,5 +24,17 @@ None required
 
 ## Requirements
 
-None
+- macOS: Uses built-in osascript
+- Linux: Uses notify-send
 
+### Script
+
+```bash
+command=$(jq -r '.tool_input.command // "unknown command"')
+short_cmd=$(echo "$command" | head -c 50)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  osascript -e "display notification \"Running: $short_cmd\" with title \"Claude Code - Bash\""
+else
+  notify-send "Claude Code - Bash" "Running: $short_cmd" 2>/dev/null || true
+fi
+```

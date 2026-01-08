@@ -24,5 +24,16 @@ Automatically run linting tools after file modifications
 
 ## Requirements
 
-None
+- ESLint for JavaScript/TypeScript files
+- Or other linters based on file type
 
+### Script
+
+```bash
+file_path=$(jq -r '.tool_input.file_path // empty')
+if [[ "$file_path" =~ \.(js|jsx|ts|tsx)$ ]]; then
+  npx eslint --fix "$file_path" 2>/dev/null || true
+elif [[ "$file_path" =~ \.py$ ]]; then
+  python3 -m black "$file_path" 2>/dev/null || true
+fi
+```

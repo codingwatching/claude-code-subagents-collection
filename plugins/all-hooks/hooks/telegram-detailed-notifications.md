@@ -25,5 +25,27 @@ Send detailed Telegram notifications with session information and metrics
 
 ## Requirements
 
-None
+- TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID environment variables
 
+### Script
+
+```bash
+#!/bin/bash
+if [[ -z "$TELEGRAM_BOT_TOKEN" ]] || [[ -z "$TELEGRAM_CHAT_ID" ]]; then
+  exit 0
+fi
+
+session_id="${CLAUDE_SESSION_ID:-unknown}"
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+message="*Claude Code Session Complete*
+
+Session: \`${session_id}\`
+Completed: ${timestamp}"
+
+url="https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+
+curl -s -X POST "$url" \
+  -d "chat_id=${TELEGRAM_CHAT_ID}" \
+  -d "text=${message}" \
+  -d "parse_mode=Markdown" >/dev/null 2>&1
+```

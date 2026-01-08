@@ -166,7 +166,7 @@ description: What this hook does
 category: category-name
 event: Stop|PreToolUse|PostToolUse
 matcher: "*"  # or specific tool name
-language: bash|prompt
+language: bash
 version: 1.0.0
 ---
 
@@ -187,6 +187,19 @@ Description of the hook's purpose.
 ## Requirements
 
 List any requirements...
+
+### Script
+
+```bash
+#!/bin/bash
+# Your executable script here
+# Hook receives JSON via stdin with tool_input, tool_name, tool_result fields
+# Use jq to parse: jq -r '.tool_input.file_path'
+
+# Example: echo the tool name
+tool_name=$(jq -r '.tool_name // empty')
+echo "Hook triggered by: $tool_name"
+```
 ```
 
 ### Hook Events

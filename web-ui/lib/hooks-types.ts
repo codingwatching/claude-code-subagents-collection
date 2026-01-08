@@ -8,6 +8,7 @@ export interface Hook {
   language?: string // bash, python, etc.
   version?: string
   content: string
+  script?: string // Extracted executable script from ### Script section
 }
 
 // Re-export category utilities
