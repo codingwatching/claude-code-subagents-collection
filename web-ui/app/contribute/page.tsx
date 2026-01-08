@@ -1,12 +1,11 @@
 'use client'
 
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  GitBranch, 
+import {
+  GitBranch,
   Terminal,
   CheckCircle2,
   XCircle,
@@ -18,18 +17,26 @@ import {
   Code2,
   Zap,
   BookOpen,
-  Heart
+  Heart,
+  Webhook,
+  Lightbulb,
+  Puzzle
 } from 'lucide-react'
 import { useState } from 'react'
 
 export default function ContributePage() {
-  const [copiedSubagent, setCopiedSubagent] = useState(false)
-  const [copiedCommand, setCopiedCommand] = useState(false)
+  const [copiedTemplate, setCopiedTemplate] = useState<string | null>(null)
 
-  const subagentTemplate = `---
-name: your-subagent-name
+  const handleCopy = (template: string, name: string) => {
+    navigator.clipboard.writeText(template)
+    setCopiedTemplate(name)
+    setTimeout(() => setCopiedTemplate(null), 2000)
+  }
+
+  const agentTemplate = `---
+name: agent-name
 description: Clear description of when to invoke. Use PROACTIVELY for automatic delegation. (under 500 chars)
-category: development-architecture # Required
+category: development-architecture
 tools: Read, Write, Edit # Optional - omit for all tools
 ---
 
@@ -44,59 +51,145 @@ Process:
 - [Key step or check]
 - [Another important step]
 - [Validation or verification]
-- [Documentation or output]
 
 Provide:
 - [Type of output or feedback]
 - [Another deliverable]
-- [Final recommendations]
-
-[Additional specific instructions or constraints]`
+- [Final recommendations]`
 
   const commandTemplate = `---
 description: Brief explanation of what the command does (10-200 chars)
-category: ci-deployment # Required
+category: version-control-git
 argument-hint: <optional-args> # Optional
-allowed-tools: Read, Write, Edit # Optional - restrict tools
-model: opus|sonnet|haiku # Optional - specify model
+allowed-tools: Read, Write, Edit # Optional
+model: opus|sonnet|haiku # Optional
 ---
 
 # Command implementation
 
 Detailed instructions for how the command should work...`
 
-  const handleCopySubagent = () => {
-    navigator.clipboard.writeText(subagentTemplate)
-    setCopiedSubagent(true)
-    setTimeout(() => setCopiedSubagent(false), 2000)
-  }
+  const hookTemplate = `---
+name: hook-name
+description: What this hook does
+category: notifications
+event: Stop
+matcher: "*"
+language: bash
+version: 1.0.0
+---
 
-  const handleCopyCommand = () => {
-    navigator.clipboard.writeText(commandTemplate)
-    setCopiedCommand(true)
-    setTimeout(() => setCopiedCommand(false), 2000)
-  }
+# hook-name
+
+Description of the hook's purpose.
+
+## Event Configuration
+
+- **Event Type**: \`Stop\`
+- **Tool Matcher**: \`*\`
+
+## Environment Variables
+
+- \`VARIABLE_NAME\` - Description
+
+## Requirements
+
+List any requirements...`
+
+  const skillTemplate = `---
+name: skill-name
+category: document-processing
+description: What this skill does and when to use it
+---
+
+# Skill Name
+
+Description of the skill.
+
+## When to Use This Skill
+
+- Use case 1
+- Use case 2
+
+## What This Skill Does
+
+1. Step 1
+2. Step 2
+
+## How to Use
+
+### Basic Usage
+
+\`\`\`
+Example prompt...
+\`\`\`
+
+## Example
+
+**User**: "Example request"
+
+**Output**:
+\`\`\`
+Example output...
+\`\`\`
+
+## Tips
+
+- Tip 1
+- Tip 2`
+
+  const pluginTemplate = `{
+  "name": "plugin-name",
+  "version": "1.0.0",
+  "description": "Description of the plugin",
+  "author": {
+    "name": "Your Name",
+    "url": "https://github.com/username"
+  },
+  "repository": "https://github.com/username/repo",
+  "license": "MIT",
+  "keywords": ["keyword1", "keyword2"]
+}`
 
   const contributionTypes = [
     {
       icon: Sparkles,
-      title: 'Subagents',
+      title: 'Agents',
       description: 'Specialized AI assistants for specific domains',
-      count: '40+',
-      href: '#contribute-tabs',
+      count: '117',
       color: 'text-purple-400'
     },
     {
       icon: Terminal,
       title: 'Commands',
       description: 'Slash commands to automate workflows',
-      count: '39+',
-      href: '#contribute-tabs',
+      count: '175',
       color: 'text-blue-400'
+    },
+    {
+      icon: Webhook,
+      title: 'Hooks',
+      description: 'Event-driven automations',
+      count: '28',
+      color: 'text-green-400'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Skills',
+      description: 'Reusable capabilities from plugins',
+      count: '26',
+      color: 'text-yellow-400'
+    },
+    {
+      icon: Puzzle,
+      title: 'Plugins',
+      description: 'Bundled plugin packages',
+      count: '50',
+      color: 'text-orange-400'
     }
   ]
 
-  const subagentCategories = [
+  const agentCategories = [
     'development-architecture',
     'language-specialists',
     'infrastructure-operations',
@@ -104,20 +197,42 @@ Detailed instructions for how the command should work...`
     'data-ai',
     'specialized-domains',
     'crypto-trading',
+    'blockchain-web3',
     'business-finance',
     'design-experience',
-    'blockchain-web3',
     'sales-marketing'
   ]
 
   const commandCategories = [
-    'ci-deployment',
-    'code-analysis-testing',
-    'context-loading-priming',
-    'documentation-changelogs',
-    'project-task-management',
     'version-control-git',
+    'code-analysis-testing',
+    'ci-deployment',
+    'documentation-changelogs',
+    'context-loading-priming',
+    'project-task-management',
+    'api-development',
+    'automation-workflow',
+    'database-operations',
     'miscellaneous'
+  ]
+
+  const hookCategories = [
+    'notifications',
+    'git',
+    'development',
+    'formatting',
+    'security',
+    'automation',
+    'performance',
+    'testing'
+  ]
+
+  const hookEvents = [
+    { event: 'PreToolUse', description: 'Before a tool is called' },
+    { event: 'PostToolUse', description: 'After a tool completes' },
+    { event: 'Stop', description: 'When Claude Code finishes' },
+    { event: 'SessionStart', description: 'When a session begins' },
+    { event: 'SessionEnd', description: 'When a session ends' }
   ]
 
   return (
@@ -143,8 +258,8 @@ Detailed instructions for how the command should work...`
               <h2 className="text-2xl font-bold">Why Contribute?</h2>
             </div>
             <p className="text-muted-foreground mb-6">
-              Every contribution makes Claude Code better for thousands of developers. Whether you&apos;re sharing 
-              your expertise through a specialized subagent or creating a helpful command, you&apos;re helping 
+              Every contribution makes Claude Code better for thousands of developers. Whether you&apos;re sharing
+              your expertise through a specialized agent or creating a helpful command, you&apos;re helping
               the community work smarter and faster.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
@@ -170,25 +285,19 @@ Detailed instructions for how the command should work...`
         {/* What Can You Contribute */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6">What Can You Contribute?</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
             {contributionTypes.map((type) => (
-              <Card key={type.title} className="p-6 border-border/50 hover:border-primary/20 transition-all">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-lg bg-background ${type.color}`}>
-                    <type.icon className="h-6 w-6" />
+              <Card key={type.title} className="p-4 border-border/50 hover:border-primary/20 transition-all">
+                <div className="flex items-start justify-between mb-3">
+                  <div className={`p-2 rounded-lg bg-background ${type.color}`}>
+                    <type.icon className="h-5 w-5" />
                   </div>
-                  <Badge variant="secondary" className="bg-primary/10 text-primary">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
                     {type.count}
                   </Badge>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{type.title}</h3>
-                <p className="text-muted-foreground mb-4">{type.description}</p>
-                <Link href={type.href}>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    Learn how to create
-                    <ArrowRight className="h-3 w-3" />
-                  </Button>
-                </Link>
+                <h3 className="font-semibold mb-1">{type.title}</h3>
+                <p className="text-xs text-muted-foreground">{type.description}</p>
               </Card>
             ))}
           </div>
@@ -196,76 +305,53 @@ Detailed instructions for how the command should work...`
 
         {/* Contribution Guides */}
         <section>
-          <Tabs defaultValue="subagents" className="w-full" id="contribute-tabs">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="subagents">Creating Subagents</TabsTrigger>
-              <TabsTrigger value="commands">Creating Commands</TabsTrigger>
+          <Tabs defaultValue="agents" className="w-full" id="contribute-tabs">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
+              <TabsTrigger value="agents">Agents</TabsTrigger>
+              <TabsTrigger value="commands">Commands</TabsTrigger>
+              <TabsTrigger value="hooks">Hooks</TabsTrigger>
+              <TabsTrigger value="skills">Skills</TabsTrigger>
+              <TabsTrigger value="plugins">Plugins</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="subagents" id="subagents">
+
+            {/* Agents Tab */}
+            <TabsContent value="agents">
               <div className="space-y-8">
-                {/* Subagent Structure */}
                 <Card className="p-6 border-border/50">
-                  <h3 className="text-xl font-semibold mb-4">Subagent Structure</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Every subagent must follow this exact structure:
-                  </p>
+                  <h3 className="text-xl font-semibold mb-2">Agent Location</h3>
+                  <code className="text-sm text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                    plugins/agents-&lt;category&gt;/agents/&lt;agent-name&gt;.md
+                  </code>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Agent Structure</h3>
                   <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm overflow-x-auto">
-                    <pre className="text-muted-foreground">{`---
-name: your-subagent-name
-description: Clear description of when to invoke. Use PROACTIVELY for automatic delegation. (under 500 chars)
-category: ${subagentCategories[0]} # Required
-tools: Read, Write, Edit # Optional - omit for all tools
----
-
-You are a [role/expertise description].
-
-When invoked:
-1. [First action to take]
-2. [Second action to take]
-3. [Begin main task]
-
-Process:
-- [Key step or check]
-- [Another important step]
-- [Validation or verification]
-- [Documentation or output]
-
-Provide:
-- [Type of output or feedback]
-- [Another deliverable]
-- [Final recommendations]
-
-[Additional specific instructions or constraints]`}</pre>
+                    <pre className="text-muted-foreground">{agentTemplate}</pre>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="mt-4 gap-2"
-                    onClick={handleCopySubagent}
+                    onClick={() => handleCopy(agentTemplate, 'agent')}
                   >
                     <Copy className="h-3 w-3" />
-                    {copiedSubagent ? 'Copied!' : 'Copy Template'}
+                    {copiedTemplate === 'agent' ? 'Copied!' : 'Copy Template'}
                   </Button>
                 </Card>
 
-                {/* Categories */}
                 <Card className="p-6 border-border/50">
                   <h3 className="text-xl font-semibold mb-4">Valid Categories</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Choose the most appropriate category for your subagent:
-                  </p>
                   <div className="grid md:grid-cols-2 gap-3">
-                    {subagentCategories.map((category) => (
+                    {agentCategories.map((category) => (
                       <div key={category} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary" />
+                        <div className="w-2 h-2 rounded-full bg-purple-400" />
                         <code className="text-sm text-muted-foreground">{category}</code>
                       </div>
                     ))}
                   </div>
                 </Card>
 
-                {/* Good vs Bad Examples */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card className="p-6 border-green-500/20 bg-green-500/5">
                     <div className="flex items-center gap-2 mb-4">
@@ -276,20 +362,12 @@ Provide:
                       <div>
                         <p className="font-medium text-green-400">✓ Clear trigger conditions</p>
                         <p className="text-muted-foreground">
-                          &quot;Validates REST API design, OpenAPI specs, and ensures API best practices. Use when designing or reviewing APIs.&quot;
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-green-400">✓ Specific capabilities</p>
-                        <p className="text-muted-foreground">
-                          Lists concrete skills like &quot;Validate OpenAPI specifications&quot;
+                          &quot;Validates REST API design and ensures API best practices.&quot;
                         </p>
                       </div>
                       <div>
                         <p className="font-medium text-green-400">✓ Focused purpose</p>
-                        <p className="text-muted-foreground">
-                          Single responsibility: API design and validation
-                        </p>
+                        <p className="text-muted-foreground">Single responsibility: API design</p>
                       </div>
                     </div>
                   </Card>
@@ -303,139 +381,217 @@ Provide:
                       <div>
                         <p className="font-medium text-red-400">✗ Vague description</p>
                         <p className="text-muted-foreground">
-                          &quot;Helps with coding tasks and other development work&quot;
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-red-400">✗ Generic capabilities</p>
-                        <p className="text-muted-foreground">
-                          &quot;Can write code in any language&quot;
+                          &quot;Helps with coding tasks&quot;
                         </p>
                       </div>
                       <div>
                         <p className="font-medium text-red-400">✗ Multiple responsibilities</p>
-                        <p className="text-muted-foreground">
-                          Tries to do frontend, backend, and DevOps
-                        </p>
+                        <p className="text-muted-foreground">Tries to do everything</p>
                       </div>
                     </div>
                   </Card>
                 </div>
-
-                {/* Testing Steps */}
-                <Card className="p-6 border-border/50">
-                  <h3 className="text-xl font-semibold mb-4">Testing Your Subagent</h3>
-                  <ol className="space-y-4">
-                    {[
-                      {
-                        title: 'Install locally',
-                        command: 'cp subagents/your-subagent.md ~/.claude/agents/',
-                        description: 'Copy to your Claude directory and restart'
-                      },
-                      {
-                        title: 'Test automatic invocation',
-                        description: 'Use prompts that should trigger your subagent'
-                      },
-                      {
-                        title: 'Test explicit invocation',
-                        description: 'Try: &quot;Use the [subagent-name] to...&quot;'
-                      },
-                      {
-                        title: 'Verify functionality',
-                        description: 'Ensure it performs all stated capabilities'
-                      }
-                    ].map((step, i) => (
-                      <li key={i} className="flex gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-semibold">
-                          {i + 1}
-                        </span>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{step.title}</p>
-                          {step.command && (
-                            <code className="text-xs text-muted-foreground bg-background/50 px-2 py-0.5 rounded">
-                              {step.command}
-                            </code>
-                          )}
-                          <p className="text-xs text-muted-foreground mt-1">{step.description}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </Card>
               </div>
             </TabsContent>
 
-            <TabsContent value="commands" id="commands">
+            {/* Commands Tab */}
+            <TabsContent value="commands">
               <div className="space-y-8">
-                {/* Command Structure */}
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-2">Command Location</h3>
+                  <code className="text-sm text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                    plugins/commands-&lt;category&gt;/commands/&lt;command-name&gt;.md
+                  </code>
+                </Card>
+
                 <Card className="p-6 border-border/50">
                   <h3 className="text-xl font-semibold mb-4">Command Structure</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Every command must follow this structure:
-                  </p>
                   <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm overflow-x-auto">
-                    <pre className="text-muted-foreground">{`---
-description: Brief explanation of what the command does (10-200 chars)
-category: ${commandCategories[0]} # Required
-argument-hint: <optional-args> # Optional
-allowed-tools: Read, Write, Edit # Optional - restrict tools
-model: opus|sonnet|haiku # Optional - specify model
----
-
-# Command implementation
-
-Detailed instructions for how the command should work...`}</pre>
+                    <pre className="text-muted-foreground">{commandTemplate}</pre>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="mt-4 gap-2"
-                    onClick={handleCopyCommand}
+                    onClick={() => handleCopy(commandTemplate, 'command')}
                   >
                     <Copy className="h-3 w-3" />
-                    {copiedCommand ? 'Copied!' : 'Copy Template'}
+                    {copiedTemplate === 'command' ? 'Copied!' : 'Copy Template'}
                   </Button>
                 </Card>
 
-                {/* Categories */}
                 <Card className="p-6 border-border/50">
                   <h3 className="text-xl font-semibold mb-4">Valid Categories</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Choose the most appropriate category for your command:
-                  </p>
                   <div className="grid md:grid-cols-2 gap-3">
                     {commandCategories.map((category) => (
                       <div key={category} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary" />
+                        <div className="w-2 h-2 rounded-full bg-blue-400" />
                         <code className="text-sm text-muted-foreground">{category}</code>
                       </div>
                     ))}
                   </div>
                 </Card>
+              </div>
+            </TabsContent>
 
-                {/* Command Examples */}
+            {/* Hooks Tab */}
+            <TabsContent value="hooks">
+              <div className="space-y-8">
                 <Card className="p-6 border-border/50">
-                  <h3 className="text-xl font-semibold mb-4">Example Commands</h3>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-card rounded-lg border border-border/50">
-                      <div className="flex items-center justify-between mb-2">
-                        <code className="text-sm font-semibold text-primary">/create_pr</code>
-                        <Badge variant="secondary" className="text-xs">Git</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Creates a pull request with AI-generated summary
-                      </p>
-                    </div>
-                    <div className="p-4 bg-card rounded-lg border border-border/50">
-                      <div className="flex items-center justify-between mb-2">
-                        <code className="text-sm font-semibold text-primary">/fix_issue</code>
-                        <Badge variant="secondary" className="text-xs">Code Analysis</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Analyzes and fixes code issues automatically
-                      </p>
-                    </div>
+                  <h3 className="text-xl font-semibold mb-2">Hook Location</h3>
+                  <code className="text-sm text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                    plugins/hooks-&lt;category&gt;/hooks/&lt;hook-name&gt;.md
+                  </code>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Hook Structure</h3>
+                  <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm overflow-x-auto">
+                    <pre className="text-muted-foreground">{hookTemplate}</pre>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 gap-2"
+                    onClick={() => handleCopy(hookTemplate, 'hook')}
+                  >
+                    <Copy className="h-3 w-3" />
+                    {copiedTemplate === 'hook' ? 'Copied!' : 'Copy Template'}
+                  </Button>
+                </Card>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="p-6 border-border/50">
+                    <h3 className="text-xl font-semibold mb-4">Hook Events</h3>
+                    <div className="space-y-3">
+                      {hookEvents.map((item) => (
+                        <div key={item.event} className="flex items-start gap-2">
+                          <code className="text-sm text-green-400 font-mono">{item.event}</code>
+                          <span className="text-sm text-muted-foreground">- {item.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+
+                  <Card className="p-6 border-border/50">
+                    <h3 className="text-xl font-semibold mb-4">Valid Categories</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {hookCategories.map((category) => (
+                        <div key={category} className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-400" />
+                          <code className="text-sm text-muted-foreground">{category}</code>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Skills Tab */}
+            <TabsContent value="skills">
+              <div className="space-y-8">
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-2">Skill Location</h3>
+                  <code className="text-sm text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                    plugins/all-skills/skills/&lt;skill-name&gt;/SKILL.md
+                  </code>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Skill Structure</h3>
+                  <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm overflow-x-auto">
+                    <pre className="text-muted-foreground">{skillTemplate}</pre>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 gap-2"
+                    onClick={() => handleCopy(skillTemplate, 'skill')}
+                  >
+                    <Copy className="h-3 w-3" />
+                    {copiedTemplate === 'skill' ? 'Copied!' : 'Copy Template'}
+                  </Button>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Skill Guidelines</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Create a directory with the skill name</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Include clear &quot;When to Use&quot; section</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Provide example prompts and outputs</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Add practical tips for best results</span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Plugins Tab */}
+            <TabsContent value="plugins">
+              <div className="space-y-8">
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-2">Plugin Structure</h3>
+                  <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm">
+                    <pre className="text-muted-foreground">{`plugins/<plugin-name>/
+├── .claude-plugin/
+│   └── plugin.json
+├── agents/           # Optional
+│   └── *.md
+├── commands/         # Optional
+│   └── *.md
+└── hooks/            # Optional
+    └── *.md`}</pre>
+                  </div>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Plugin Manifest (plugin.json)</h3>
+                  <div className="bg-card rounded-lg border border-border/50 p-4 font-mono text-sm overflow-x-auto">
+                    <pre className="text-muted-foreground">{pluginTemplate}</pre>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 gap-2"
+                    onClick={() => handleCopy(pluginTemplate, 'plugin')}
+                  >
+                    <Copy className="h-3 w-3" />
+                    {copiedTemplate === 'plugin' ? 'Copied!' : 'Copy Template'}
+                  </Button>
+                </Card>
+
+                <Card className="p-6 border-border/50">
+                  <h3 className="text-xl font-semibold mb-4">Plugin Guidelines</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Include a descriptive name and version</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Add relevant keywords for discoverability</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Link to your repository</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span>Specify license (MIT recommended)</span>
+                    </li>
+                  </ul>
                 </Card>
               </div>
             </TabsContent>
@@ -447,10 +603,10 @@ Detailed instructions for how the command should work...`}</pre>
           <h2 className="text-2xl font-bold mb-6">Submission Process</h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { icon: Code2, title: 'Create', desc: 'Write your subagent or command' },
-              { icon: AlertCircle, title: 'Test', desc: 'Verify it works correctly' },
+              { icon: Code2, title: 'Create', desc: 'Write your component' },
+              { icon: AlertCircle, title: 'Validate', desc: 'Run npm test' },
               { icon: GitBranch, title: 'Submit PR', desc: 'Open a pull request' },
-              { icon: Zap, title: 'Auto Deploy', desc: 'Merged PRs go live instantly' }
+              { icon: Zap, title: 'Auto Deploy', desc: 'Merged PRs go live' }
             ].map((step, i) => (
               <div key={i} className="text-center relative">
                 <div className="mx-auto w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-3">
@@ -468,6 +624,27 @@ Detailed instructions for how the command should work...`}</pre>
           </div>
         </section>
 
+        {/* Testing Section */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Testing Your Contribution</h2>
+          <Card className="p-6 border-border/50">
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">Run Validation</h4>
+                <code className="text-sm text-muted-foreground bg-background/50 px-3 py-2 rounded block">
+                  npm test
+                </code>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Install Locally</h4>
+                <code className="text-sm text-muted-foreground bg-background/50 px-3 py-2 rounded block">
+                  find plugins/agents-*/agents -name &quot;*.md&quot; -exec cp {'{}' } ~/.claude/agents/ \;
+                </code>
+              </div>
+            </div>
+          </Card>
+        </section>
+
         {/* Call to Action */}
         <section className="mt-16">
           <Card className="p-8 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5">
@@ -475,11 +652,11 @@ Detailed instructions for how the command should work...`}</pre>
               <BookOpen className="h-12 w-12 text-primary mx-auto mb-4" />
               <h2 className="text-2xl font-bold mb-4">Ready to Contribute?</h2>
               <p className="text-muted-foreground mb-6">
-                Check out our detailed contribution guide for step-by-step instructions, 
+                Check out our detailed contribution guide for step-by-step instructions,
                 best practices, and tips for getting your contribution merged quickly.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
-                <a 
+                <a
                   href="https://github.com/davepoon/buildwithclaude/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -489,7 +666,7 @@ Detailed instructions for how the command should work...`}</pre>
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </a>
-                <a 
+                <a
                   href="https://github.com/davepoon/buildwithclaude"
                   target="_blank"
                   rel="noopener noreferrer"
