@@ -69,12 +69,7 @@ export default function MCPPageClient({
 
   const handleSourceChange = (source: string) => {
     setSelectedSource(source)
-    if (source === 'official-mcp' && sortBy === 'stars') {
-      setSortBy('name')
-      updateURL({ source, sort: 'name' })
-    } else {
-      updateURL({ source })
-    }
+    updateURL({ source })
   }
 
   const updateURL = (newParams: { category?: string | 'all', source?: string, sort?: string }) => {
