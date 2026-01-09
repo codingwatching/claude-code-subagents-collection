@@ -7,14 +7,43 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5 minutes max for cron job
 
 /**
+ * Task names for logging and API responses
+ */
+const TASK_NAMES = {
+  mcp: 'MCP servers',
+  marketplaces: 'Marketplaces',
+  plugins: 'Plugins',
+  stats: 'MCP server stats',
+} as const
+
+type TaskType = keyof typeof TASK_NAMES
+
+/**
+ * Day-of-week to task mapping (Vercel Hobby plan: 1 cron/day)
+ * 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
+ */
+const DAY_TO_TASK: Record<number, TaskType | null> = {
+  0: null,          // Sunday: skip
+  1: 'mcp',         // Monday: MCP servers
+  2: 'marketplaces', // Tuesday: Marketplaces
+  3: 'plugins',     // Wednesday: Plugins
+  4: 'stats',       // Thursday: MCP stats
+  5: null,          // Friday: skip
+  6: null,          // Saturday: skip
+}
+
+/**
  * Unified Vercel Cron endpoint for all indexing tasks
  * Scheduled to run daily at 5 AM UTC via vercel.json
  *
- * Runs sequentially:
- * 1. MCP servers (Official Registry + Docker Hub)
- * 2. Plugin marketplaces
- * 3. Plugins from marketplaces
- * 4. MCP server stats sync (GitHub stars, Docker pulls)
+ * Due to Vercel Hobby plan limitations (1 cron/day), tasks are rotated by day:
+ * - Monday: Index MCP servers (Official Registry + Docker Hub)
+ * - Tuesday: Index plugin marketplaces
+ * - Wednesday: Index plugins from marketplaces
+ * - Thursday: Sync MCP server stats (GitHub stars, Docker pulls)
+ * - Fri-Sun: Skip
+ *
+ * Manual override: Add ?task=mcp|marketplaces|plugins|stats to run specific task
  */
 export async function GET(request: NextRequest) {
   // Verify Vercel Cron secret
@@ -26,52 +55,66 @@ export async function GET(request: NextRequest) {
   }
 
   const startTime = Date.now()
-  console.log('Unified indexer CRON started')
+
+  // Check for manual task override via query parameter
+  const taskOverride = request.nextUrl.searchParams.get('task') as TaskType | null
+  const dayOfWeek = new Date().getUTCDay()
+  const scheduledTask = DAY_TO_TASK[dayOfWeek]
+
+  // Use override if provided, otherwise use scheduled task
+  const taskToRun = taskOverride || scheduledTask
+
+  console.log(`Cron started - Day: ${dayOfWeek}, Scheduled: ${scheduledTask || 'none'}, Override: ${taskOverride || 'none'}`)
+
+  // No task scheduled for today and no override
+  if (!taskToRun) {
+    console.log(`Day ${dayOfWeek}: No indexing scheduled`)
+    return NextResponse.json({
+      success: true,
+      skipped: true,
+      day: dayOfWeek,
+      message: 'No indexing scheduled for today (Fri-Sun)',
+    })
+  }
 
   const results: Record<string, unknown> = {}
   const errors: string[] = []
 
-  // 1. Index MCP servers
   try {
-    console.log('Step 1/4: Indexing MCP servers...')
-    results.mcpServers = await indexMCPServers()
-  } catch (error) {
-    console.error('MCP server indexing failed:', error)
-    errors.push(`mcpServers: ${error instanceof Error ? error.message : String(error)}`)
-  }
+    console.log(`Running task: ${TASK_NAMES[taskToRun]}`)
 
-  // 2. Index marketplaces
-  try {
-    console.log('Step 2/4: Indexing marketplaces...')
-    results.marketplaces = await indexMarketplaces()
+    switch (taskToRun) {
+      case 'mcp':
+        results.mcpServers = await indexMCPServers()
+        break
+      case 'marketplaces':
+        results.marketplaces = await indexMarketplaces()
+        break
+      case 'plugins':
+        results.plugins = await indexPlugins()
+        break
+      case 'stats':
+        results.mcpStats = await syncMCPServerStats()
+        break
+      default:
+        // TypeScript exhaustiveness check
+        const _exhaustive: never = taskToRun
+        throw new Error(`Unknown task: ${_exhaustive}`)
+    }
   } catch (error) {
-    console.error('Marketplace indexing failed:', error)
-    errors.push(`marketplaces: ${error instanceof Error ? error.message : String(error)}`)
-  }
-
-  // 3. Index plugins
-  try {
-    console.log('Step 3/4: Indexing plugins...')
-    results.plugins = await indexPlugins()
-  } catch (error) {
-    console.error('Plugin indexing failed:', error)
-    errors.push(`plugins: ${error instanceof Error ? error.message : String(error)}`)
-  }
-
-  // 4. Sync MCP server stats
-  try {
-    console.log('Step 4/4: Syncing MCP server stats...')
-    results.mcpStats = await syncMCPServerStats()
-  } catch (error) {
-    console.error('MCP stats sync failed:', error)
-    errors.push(`mcpStats: ${error instanceof Error ? error.message : String(error)}`)
+    console.error(`${TASK_NAMES[taskToRun]} indexing failed:`, error)
+    errors.push(`${taskToRun}: ${error instanceof Error ? error.message : String(error)}`)
   }
 
   const durationMs = Date.now() - startTime
-  console.log(`Unified indexer completed in ${durationMs}ms`)
+  console.log(`Cron completed in ${durationMs}ms - Task: ${TASK_NAMES[taskToRun]}`)
 
   return NextResponse.json({
     success: errors.length === 0,
+    task: taskToRun,
+    taskName: TASK_NAMES[taskToRun],
+    day: dayOfWeek,
+    isOverride: !!taskOverride,
     durationMs,
     results,
     errors: errors.length > 0 ? errors : undefined,

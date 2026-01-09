@@ -3,6 +3,8 @@ import { z } from 'zod'
 // Rate limiting configuration
 const MIN_DELAY_MS = 2000 // 2 second delay between requests
 const MAX_RETRIES = 3
+const MAX_CONSECUTIVE_FAILURES = 5 // Circuit breaker threshold
+const MAX_RATE_LIMIT_WAIT_MS = 15000 // Cap wait time at 15s for serverless
 
 // GitHub API response schemas
 const GitHubSearchItemSchema = z.object({
@@ -56,6 +58,7 @@ export class GitHubClient {
   private baseUrl = 'https://api.github.com'
   private apiVersion = '2022-11-28'
   private lastRequestTime = 0
+  private consecutiveFailures = 0 // Circuit breaker counter
 
   private get headers(): HeadersInit {
     const headers: HeadersInit = {
@@ -159,9 +162,17 @@ export class GitHubClient {
   }
 
   /**
-   * Fetch with exponential backoff retry
+   * Fetch with exponential backoff retry and circuit breaker
    */
   private async fetchWithRetry(url: string): Promise<Response> {
+    // Circuit breaker: fail fast if too many consecutive failures
+    if (this.consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+      throw new Error(
+        `Circuit breaker open: ${this.consecutiveFailures} consecutive failures. ` +
+        `Failing fast to prevent timeout. Try again later.`
+      )
+    }
+
     let lastError: Error | null = null
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -171,12 +182,18 @@ export class GitHubClient {
         // Handle rate limiting
         if (response.status === 429 || response.status === 403) {
           const retryAfter = response.headers.get('retry-after')
-          const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : Math.min(1000 * Math.pow(2, attempt), 60000)
-          console.warn(`Rate limited. Waiting ${waitTime / 1000}s before retry...`)
+          // Cap wait time to avoid consuming entire timeout budget
+          const waitTime = Math.min(
+            retryAfter ? parseInt(retryAfter) * 1000 : 1000 * Math.pow(2, attempt),
+            MAX_RATE_LIMIT_WAIT_MS
+          )
+          console.warn(`Rate limited. Waiting ${waitTime / 1000}s before retry... (attempt ${attempt + 1}/${MAX_RETRIES})`)
           await this.sleep(waitTime)
           continue
         }
 
+        // Success - reset circuit breaker
+        this.consecutiveFailures = 0
         return response
       } catch (error) {
         lastError = error as Error
@@ -189,7 +206,18 @@ export class GitHubClient {
       }
     }
 
+    // All retries exhausted - increment circuit breaker counter
+    this.consecutiveFailures++
+    console.warn(`GitHub request failed after ${MAX_RETRIES} retries. Consecutive failures: ${this.consecutiveFailures}/${MAX_CONSECUTIVE_FAILURES}`)
+
     throw lastError || new Error('Request failed after retries')
+  }
+
+  /**
+   * Reset the circuit breaker (useful for new indexing runs)
+   */
+  resetCircuitBreaker(): void {
+    this.consecutiveFailures = 0
   }
 
   private sleep(ms: number): Promise<void> {

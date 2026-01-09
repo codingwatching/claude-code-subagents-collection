@@ -1283,6 +1283,32 @@
       ],
       "category": "skills",
       "source": "./plugins/frontend-design-pro"
+    },
+    {
+      "name": "obsidian-skills",
+      "description": "Skills for working with Obsidian files including Markdown with wikilinks/embeds/callouts, Bases for database views, and Canvas for visual diagrams",
+      "version": "1.0.0",
+      "author": {
+        "name": "kepano",
+        "url": "https://github.com/kepano/obsidian-skills"
+      },
+      "repository": "https://github.com/kepano/obsidian-skills",
+      "license": "MIT",
+      "keywords": [
+        "skills",
+        "obsidian",
+        "obsidian-markdown",
+        "obsidian-bases",
+        "json-canvas",
+        "wikilinks",
+        "callouts",
+        "embeds",
+        "canvas",
+        "bases",
+        "note-taking"
+      ],
+      "category": "skills",
+      "source": "./plugins/obsidian-skills"
     }
   ]
 }
