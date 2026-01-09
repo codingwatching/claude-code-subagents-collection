@@ -24,42 +24,27 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Bot, Terminal, Webhook, Sparkles, Package, Store, Loader2, ArrowUpDown, Check, ChevronsUpDown } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Package, Store, Loader2, ArrowUpDown, Check, ChevronsUpDown, X, Tags } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { UnifiedPlugin, PluginType } from '@/lib/plugin-types'
-import type { MarketplaceOption, SortOption } from '@/lib/plugin-db-server'
-
-interface PluginStats {
-  total: number
-  subagents: number
-  commands: number
-  hooks: number
-  skills: number
-  plugins: number
-}
+import type { UnifiedPlugin } from '@/lib/plugin-types'
+import type { MarketplaceOption, SortOption, PluginCategory } from '@/lib/plugin-db-server'
 
 interface PluginsPageClientProps {
   initialPlugins: UnifiedPlugin[]
   initialHasMore: boolean
-  stats: PluginStats
+  categories: PluginCategory[]
+  totalPlugins: number
   marketplaces: MarketplaceOption[]
 }
-
-const typeFilters: { value: PluginType | 'all'; label: string; icon: React.ElementType | null }[] = [
-  { value: 'all', label: 'All', icon: null },
-  { value: 'subagent', label: 'Subagents', icon: Bot },
-  { value: 'command', label: 'Commands', icon: Terminal },
-  { value: 'hook', label: 'Hooks', icon: Webhook },
-  { value: 'skill', label: 'Skills', icon: Sparkles },
-  { value: 'plugin', label: 'Plugins', icon: Package },
-]
 
 const ITEMS_PER_PAGE = 24
 
 export default function PluginsPageClient({
   initialPlugins,
   initialHasMore,
-  stats,
+  categories,
+  totalPlugins,
   marketplaces,
 }: PluginsPageClientProps) {
   // State
@@ -68,10 +53,11 @@ export default function PluginsPageClient({
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [selectedType, setSelectedType] = useState<PluginType | 'all'>('all')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedMarketplace, setSelectedMarketplace] = useState<string>('all')
   const [sort, setSort] = useState<SortOption>('relevance')
   const [marketplaceOpen, setMarketplaceOpen] = useState(false)
+  const [categoryOpen, setCategoryOpen] = useState(false)
 
   // Refs
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -95,12 +81,13 @@ export default function PluginsPageClient({
           limit: ITEMS_PER_PAGE.toString(),
           offset: '0',
           sort,
+          type: 'plugin', // Always filter to plugins only
         })
         if (debouncedSearch) {
           params.set('search', debouncedSearch)
         }
-        if (selectedType !== 'all') {
-          params.set('type', selectedType)
+        if (selectedCategories.length > 0) {
+          params.set('category', selectedCategories.join(','))
         }
         if (selectedMarketplace !== 'all') {
           params.set('marketplaceId', selectedMarketplace)
@@ -126,7 +113,7 @@ export default function PluginsPageClient({
     }
 
     fetchFiltered()
-  }, [debouncedSearch, selectedType, selectedMarketplace, sort])
+  }, [debouncedSearch, selectedCategories, selectedMarketplace, sort])
 
   // Load more function
   const loadMore = useCallback(async () => {
@@ -138,12 +125,13 @@ export default function PluginsPageClient({
         limit: ITEMS_PER_PAGE.toString(),
         offset: offsetRef.current.toString(),
         sort,
+        type: 'plugin', // Always filter to plugins only
       })
       if (debouncedSearch) {
         params.set('search', debouncedSearch)
       }
-      if (selectedType !== 'all') {
-        params.set('type', selectedType)
+      if (selectedCategories.length > 0) {
+        params.set('category', selectedCategories.join(','))
       }
       if (selectedMarketplace !== 'all') {
         params.set('marketplaceId', selectedMarketplace)
@@ -160,7 +148,7 @@ export default function PluginsPageClient({
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, hasMore, debouncedSearch, selectedType, selectedMarketplace, sort])
+  }, [isLoading, hasMore, debouncedSearch, selectedCategories, selectedMarketplace, sort])
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -179,16 +167,6 @@ export default function PluginsPageClient({
 
     return () => observer.disconnect()
   }, [hasMore, isLoading, loadMore])
-
-  const getTypeCount = (type: PluginType | 'all') => {
-    if (type === 'all') return stats.total
-    if (type === 'subagent') return stats.subagents
-    if (type === 'command') return stats.commands
-    if (type === 'hook') return stats.hooks
-    if (type === 'skill') return stats.skills
-    if (type === 'plugin') return stats.plugins
-    return 0
-  }
 
   // Filter marketplaces: remove duplicates by displayName and entries with 0 plugins
   // Sort with "Build with Claude" first, then by pluginCount descending
@@ -216,11 +194,19 @@ export default function PluginsPageClient({
   // Get selected marketplace display name
   const selectedMarketplaceDisplay = useMemo(() => {
     if (selectedMarketplace === 'all') {
-      return `All Sources (${stats.total.toLocaleString()})`
+      return `All Sources (${totalPlugins.toLocaleString()})`
     }
     const mp = filteredMarketplaces.find(m => m.id === selectedMarketplace)
     return mp ? `${mp.displayName} (${mp.pluginCount.toLocaleString()})` : 'Select source...'
-  }, [selectedMarketplace, filteredMarketplaces, stats.total])
+  }, [selectedMarketplace, filteredMarketplaces, totalPlugins])
+
+  // Format category name for display
+  const formatCategoryName = (name: string) => {
+    return name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
 
   return (
     <div className="min-h-screen">
@@ -231,33 +217,9 @@ export default function PluginsPageClient({
             <Package className="h-8 w-8 text-primary" />
             Plugins
           </h1>
-          <p className="text-muted-foreground mb-4">
-            Browse {stats.total.toLocaleString()} plugins across subagents, commands, hooks, skills, and community plugins
+          <p className="text-muted-foreground">
+            Browse {totalPlugins.toLocaleString()} plugins for development, AI-powered workflows, productivity, and more
           </p>
-          <div className="flex items-center gap-4 text-sm flex-wrap">
-            <span className="flex items-center gap-1.5 text-blue-500">
-              <Bot className="h-4 w-4" />
-              {stats.subagents.toLocaleString()} subagents
-            </span>
-            <span className="flex items-center gap-1.5 text-green-500">
-              <Terminal className="h-4 w-4" />
-              {stats.commands.toLocaleString()} commands
-            </span>
-            <span className="flex items-center gap-1.5 text-orange-500">
-              <Webhook className="h-4 w-4" />
-              {stats.hooks.toLocaleString()} hooks
-            </span>
-            <span className="flex items-center gap-1.5 text-yellow-500">
-              <Sparkles className="h-4 w-4" />
-              {stats.skills.toLocaleString()} skills
-            </span>
-            {stats.plugins > 0 && (
-              <span className="flex items-center gap-1.5 text-purple-500">
-                <Package className="h-4 w-4" />
-                {stats.plugins.toLocaleString()} plugins
-              </span>
-            )}
-          </div>
         </div>
 
         {/* Search, Marketplace Filter, and Sort */}
@@ -304,7 +266,7 @@ export default function PluginsPageClient({
                             selectedMarketplace === 'all' ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        All Sources ({stats.total.toLocaleString()})
+                        All Sources ({totalPlugins.toLocaleString()})
                       </CommandItem>
                       {filteredMarketplaces.map((mp) => (
                         <CommandItem
@@ -346,34 +308,99 @@ export default function PluginsPageClient({
           </Select>
         </div>
 
-        {/* Type filters */}
-        <div className="flex gap-2 flex-wrap mb-8">
-          {typeFilters.map((filter) => {
-            const Icon = filter.icon
-            const count = getTypeCount(filter.value)
-            return (
-              <button
-                key={filter.value}
-                onClick={() => setSelectedType(filter.value)}
-                className={`px-3 py-1.5 text-sm rounded-md transition-colors flex items-center gap-1.5 ${
-                  selectedType === filter.value
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                }`}
-              >
-                {Icon && <Icon className="h-3.5 w-3.5" />}
-                {filter.label}
-                <span className="text-xs opacity-70">({count.toLocaleString()})</span>
-              </button>
-            )
-          })}
+        {/* Category multi-select combobox */}
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Selected category pills */}
+            {selectedCategories.map((catName) => {
+              const cat = categories.find(c => c.name === catName)
+              return (
+                <Badge
+                  key={catName}
+                  variant="secondary"
+                  className="pl-2 pr-1 py-1 gap-1 text-sm bg-primary/10 text-primary border-primary/20"
+                >
+                  {formatCategoryName(catName)}
+                  {cat && <span className="text-xs opacity-70">({cat.count})</span>}
+                  <button
+                    onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catName))}
+                    className="ml-1 rounded-full p-0.5 hover:bg-primary/20 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )
+            })}
+
+            {/* Category combobox */}
+            <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={categoryOpen}
+                  className="h-8 gap-2 bg-card border-border border-dashed group"
+                >
+                  <Tags className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                    {selectedCategories.length === 0 ? 'Filter by categories...' : 'Add category'}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[300px] p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search categories..." />
+                  <CommandList className="max-h-[300px]">
+                    <CommandEmpty>No category found.</CommandEmpty>
+                    <CommandGroup>
+                      {selectedCategories.length > 0 && (
+                        <CommandItem
+                          onSelect={() => setSelectedCategories([])}
+                          className="text-muted-foreground"
+                        >
+                          <X className="mr-2 h-4 w-4" />
+                          Clear all filters
+                        </CommandItem>
+                      )}
+                      {categories.map((cat) => {
+                        const isSelected = selectedCategories.includes(cat.name)
+                        return (
+                          <CommandItem
+                            key={cat.name}
+                            value={cat.name}
+                            className="group"
+                            onSelect={() => {
+                              if (isSelected) {
+                                setSelectedCategories(prev => prev.filter(c => c !== cat.name))
+                              } else {
+                                setSelectedCategories(prev => [...prev, cat.name])
+                              }
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                isSelected ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            <span className="flex-1">{formatCategoryName(cat.name)}</span>
+                            <span className="text-xs text-muted-foreground group-data-[selected=true]:text-accent-foreground transition-colors">({cat.count})</span>
+                          </CommandItem>
+                        )
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
 
         {/* Results count */}
-        {(selectedType !== 'all' || selectedMarketplace !== 'all' || debouncedSearch) && (
+        {(selectedCategories.length > 0 || selectedMarketplace !== 'all' || debouncedSearch) && (
           <p className="text-sm text-muted-foreground mb-6">
             Showing {plugins.length.toLocaleString()} result{plugins.length !== 1 ? 's' : ''}
-            {selectedType !== 'all' && ` in ${typeFilters.find(f => f.value === selectedType)?.label}`}
+            {selectedCategories.length > 0 && ` in ${selectedCategories.map(c => formatCategoryName(c)).join(', ')}`}
             {selectedMarketplace !== 'all' && ` from ${filteredMarketplaces.find(m => m.id === selectedMarketplace)?.displayName}`}
             {debouncedSearch && ` matching "${debouncedSearch}"`}
           </p>

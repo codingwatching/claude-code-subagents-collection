@@ -166,9 +166,12 @@ function filterLocalPlugins(
     }
   }
 
-  // Category filter
+  // Category filter (supports comma-separated categories with OR logic)
   if (options.category) {
-    filtered = filtered.filter(p => p.category === options.category)
+    const categories = options.category.split(',').map(c => c.trim()).filter(Boolean)
+    if (categories.length > 0) {
+      filtered = filtered.filter(p => categories.includes(p.category || ''))
+    }
   }
 
   // Search filter
@@ -303,9 +306,15 @@ export async function getPluginsPaginated(options: {
     )
   }
 
-  // Category filter
+  // Category filter (supports comma-separated categories with OR logic)
   if (category) {
-    conditions.push(sql`${category} = ANY(${plugins.categories})`)
+    const categories = category.split(',').map(c => c.trim()).filter(Boolean)
+    if (categories.length === 1) {
+      conditions.push(sql`${categories[0]} = ANY(${plugins.categories})`)
+    } else if (categories.length > 1) {
+      // OR logic: plugin matches if ANY of its categories is in the selected list
+      conditions.push(sql`${plugins.categories} && ARRAY[${sql.join(categories.map(c => sql`${c}`), sql`, `)}]::text[]`)
+    }
   }
 
   // Search filter
@@ -668,6 +677,72 @@ export async function getPluginStats(): Promise<{
   }
 
   return { total, byType, byMarketplace }
+}
+
+export interface PluginCategory {
+  name: string
+  count: number
+}
+
+/**
+ * Get unique plugin categories with counts from all sources (local + database)
+ * Returns semantic categories like development, ai-powered, workflow-automation, etc.
+ */
+export async function getPluginCategories(): Promise<PluginCategory[]> {
+  const categoryCounts: Record<string, number> = {}
+
+  // Get categories from database plugins (semantic categories)
+  try {
+    const dbCategories = await db
+      .select({ category: sql<string>`unnest(${plugins.categories})` })
+      .from(plugins)
+      .where(and(
+        eq(plugins.active, true),
+        eq(plugins.type, 'plugin')
+      ))
+
+    // Count database categories
+    for (const row of dbCategories) {
+      if (row.category) {
+        categoryCounts[row.category] = (categoryCounts[row.category] || 0) + 1
+      }
+    }
+  } catch (e) {
+    console.warn('Error fetching database categories:', e)
+  }
+
+  // Also include local plugin categories
+  const localPlugins = getLocalBuildWithClaudePlugins()
+  const pluginsOnly = localPlugins.filter(p => p.type === 'plugin')
+  for (const p of pluginsOnly) {
+    const category = p.category || 'uncategorized'
+    categoryCounts[category] = (categoryCounts[category] || 0) + 1
+  }
+
+  // Convert to array and sort by count descending
+  return Object.entries(categoryCounts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+}
+
+/**
+ * Get total count of plugins (type='plugin' only) from all sources
+ */
+export async function getPluginOnlyCount(): Promise<number> {
+  // Count local plugins
+  const localPlugins = getLocalBuildWithClaudePlugins()
+  const localCount = localPlugins.filter(p => p.type === 'plugin').length
+
+  // Count database plugins
+  const dbCount = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(plugins)
+    .where(and(
+      eq(plugins.active, true),
+      eq(plugins.type, 'plugin')
+    ))
+
+  return localCount + Number(dbCount[0]?.count || 0)
 }
 
 /**

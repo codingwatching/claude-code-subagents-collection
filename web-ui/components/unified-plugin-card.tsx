@@ -19,6 +19,13 @@ const typeLabels: Record<string, string> = {
   plugin: 'Plugin',
 }
 
+function formatCategoryName(name: string): string {
+  return name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
 function getTypeBadgeClasses(type: string): string {
   switch (type) {
     case 'subagent':
@@ -66,11 +73,11 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
     case 'hook': return `/hook/${plugin.name}`
     case 'skill': return `/skill/${plugin.name}`
     case 'plugin':
-      // For actual plugins, link to the plugin directory on GitHub
-      if (plugin.file?.includes('.claude-plugin')) {
-        const dirName = plugin.file.split('/')[1] // Extract directory name from path like "plugins/agents-blockchain-web3/.claude-plugin/plugin.json"
-        return `https://github.com/davepoon/buildwithclaude/tree/main/plugins/${dirName}`
+      // Build with Claude plugins have internal detail pages
+      if (plugin.marketplaceName === 'Build with Claude') {
+        return `/plugin/${plugin.name}`
       }
+      // External plugins link to their repository
       return plugin.repository || '#'
     default: return '#'
   }
@@ -107,9 +114,17 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
       <div className="mb-3">
         <h3 className="font-medium mb-1">{plugin.name}</h3>
         <div className="flex flex-wrap items-center gap-1">
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClasses(plugin.type)}`}>
-            {typeLabels[plugin.type]}
-          </span>
+          {plugin.type === 'plugin' && plugin.category && plugin.category !== 'uncategorized' ? (
+            // Show category badge for plugins
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-purple-500">
+              {formatCategoryName(plugin.category)}
+            </span>
+          ) : (
+            // Show type badge for non-plugins or uncategorized plugins
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClasses(plugin.type)}`}>
+              {typeLabels[plugin.type]}
+            </span>
+          )}
           {plugin.marketplaceName && (
             <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-xs text-indigo-500 font-medium truncate max-w-[140px]">
               {plugin.marketplaceName}
