@@ -239,7 +239,7 @@ function countPluginContents(pluginConfig) {
   return {
     commands: config.commands?.length || 0,
     agents: config.agents?.length || 0,
-    skills: config.skills?.length || 0,
+    skills: normalizeSkills(config.skills).length,
     hooks: config.hooks?.length || 0,
   };
 }
@@ -274,6 +274,24 @@ function formatMarketplace(repo, pluginConfig) {
 }
 
 /**
+ * Normalize skills from various formats to an array of names
+ */
+function normalizeSkills(skills) {
+  if (!skills) return [];
+  if (Array.isArray(skills)) {
+    return skills.map(s => s.name || s);
+  }
+  if (typeof skills === 'object') {
+    // Handle object format: { "skill-name": { ... } }
+    return Object.keys(skills);
+  }
+  if (typeof skills === 'string') {
+    return [skills];
+  }
+  return [];
+}
+
+/**
  * Format a plugin for the registry
  */
 function formatPlugin(repo, pluginConfig) {
@@ -287,7 +305,7 @@ function formatPlugin(repo, pluginConfig) {
     stars: repo.stars,
     installCommand: `npx claude-plugins install ${repo.fullName}`,
     categories: extractCategories(repo, pluginConfig),
-    skills: config.skills?.map(s => s.name || s) || [],
+    skills: normalizeSkills(config.skills),
     version: config.version || '1.0.0',
     author: config.author?.name || repo.owner,
     keywords: config.keywords || [],
