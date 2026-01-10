@@ -23,25 +23,27 @@ type TaskType = keyof typeof TASK_NAMES
  * 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
  */
 const DAY_TO_TASK: Record<number, TaskType | null> = {
-  0: null,          // Sunday: skip
+  0: 'stats',       // Sunday: MCP stats
   1: 'mcp',         // Monday: MCP servers
   2: 'marketplaces', // Tuesday: Marketplaces
   3: 'plugins',     // Wednesday: Plugins
   4: 'stats',       // Thursday: MCP stats
-  5: null,          // Friday: skip
-  6: null,          // Saturday: skip
+  5: 'marketplaces', // Friday: Marketplaces
+  6: 'plugins',     // Saturday: Plugins
 }
 
 /**
  * Unified Vercel Cron endpoint for all indexing tasks
  * Scheduled to run daily at 5 AM UTC via vercel.json
  *
- * Due to Vercel Hobby plan limitations (1 cron/day), tasks are rotated by day:
+ * Tasks rotate by day of week:
+ * - Sunday: Sync MCP server stats
  * - Monday: Index MCP servers (Official Registry + Docker Hub)
  * - Tuesday: Index plugin marketplaces
  * - Wednesday: Index plugins from marketplaces
- * - Thursday: Sync MCP server stats (GitHub stars, Docker pulls)
- * - Fri-Sun: Skip
+ * - Thursday: Sync MCP server stats
+ * - Friday: Index plugin marketplaces
+ * - Saturday: Index plugins from marketplaces
  *
  * Manual override: Add ?task=mcp|marketplaces|plugins|stats to run specific task
  */
@@ -73,7 +75,7 @@ export async function GET(request: NextRequest) {
       success: true,
       skipped: true,
       day: dayOfWeek,
-      message: 'No indexing scheduled for today (Fri-Sun)',
+      message: 'No indexing scheduled for today',
     })
   }
 
