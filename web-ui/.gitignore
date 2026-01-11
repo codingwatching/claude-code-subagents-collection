@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Generated registry (no longer needed - data comes from database)
 /public/registry.json
+
+# Trigger.dev
+.trigger/

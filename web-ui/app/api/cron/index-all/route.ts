@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { indexMCPServers, syncMCPServerStats } from '@/lib/indexer/mcp-server-indexer'
 import { indexMarketplaces } from '@/lib/indexer/marketplace-indexer'
 import { indexPlugins } from '@/lib/indexer/plugin-indexer'
+import { tasks } from '@trigger.dev/sdk/v3'
+import type { indexPluginsTask } from '@/trigger/index-plugins'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5 minutes max for cron job
+
+// Whether to use trigger.dev for plugin indexing (background processing)
+const USE_TRIGGER_DEV = process.env.TRIGGER_SECRET_KEY ? true : false
 
 /**
  * Task names for logging and API responses
@@ -93,7 +98,19 @@ export async function GET(request: NextRequest) {
         results.marketplaces = await indexMarketplaces()
         break
       case 'plugins':
-        results.plugins = await indexPlugins()
+        if (USE_TRIGGER_DEV) {
+          // Trigger background task via trigger.dev - returns immediately
+          const handle = await tasks.trigger<typeof indexPluginsTask>('index-plugins', {})
+          console.log(`Triggered plugin indexing task: ${handle.id}`)
+          results.plugins = {
+            triggered: true,
+            taskId: handle.id,
+            message: 'Plugin indexing started as background task',
+          }
+        } else {
+          // Fallback to inline execution
+          results.plugins = await indexPlugins()
+        }
         break
       case 'stats':
         results.mcpStats = await syncMCPServerStats()
