@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Package, Sparkles, Loader2, ArrowUpDown } from 'lucide-react'
+import { CreateMarketplaceBanner } from '@/components/create-marketplace-banner'
 import type { MarketplaceRegistry } from '@/lib/marketplace-types'
 import type { SortOption } from '@/lib/marketplace-server'
 
@@ -162,6 +163,9 @@ export default function MarketplacesPageClient({
           </div>
         </div>
 
+        {/* Create Marketplace CTA */}
+        <CreateMarketplaceBanner />
+
         {/* Search and Sort */}
         <div className="mb-8 flex flex-col sm:flex-row gap-4">
           <Input
@@ -215,20 +219,6 @@ export default function MarketplacesPageClient({
           )}
         </div>
 
-        {/* Footer info */}
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          <p>
-            Want to add your marketplace?{' '}
-            <a
-              href="https://github.com/anthropics/claude-code-subagents-collection"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Submit a PR
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   )

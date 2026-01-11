@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/command'
 import { Badge } from '@/components/ui/badge'
 import { Package, Store, Loader2, ArrowUpDown, Check, ChevronsUpDown, X, Tags } from 'lucide-react'
+import { CreateMarketplaceBanner } from '@/components/create-marketplace-banner'
 import { cn } from '@/lib/utils'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
 import type { MarketplaceOption, SortOption, PluginCategory } from '@/lib/plugin-db-server'
@@ -221,6 +222,9 @@ export default function PluginsPageClient({
             Browse {totalPlugins.toLocaleString()} plugins for development, AI-powered workflows, productivity, and more
           </p>
         </div>
+
+        {/* Create Marketplace CTA */}
+        <CreateMarketplaceBanner />
 
         {/* Search, Marketplace Filter, and Sort */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
