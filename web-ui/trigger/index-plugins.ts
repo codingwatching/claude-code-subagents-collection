@@ -5,8 +5,8 @@ import { getGitHubClient } from "@/lib/github/client";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
-// Plugin schema from claude-plugins.dev API
-const ClaudePluginSchema = z.object({
+// Plugin schema for GitHub marketplace data
+const PluginSchema = z.object({
   id: z.string(),
   name: z.string(),
   namespace: z.string(),
@@ -45,73 +45,16 @@ const ClaudePluginSchema = z.object({
   updatedAt: z.string().optional(),
 });
 
-const ClaudePluginsApiResponseSchema = z.object({
-  plugins: z.array(ClaudePluginSchema),
-  total: z.number(),
-  limit: z.number(),
-  offset: z.number(),
-});
-
-type ClaudePlugin = z.infer<typeof ClaudePluginSchema>;
-
-/**
- * Fetch plugins from claude-plugins.dev API
- */
-async function fetchClaudePluginsRegistry(): Promise<ClaudePlugin[]> {
-  const allPlugins: ClaudePlugin[] = [];
-  let offset = 0;
-  const limit = 100;
-
-  try {
-    while (true) {
-      const response = await fetch(
-        `https://claude-plugins.dev/api/plugins?limit=${limit}&offset=${offset}`
-      );
-
-      if (!response.ok) {
-        logger.error(`claude-plugins API error: ${response.status}`);
-        break;
-      }
-
-      const data = await response.json();
-      const parsed = ClaudePluginsApiResponseSchema.safeParse(data);
-
-      if (!parsed.success) {
-        logger.error("Failed to parse claude-plugins response", {
-          error: parsed.error,
-        });
-        break;
-      }
-
-      allPlugins.push(...parsed.data.plugins);
-      logger.info(
-        `Fetched ${allPlugins.length}/${parsed.data.total} plugins from claude-plugins.dev`
-      );
-
-      if (allPlugins.length >= parsed.data.total) {
-        break;
-      }
-
-      offset += limit;
-
-      // Rate limiting - reduced since not GitHub API
-      await new Promise((resolve) => setTimeout(resolve, 200));
-    }
-  } catch (error) {
-    logger.error("Error fetching from claude-plugins.dev", { error });
-  }
-
-  return allPlugins;
-}
+type Plugin = z.infer<typeof PluginSchema>;
 
 /**
  * Fetch plugins from GitHub repository marketplace.json
  */
 async function fetchGitHubMarketplacePlugins(
   repoFullName: string
-): Promise<ClaudePlugin[]> {
+): Promise<Plugin[]> {
   const github = getGitHubClient();
-  const foundPlugins: ClaudePlugin[] = [];
+  const foundPlugins: Plugin[] = [];
 
   // Try standard paths for marketplace.json
   const paths = [
@@ -271,7 +214,7 @@ function createSlug(name: string): string {
 /**
  * Determine plugin type from metadata
  */
-function determinePluginType(plugin: ClaudePlugin): string {
+function determinePluginType(plugin: Plugin): string {
   const hasAgents = Array.isArray(plugin.metadata?.agents)
     ? plugin.metadata.agents.length > 0
     : !!plugin.metadata?.agents;
@@ -296,19 +239,6 @@ function determinePluginType(plugin: ClaudePlugin): string {
 
   return "plugin";
 }
-
-// Marketplace-specific fetch handlers
-const MARKETPLACE_HANDLERS: Record<
-  string,
-  (marketplace: {
-    id: string;
-    name: string;
-    displayName: string;
-    repository: string;
-  }) => Promise<ClaudePlugin[]>
-> = {
-  "claude-plugins": fetchClaudePluginsRegistry,
-};
 
 /**
  * Batch upsert plugins to database
@@ -481,20 +411,12 @@ export const indexPluginsTask = task({
       }
 
       try {
-        let fetchedPlugins: ClaudePlugin[] = [];
-
-        // Check for specific handler
-        const handler = MARKETPLACE_HANDLERS[marketplace.name];
-        if (handler) {
-          fetchedPlugins = await handler(marketplace);
-        } else {
-          // Default: try GitHub-based fetching
-          const repoPath = marketplace.repository.replace(
-            "https://github.com/",
-            ""
-          );
-          fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath);
-        }
+        // Fetch plugins from GitHub repository
+        const repoPath = marketplace.repository.replace(
+          "https://github.com/",
+          ""
+        );
+        const fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath);
 
         logger.info(
           `Fetched ${fetchedPlugins.length} plugins from ${marketplace.displayName}`

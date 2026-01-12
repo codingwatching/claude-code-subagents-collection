@@ -4,8 +4,8 @@ import { getGitHubClient } from '@/lib/github/client'
 import { eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
 
-// Plugin schema from claude-plugins.dev API
-const ClaudePluginSchema = z.object({
+// Plugin schema for GitHub marketplace data
+const PluginSchema = z.object({
   id: z.string(),
   name: z.string(),
   namespace: z.string(),
@@ -31,14 +31,7 @@ const ClaudePluginSchema = z.object({
   updatedAt: z.string().optional(),
 })
 
-const ClaudePluginsApiResponseSchema = z.object({
-  plugins: z.array(ClaudePluginSchema),
-  total: z.number(),
-  limit: z.number(),
-  offset: z.number(),
-})
-
-type ClaudePlugin = z.infer<typeof ClaudePluginSchema>
+type Plugin = z.infer<typeof PluginSchema>
 
 export interface PluginIndexResult {
   indexed: number
@@ -47,61 +40,12 @@ export interface PluginIndexResult {
   durationMs: number
 }
 
-// Marketplace-specific fetch handlers
-const MARKETPLACE_HANDLERS: Record<string, (marketplace: { id: string; name: string; displayName: string; repository: string }) => Promise<ClaudePlugin[]>> = {
-  'claude-plugins': fetchClaudePluginsRegistry,
-}
-
-/**
- * Fetch plugins from claude-plugins.dev API
- */
-async function fetchClaudePluginsRegistry(): Promise<ClaudePlugin[]> {
-  const allPlugins: ClaudePlugin[] = []
-  let offset = 0
-  const limit = 100
-
-  try {
-    while (true) {
-      const response = await fetch(`https://claude-plugins.dev/api/plugins?limit=${limit}&offset=${offset}`)
-
-      if (!response.ok) {
-        console.error(`claude-plugins API error: ${response.status}`)
-        break
-      }
-
-      const data = await response.json()
-      const parsed = ClaudePluginsApiResponseSchema.safeParse(data)
-
-      if (!parsed.success) {
-        console.error('Failed to parse claude-plugins response:', parsed.error)
-        break
-      }
-
-      allPlugins.push(...parsed.data.plugins)
-      console.log(`Fetched ${allPlugins.length}/${parsed.data.total} plugins from claude-plugins.dev`)
-
-      if (allPlugins.length >= parsed.data.total) {
-        break
-      }
-
-      offset += limit
-
-      // Rate limiting
-      await new Promise(resolve => setTimeout(resolve, 500))
-    }
-  } catch (error) {
-    console.error('Error fetching from claude-plugins.dev:', error)
-  }
-
-  return allPlugins
-}
-
 /**
  * Fetch plugins from GitHub repository marketplace.json
  */
-async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<ClaudePlugin[]> {
+async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plugin[]> {
   const github = getGitHubClient()
-  const plugins: ClaudePlugin[] = []
+  const plugins: Plugin[] = []
 
   // Try standard paths for marketplace.json
   const paths = [
@@ -279,17 +223,9 @@ export async function indexPlugins(): Promise<PluginIndexResult> {
     }
 
     try {
-      let fetchedPlugins: ClaudePlugin[] = []
-
-      // Check for specific handler
-      const handler = MARKETPLACE_HANDLERS[marketplace.name]
-      if (handler) {
-        fetchedPlugins = await handler(marketplace)
-      } else {
-        // Default: try GitHub-based fetching
-        const repoPath = marketplace.repository.replace('https://github.com/', '')
-        fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath)
-      }
+      // Fetch plugins from GitHub repository
+      const repoPath = marketplace.repository.replace('https://github.com/', '')
+      const fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath)
 
       console.log(`Fetched ${fetchedPlugins.length} plugins from ${marketplace.displayName}`)
 
@@ -402,7 +338,7 @@ function createSlug(name: string): string {
 /**
  * Determine plugin type from metadata
  */
-function determinePluginType(plugin: ClaudePlugin): string {
+function determinePluginType(plugin: Plugin): string {
   // Check metadata for type indicators (handle both array and object formats)
   const hasAgents = Array.isArray(plugin.metadata?.agents) ? plugin.metadata.agents.length > 0 : !!plugin.metadata?.agents
   const hasCommands = Array.isArray(plugin.metadata?.commands) ? plugin.metadata.commands.length > 0 : !!plugin.metadata?.commands
@@ -451,15 +387,9 @@ export async function indexMarketplacePlugins(marketplaceId: string): Promise<Pl
   const mp = marketplace[0]
 
   try {
-    let fetchedPlugins: ClaudePlugin[] = []
-
-    const handler = MARKETPLACE_HANDLERS[mp.name]
-    if (handler) {
-      fetchedPlugins = await handler(mp)
-    } else {
-      const repoPath = mp.repository.replace('https://github.com/', '')
-      fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath)
-    }
+    // Fetch plugins from GitHub repository
+    const repoPath = mp.repository.replace('https://github.com/', '')
+    const fetchedPlugins = await fetchGitHubMarketplacePlugins(repoPath)
 
     for (const plugin of fetchedPlugins) {
       try {
