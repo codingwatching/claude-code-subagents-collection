@@ -4,7 +4,7 @@ export default defineConfig({
   project: "proj_jpiratzafqxxuqitrvmi",
   runtime: "node",
   logLevel: "log",
-  maxDuration: 3600, // 60 minutes max for indexing tasks
+  maxDuration: 10800, // 3 hours max for indexing tasks
   tsconfig: "./tsconfig.json", // Use the same tsconfig to resolve @/ paths
   retries: {
     enabledInDev: true,

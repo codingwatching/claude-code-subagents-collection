@@ -344,7 +344,7 @@ export type IndexPluginsPayload = {
  */
 export const indexPluginsTask = task({
   id: "index-plugins",
-  maxDuration: 3600, // 60 minutes
+  maxDuration: 10800, // 3 hours
   run: async (payload: IndexPluginsPayload) => {
     const startTime = Date.now();
     logger.info("Starting plugin indexing task");
