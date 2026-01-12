@@ -84,6 +84,10 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
       } else if (data.subagents || data.commands || data.hooks) {
         // buildwithclaude registry.json format
         for (const subagent of data.subagents || []) {
+          if (!subagent.name) {
+            console.warn(`Skipping subagent without name in ${repoFullName}`)
+            continue
+          }
           plugins.push({
             id: `${repoFullName}/subagent/${subagent.name}`,
             name: subagent.name,
@@ -104,6 +108,10 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
           })
         }
         for (const command of data.commands || []) {
+          if (!command.name) {
+            console.warn(`Skipping command without name in ${repoFullName}`)
+            continue
+          }
           plugins.push({
             id: `${repoFullName}/command/${command.name}`,
             name: command.name,
@@ -124,6 +132,10 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
           })
         }
         for (const hook of data.hooks || []) {
+          if (!hook.name) {
+            console.warn(`Skipping hook without name in ${repoFullName}`)
+            continue
+          }
           plugins.push({
             id: `${repoFullName}/hook/${hook.name}`,
             name: hook.name,
@@ -141,6 +153,10 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
           })
         }
         for (const skill of data.skills || []) {
+          if (!skill.name) {
+            console.warn(`Skipping skill without name in ${repoFullName}`)
+            continue
+          }
           plugins.push({
             id: `${repoFullName}/skill/${skill.name}`,
             name: skill.name,
@@ -159,6 +175,10 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
         }
         // Process actual Claude Code plugins (directories with .claude-plugin/plugin.json)
         for (const plugin of data.plugins || []) {
+          if (!plugin.name) {
+            console.warn(`Skipping plugin without name in ${repoFullName}`)
+            continue
+          }
           plugins.push({
             id: `${repoFullName}/plugin/${plugin.name}`,
             name: plugin.name,
@@ -329,6 +349,9 @@ export async function indexPlugins(): Promise<PluginIndexResult> {
  * Create URL-safe slug from name
  */
 function createSlug(name: string): string {
+  if (!name) {
+    throw new Error('createSlug called with undefined or empty name')
+  }
   return name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
