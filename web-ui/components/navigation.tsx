@@ -63,7 +63,7 @@ export function Navigation() {
                 <HamburgerMenuIcon className="h-4 w-4" />
               </Button>
               <a
-                href="https://github.com/anthropics/claude-code"
+                href="https://github.com/davepoon/buildwithclaude"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -73,7 +73,7 @@ export function Navigation() {
                 </Button>
               </a>
               <a
-                href="https://github.com/anthropics/claude-code"
+                href="https://github.com/davepoon/buildwithclaude"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden sm:block"
@@ -144,7 +144,7 @@ export function Navigation() {
 
               <div className="border-t border-border p-4 space-y-3">
                 <a
-                  href="https://github.com/anthropics/claude-code"
+                  href="https://github.com/davepoon/buildwithclaude"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"
@@ -156,7 +156,7 @@ export function Navigation() {
                 </a>
                 <div className="flex justify-center">
                   <a
-                    href="https://github.com/anthropics/claude-code"
+                    href="https://github.com/davepoon/buildwithclaude"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
