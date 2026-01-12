@@ -4,12 +4,6 @@
   "framework": "nextjs",
   "installCommand": "npm install",
   "regions": ["iad1"],
-  "crons": [
-    {
-      "path": "/api/cron/index-all",
-      "schedule": "0 5 * * *"
-    }
-  ],
   "functions": {
     "app/page.tsx": {
       "maxDuration": 10
