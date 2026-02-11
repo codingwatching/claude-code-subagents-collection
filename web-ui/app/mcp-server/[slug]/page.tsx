@@ -3,6 +3,8 @@ import { getMCPServerBySlug, getAllMCPServers } from '@/lib/mcp-server'
 import MCPServerPageClient from './page-client'
 
 export async function generateStaticParams() {
+  if (!process.env.POSTGRES_URL) return []
+
   const servers = await getAllMCPServers()
 
   return servers.map((server) => ({
