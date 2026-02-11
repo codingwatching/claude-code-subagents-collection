@@ -4,11 +4,11 @@ import { indexMarketplaces } from '@/lib/indexer/marketplace-indexer'
 export const dynamic = 'force-dynamic'
 
 /**
- * Vercel Cron endpoint for marketplace indexing
- * Scheduled to run daily at 6 AM UTC via vercel.json
+ * Cron endpoint for marketplace indexing
+ * Scheduled to run daily at 6 AM UTC
  */
 export async function GET(request: NextRequest) {
-  // Verify Vercel Cron secret
+  // Verify cron secret
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 

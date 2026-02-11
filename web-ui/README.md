@@ -44,24 +44,11 @@ A modern web interface for browsing and installing Claude Code plugins, agents, 
 npm run build
 ```
 
-## Deployment
-
-### Vercel (Recommended)
-
-1. Push the repository to GitHub
-2. Import the project to Vercel
-3. Set the root directory to `web-ui`
-4. Deploy!
-
-The site is optimized for Vercel with:
-- Automatic deployments on push
-- Static generation for all subagent and command pages
-- Optimized build settings in `vercel.json`
-- Automatic syncing with latest subagents and commands from main branch
 
 ### Other Platforms
 
 The site can be deployed to any platform that supports Next.js:
+- Vercel
 - Netlify
 - AWS Amplify
 - Cloudflare Pages
@@ -73,7 +60,7 @@ The site can be deployed to any platform that supports Next.js:
 - **UI Components**: shadcn/ui + Radix UI
 - **Styling**: Tailwind CSS 4
 - **Language**: TypeScript
-- **Database**: Vercel Postgres + Drizzle ORM
+- **Database**: Neon Postgres + Drizzle ORM
 - **Icons**: Lucide React + Radix Icons
 
 ## Environment Variables

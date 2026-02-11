@@ -4,11 +4,11 @@ import { indexMCPServers } from '@/lib/indexer/mcp-server-indexer'
 export const dynamic = 'force-dynamic'
 
 /**
- * Vercel Cron endpoint for MCP server indexing
- * Scheduled to run daily at 5 AM UTC via vercel.json (before marketplace/plugin indexing)
+ * Cron endpoint for MCP server indexing
+ * Scheduled to run daily at 5 AM UTC (before marketplace/plugin indexing)
  */
 export async function GET(request: NextRequest) {
-  // Verify Vercel Cron secret
+  // Verify cron secret
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 
