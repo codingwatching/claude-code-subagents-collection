@@ -103,7 +103,7 @@ jobs:
             1. Check if marketplace.json has valid structure
             2. Count components (subagents, commands, hooks)
             3. Report any issues found
-          claude_args: "--max-turns 3"
+          claude_args: "--max-turns 10"
 
   summary:
     name: Test Summary
