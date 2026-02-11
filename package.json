@@ -12,7 +12,8 @@
     "validate:hooks": "node scripts/validate-hooks.js",
     "generate:registry": "node scripts/generate-registry.js",
     "fetch:plugins": "node scripts/fetch-plugins.js",
-    "fetch:all": "npm run fetch:plugins && npm run generate:registry"
+    "fetch:all": "npm run fetch:plugins && npm run generate:registry",
+    "start": "node web-ui/server.js"
   },
   "workspaces": [
     "web-ui"
