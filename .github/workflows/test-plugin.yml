@@ -95,8 +95,9 @@ jobs:
       - name: Test with Claude Code Action
         uses: anthropics/claude-code-action@v1
         with:
-          # Supports both OAuth token (Max/Pro subscribers) and API key
-          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN || secrets.ANTHROPIC_API_KEY }}
+          # OAuth token for Max/Pro subscribers, API key for direct API access
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             Verify this plugin structure is valid:
             1. Check if marketplace.json has valid structure
