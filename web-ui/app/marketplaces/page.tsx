@@ -7,6 +7,8 @@ export const metadata = {
   description: 'Discover community-maintained Claude Code plugin marketplaces. Browse registries with thousands of plugins, skills, and commands.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function MarketplacesPage() {
   const [{ marketplaces, hasMore }, totals] = await Promise.all([
     getMarketplacesPaginated({ limit: 20, offset: 0 }),
