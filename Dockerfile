@@ -32,13 +32,13 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy standalone server
-COPY --from=builder /app/web-ui/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/web-ui/.next/standalone ./
 # Minimal package.json for Railway (no workspaces, just start script)
 RUN echo '{"name":"buildwithclaude","private":true,"scripts":{"start":"node web-ui/server.js"}}' > package.json
 # Copy static assets
-COPY --from=builder /app/web-ui/.next/static ./web-ui/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/web-ui/.next/static ./web-ui/.next/static
 # Copy public assets
-COPY --from=builder /app/web-ui/public ./web-ui/public
+COPY --from=builder --chown=nextjs:nodejs /app/web-ui/public ./web-ui/public
 # Copy plugins directory (agents, commands, hooks read from filesystem at runtime)
 COPY --from=builder /app/plugins ./plugins
 

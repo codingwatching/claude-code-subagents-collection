@@ -2,6 +2,38 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  async headers() {
+    return [
+      {
+        // File-based list pages — only change on deployment
+        source: '/(subagents|commands|hooks|skills)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // File-based detail pages — only change on deployment
+        source: '/(subagent|command|hook|skill|plugin)/:slug*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // Homepage
+        source: '/',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=7200' },
+        ],
+      },
+      {
+        // Static docs/contribute pages
+        source: '/(docs|contribute)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+        ],
+      },
+    ]
+  },
   images: {
     minimumCacheTTL: 2678400, // 31 days
     remotePatterns: [
