@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { syncMCPServerStats } from '@/lib/indexer/mcp-server-indexer'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 minutes max for cron job
 
 /**
- * Vercel Cron endpoint for MCP server stats syncing
- * Scheduled to run daily at 8 AM UTC via vercel.json (after all indexing)
+ * Cron endpoint for MCP server stats syncing
+ * Scheduled to run daily at 8 AM UTC (after all indexing)
  */
 export async function GET(request: NextRequest) {
-  // Verify Vercel Cron secret
+  // Verify cron secret
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 

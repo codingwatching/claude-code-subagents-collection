@@ -1,6 +1,46 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+  async headers() {
+    return [
+      {
+        // DB-driven list pages — force-dynamic prevents prerender, CDN-Cache-Control tells Cloudflare to cache
+        source: '/(mcp-servers|marketplaces|plugins)',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=300' },
+        ],
+      },
+      {
+        // File-based list pages — only change on deployment
+        source: '/(subagents|commands|hooks|skills)',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
+        ],
+      },
+      {
+        // File-based detail pages — only change on deployment
+        source: '/(subagent|command|hook|skill|plugin)/:slug*',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
+        ],
+      },
+      {
+        // Homepage
+        source: '/',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=3600' },
+        ],
+      },
+      {
+        // Static docs/contribute pages
+        source: '/(docs|contribute)/:path*',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
+        ],
+      },
+    ]
+  },
   images: {
     minimumCacheTTL: 2678400, // 31 days
     remotePatterns: [

@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { indexMarketplaces } from '@/lib/indexer/marketplace-indexer'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 minutes max for cron job
 
 /**
- * Vercel Cron endpoint for marketplace indexing
- * Scheduled to run daily at 6 AM UTC via vercel.json
+ * Cron endpoint for marketplace indexing
+ * Scheduled to run daily at 6 AM UTC
  */
 export async function GET(request: NextRequest) {
-  // Verify Vercel Cron secret
+  // Verify cron secret
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 

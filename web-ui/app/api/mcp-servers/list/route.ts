@@ -54,7 +54,9 @@ export async function GET(request: NextRequest) {
       verification,
     })
 
-    return NextResponse.json(result)
+    return NextResponse.json(result, {
+      headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' }
+    })
   } catch (error) {
     console.error('Error fetching MCP servers:', error)
     return NextResponse.json(

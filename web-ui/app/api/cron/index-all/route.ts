@@ -6,7 +6,6 @@ import { tasks } from '@trigger.dev/sdk/v3'
 import type { indexPluginsTask } from '@/trigger/index-plugins'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 minutes max for cron job
 
 // Whether to use trigger.dev for plugin indexing (background processing)
 const USE_TRIGGER_DEV = process.env.TRIGGER_SECRET_KEY ? true : false
@@ -24,7 +23,7 @@ const TASK_NAMES = {
 type TaskType = keyof typeof TASK_NAMES
 
 /**
- * Day-of-week to task mapping (Vercel Hobby plan: 1 cron/day)
+ * Day-of-week to task mapping
  * 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
  */
 const DAY_TO_TASK: Record<number, TaskType | null> = {
@@ -38,8 +37,8 @@ const DAY_TO_TASK: Record<number, TaskType | null> = {
 }
 
 /**
- * Unified Vercel Cron endpoint for all indexing tasks
- * Scheduled to run daily at 5 AM UTC via vercel.json
+ * Unified cron endpoint for all indexing tasks
+ * Scheduled to run daily at 5 AM UTC
  *
  * Tasks rotate by day of week:
  * - Sunday: Sync MCP server stats
@@ -53,7 +52,7 @@ const DAY_TO_TASK: Record<number, TaskType | null> = {
  * Manual override: Add ?task=mcp|marketplaces|plugins|stats to run specific task
  */
 export async function GET(request: NextRequest) {
-  // Verify Vercel Cron secret
+  // Verify cron secret
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 

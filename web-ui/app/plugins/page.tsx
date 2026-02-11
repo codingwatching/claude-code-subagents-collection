@@ -7,7 +7,6 @@ export const metadata = {
   description: 'Browse Claude Code plugins for development, AI-powered workflows, productivity, and more.',
 }
 
-// Force dynamic rendering to always get fresh data from database
 export const dynamic = 'force-dynamic'
 
 const ITEMS_PER_PAGE = 24 // 8 rows of 3 columns

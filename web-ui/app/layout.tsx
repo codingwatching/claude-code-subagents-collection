@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Outfit, Instrument_Serif, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
 import { Navigation } from "@/components/navigation";
 import "./globals.css";
 
@@ -68,7 +67,6 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
-        <Analytics />
       </body>
     </html>
   );

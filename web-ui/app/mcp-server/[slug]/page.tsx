@@ -2,7 +2,11 @@ import { notFound } from 'next/navigation'
 import { getMCPServerBySlug, getAllMCPServers } from '@/lib/mcp-server'
 import MCPServerPageClient from './page-client'
 
+export const revalidate = 3600  // 1 hour — individual pages change less often
+
 export async function generateStaticParams() {
+  if (!process.env.POSTGRES_URL) return []
+
   const servers = await getAllMCPServers()
 
   return servers.map((server) => ({

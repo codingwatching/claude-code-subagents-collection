@@ -52,7 +52,7 @@ export type GitHubRepo = z.infer<typeof GitHubRepoSchema>
 
 /**
  * GitHub API client with rate limiting and retry logic
- * Adapted from claude-plugins-registry for Vercel/Node.js
+ * Adapted from claude-plugins-registry for Node.js
  */
 export class GitHubClient {
   private baseUrl = 'https://api.github.com'
