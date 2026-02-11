@@ -5,31 +5,38 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // DB-driven list pages — force-dynamic prevents prerender, CDN-Cache-Control tells Cloudflare to cache
+        source: '/(mcp-servers|marketplaces|plugins)',
+        headers: [
+          { key: 'CDN-Cache-Control', value: 'max-age=300' },
+        ],
+      },
+      {
         // File-based list pages — only change on deployment
         source: '/(subagents|commands|hooks|skills)',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
         ],
       },
       {
         // File-based detail pages — only change on deployment
         source: '/(subagent|command|hook|skill|plugin)/:slug*',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
         ],
       },
       {
         // Homepage
         source: '/',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=7200' },
+          { key: 'CDN-Cache-Control', value: 'max-age=3600' },
         ],
       },
       {
         // Static docs/contribute pages
         source: '/(docs|contribute)/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
+          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
         ],
       },
     ]

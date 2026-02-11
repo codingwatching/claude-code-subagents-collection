@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { getAllMCPServers, getAllMCPCategories } from '@/lib/mcp-server'
 import MCPPageClient from './mcp-client'
 
-export const revalidate = 300  // 5 min ISR — Cloudflare caches at edge
+export const dynamic = 'force-dynamic'
 
 export default async function MCPServersPage() {
   const allServers = await getAllMCPServers()

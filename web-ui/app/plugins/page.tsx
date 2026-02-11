@@ -7,7 +7,7 @@ export const metadata = {
   description: 'Browse Claude Code plugins for development, AI-powered workflows, productivity, and more.',
 }
 
-export const revalidate = 300  // 5 min ISR
+export const dynamic = 'force-dynamic'
 
 const ITEMS_PER_PAGE = 24 // 8 rows of 3 columns
 
