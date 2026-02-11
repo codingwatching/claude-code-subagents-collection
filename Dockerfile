@@ -33,8 +33,8 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy standalone server
 COPY --from=builder /app/web-ui/.next/standalone ./
-# Ensure root package.json is present (Railway runs npm start)
-COPY --from=builder /app/package.json ./package.json
+# Minimal package.json for Railway (no workspaces, just start script)
+RUN echo '{"name":"buildwithclaude","private":true,"scripts":{"start":"node web-ui/server.js"}}' > package.json
 # Copy static assets
 COPY --from=builder /app/web-ui/.next/static ./web-ui/.next/static
 # Copy public assets
