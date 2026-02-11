@@ -6,7 +6,6 @@ import { tasks } from '@trigger.dev/sdk/v3'
 import type { indexPluginsTask } from '@/trigger/index-plugins'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 minutes max for cron job
 
 // Whether to use trigger.dev for plugin indexing (background processing)
 const USE_TRIGGER_DEV = process.env.TRIGGER_SECRET_KEY ? true : false

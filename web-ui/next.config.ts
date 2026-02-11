@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   images: {
     minimumCacheTTL: 2678400, // 31 days
     remotePatterns: [

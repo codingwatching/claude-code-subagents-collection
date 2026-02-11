@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { indexPlugins } from '@/lib/indexer/plugin-indexer'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 minutes max for cron job
 
 /**
  * Vercel Cron endpoint for plugin indexing
