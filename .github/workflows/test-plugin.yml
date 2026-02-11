@@ -83,6 +83,10 @@ jobs:
     # Only run on pull requests (claude-code-action doesn't support push events)
     if: github.event_name == 'pull_request'
     continue-on-error: true
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Checkout repository
