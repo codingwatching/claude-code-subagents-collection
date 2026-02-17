@@ -8,6 +8,9 @@ import { type Skill } from '@/lib/skills-types'
 import { generateSkillMarkdown } from '@/lib/utils'
 import { generateCategoryDisplayName } from '@/lib/category-utils'
 
+const getOpenClawCommand = (slug: string) =>
+  `curl -sL https://buildwithclaude.com/api/skills/${slug}/download -o /tmp/${slug}.zip && unzip -o /tmp/${slug}.zip -d ~/.claude/skills/ && rm /tmp/${slug}.zip`
+
 interface SkillPageClientProps {
   skill: Skill
 }
@@ -29,16 +32,7 @@ export function SkillPageClient({ skill }: SkillPageClientProps) {
   }
 
   const handleDownload = () => {
-    const markdown = generateSkillMarkdown(skill)
-    const blob = new Blob([markdown], { type: 'text/markdown' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `SKILL.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
+    window.location.href = `/api/skills/${skill.slug}/download`
   }
 
   const lines = skill.content.split('\n')
@@ -111,23 +105,24 @@ export function SkillPageClient({ skill }: SkillPageClientProps) {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-2">
-                Step 1: Create the skill directory
+                Step 1: Click Download to get <code className="bg-muted px-1 rounded">{skill.slug}.zip</code>
               </p>
-              <div className="bg-card rounded-lg p-4 font-mono text-sm border border-border">
-                mkdir -p ~/.claude/skills/{skill.slug}
-              </div>
+              <Button size="sm" onClick={handleDownload} className="gap-2">
+                <Download className="h-4 w-4" />
+                Download {skill.slug}.zip
+              </Button>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">
-                Step 2: Save SKILL.md to
+                Step 2: Extract to <code className="bg-muted px-1 rounded">~/.claude/skills/</code>
               </p>
               <div className="bg-card rounded-lg p-4 font-mono text-sm flex items-center justify-between border border-border">
-                <span>{installPath}</span>
+                <span>unzip {skill.slug}.zip -d ~/.claude/skills/</span>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(installPath)
+                    await navigator.clipboard.writeText(`unzip ${skill.slug}.zip -d ~/.claude/skills/`)
                     setCopiedPath(true)
                     setTimeout(() => setCopiedPath(false), 2000)
                   }}
@@ -151,13 +146,13 @@ export function SkillPageClient({ skill }: SkillPageClientProps) {
                 One-line install
               </p>
               <div className="bg-card rounded-lg p-4 font-mono text-sm flex items-center justify-between gap-2 border border-border">
-                <span className="break-all">{`mkdir -p ~/.openclaw/skills/${skill.slug} && curl -sL https://raw.githubusercontent.com/davepoon/buildwithclaude/main/plugins/all-skills/skills/${skill.slug}/SKILL.md -o ~/.openclaw/skills/${skill.slug}/SKILL.md`}</span>
+                <span className="break-all">{getOpenClawCommand(skill.slug)}</span>
                 <Button
                   size="sm"
                   variant="ghost"
                   className="shrink-0"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(`mkdir -p ~/.openclaw/skills/${skill.slug} && curl -sL https://raw.githubusercontent.com/davepoon/buildwithclaude/main/plugins/all-skills/skills/${skill.slug}/SKILL.md -o ~/.openclaw/skills/${skill.slug}/SKILL.md`)
+                    await navigator.clipboard.writeText(getOpenClawCommand(skill.slug))
                     setCopiedClawCmd(true)
                     setTimeout(() => setCopiedClawCmd(false), 2000)
                   }}
@@ -168,15 +163,15 @@ export function SkillPageClient({ skill }: SkillPageClientProps) {
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">
-                Or manually place SKILL.md at
+                Or extract the zip to
               </p>
               <div className="bg-card rounded-lg p-4 font-mono text-sm flex items-center justify-between border border-border">
-                <span>~/.openclaw/skills/{skill.slug}/SKILL.md</span>
+                <span>~/.openclaw/skills/{skill.slug}/</span>
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(`~/.openclaw/skills/${skill.slug}/SKILL.md`)
+                    await navigator.clipboard.writeText(`~/.openclaw/skills/${skill.slug}/`)
                     setCopiedClawPath(true)
                     setTimeout(() => setCopiedClawPath(false), 2000)
                   }}

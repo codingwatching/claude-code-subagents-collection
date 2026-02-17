@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Check, Copy, Github, Terminal } from 'lucide-react'
+import { Check, Copy, Download, Github, Terminal } from 'lucide-react'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
 
 interface UnifiedPluginCardProps {
@@ -85,15 +85,7 @@ function getDetailUrl(plugin: UnifiedPlugin): string {
 
 function getOpenClawCommand(plugin: UnifiedPlugin): string {
   const name = plugin.name
-  if (plugin.marketplaceName === 'Build with Claude') {
-    return `mkdir -p ~/.openclaw/skills/${name} && curl -sL https://raw.githubusercontent.com/davepoon/buildwithclaude/main/plugins/all-skills/skills/${name}/SKILL.md -o ~/.openclaw/skills/${name}/SKILL.md`
-  }
-  // For external marketplace skills with a repository
-  if (plugin.repository) {
-    const repoUrl = plugin.repository.replace('github.com', 'raw.githubusercontent.com').replace(/\/$/, '')
-    return `mkdir -p ~/.openclaw/skills/${name} && curl -sL ${repoUrl}/main/skills/${name}/SKILL.md -o ~/.openclaw/skills/${name}/SKILL.md`
-  }
-  return `mkdir -p ~/.openclaw/skills/${name} && curl -sL <SKILL.md URL> -o ~/.openclaw/skills/${name}/SKILL.md`
+  return `curl -sL https://buildwithclaude.com/api/skills/${name}/download -o /tmp/${name}.zip && unzip -o /tmp/${name}.zip -d ~/.claude/skills/ && rm /tmp/${name}.zip`
 }
 
 export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
@@ -112,6 +104,12 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
     await navigator.clipboard.writeText(cmd)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleDownload = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    window.location.href = `/api/skills/${plugin.name}/download`
   }
 
   const handleOpenRepo = (e: React.MouseEvent) => {
@@ -164,7 +162,22 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
       {/* Action Buttons */}
       <TooltipProvider>
         <div className="flex gap-2">
-          {!isExternal && (
+          {plugin.type === 'skill' && !isExternal ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={handleDownload}
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Download
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Download skill zip</TooltipContent>
+            </Tooltip>
+          ) : !isExternal && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -194,7 +207,7 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
             </TooltipTrigger>
             <TooltipContent>View on GitHub</TooltipContent>
           </Tooltip>
-          {plugin.type === 'skill' && (
+          {plugin.type === 'skill' && !isExternal && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
