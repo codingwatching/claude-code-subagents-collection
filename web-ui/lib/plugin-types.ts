@@ -73,6 +73,8 @@ export interface UnifiedPlugin {
   // For internal/local plugins
   file?: string
   path?: string
+  // Slug for download/install endpoints
+  slug?: string
 }
 
 export interface PluginRegistryData {

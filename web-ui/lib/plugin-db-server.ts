@@ -108,6 +108,7 @@ function getLocalBuildWithClaudePlugins(): UnifiedPlugin[] {
         description: s.description,
         category: s.category,
         tags: [],
+        slug: s.slug,
         marketplaceId: BUILD_WITH_CLAUDE_ID,
         marketplaceName: BUILD_WITH_CLAUDE_MARKETPLACE,
       })
@@ -421,6 +422,7 @@ export async function getPluginsPaginated(options: {
     description: p.description || '',
     category: p.categories?.[0] || 'uncategorized',
     tags: p.keywords || [],
+    slug: p.slug,
     marketplaceId: p.marketplaceId || undefined,
     marketplaceName: p.marketplaceName || undefined,
     repository: p.repository || undefined,
