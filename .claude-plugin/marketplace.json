@@ -1214,7 +1214,7 @@
     },
     {
       "name": "all-skills",
-      "description": "Complete collection of 26 Claude Code skills for document processing, development, business productivity, and creative tasks",
+      "description": "Complete collection of ~110 Claude Code skills across document processing, development, automation, CRM, DevOps, and more",
       "version": "1.0.0",
       "author": {
         "name": "BuildWithClaude Community",
@@ -1229,7 +1229,13 @@
         "document-processing",
         "development",
         "business-productivity",
-        "creative-collaboration"
+        "creative-collaboration",
+        "automation",
+        "crm",
+        "devops",
+        "communication",
+        "analytics",
+        "composio"
       ],
       "category": "skills",
       "source": "./plugins/all-skills"

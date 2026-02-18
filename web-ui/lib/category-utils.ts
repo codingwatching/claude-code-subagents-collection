@@ -71,6 +71,17 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'development-code': '💻',
   'business-productivity': '📊',
   'creative-collaboration': '🎨',
+  'analytics': '📈',
+  'communication': '💬',
+  'crm': '🤝',
+  'design': '🎨',
+  'devops': '🚀',
+  'ecommerce': '🛍️',
+  'email': '📧',
+  'project-management': '📋',
+  'social-media': '📱',
+  'storage-docs': '☁️',
+  'customer-support': '🎧',
   'uncategorized': '📦',
   // Default icon for unknown categories
   'default': '📦'

@@ -91,6 +91,7 @@ function getOpenClawCommand(plugin: UnifiedPlugin): string {
 export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
   const [copied, setCopied] = useState(false)
   const [copiedClaw, setCopiedClaw] = useState(false)
+  const [copiedInstall, setCopiedInstall] = useState(false)
   const isExternal = isExternalPlugin(plugin)
 
   const githubUrl = plugin.file
@@ -118,6 +119,14 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
     if (githubUrl) {
       window.open(githubUrl, '_blank')
     }
+  }
+
+  const handleCopyInstall = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    await navigator.clipboard.writeText('/plugin install all-skills@buildwithclaude')
+    setCopiedInstall(true)
+    setTimeout(() => setCopiedInstall(false), 2000)
   }
 
   const handleCopyOpenClaw = async (e: React.MouseEvent) => {
@@ -193,20 +202,37 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
               <TooltipContent>Copy install command</TooltipContent>
             </Tooltip>
           )}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                onClick={handleOpenRepo}
-              >
-                <Github className="h-3 w-3 mr-1" />
-                GitHub
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>View on GitHub</TooltipContent>
-          </Tooltip>
+          {plugin.type === 'skill' && !isExternal ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={handleCopyInstall}
+                >
+                  {copiedInstall ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                  {copiedInstall ? 'Copied' : 'Install Plugin'}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Copy: /plugin install all-skills@buildwithclaude</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={handleOpenRepo}
+                >
+                  <Github className="h-3 w-3 mr-1" />
+                  GitHub
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>View on GitHub</TooltipContent>
+            </Tooltip>
+          )}
           {plugin.type === 'skill' && !isExternal && (
             <Tooltip>
               <TooltipTrigger asChild>
