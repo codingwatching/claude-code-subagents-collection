@@ -10,38 +10,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // DB-driven list pages — force-dynamic prevents prerender, CDN-Cache-Control tells Cloudflare to cache
-        source: '/(mcp-servers|marketplaces|plugins)',
+        // Never let the CDN cache HTML pages — Next.js server action IDs are
+        // build-specific hashes that change on every deployment. Serving stale
+        // cached HTML causes "Failed to find Server Action" errors because the
+        // old action IDs no longer exist on the new server.
+        // Next.js already content-hashes all JS/CSS under /_next/static/, so
+        // those assets are safe to cache long-term without this header.
+        source: '/(.*)',
         headers: [
-          { key: 'CDN-Cache-Control', value: 'max-age=300' },
-        ],
-      },
-      {
-        // File-based list pages — only change on deployment
-        source: '/(subagents|commands|hooks|skills)',
-        headers: [
-          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
-        ],
-      },
-      {
-        // File-based detail pages — only change on deployment
-        source: '/(subagent|command|hook|skill|plugin)/:slug*',
-        headers: [
-          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
-        ],
-      },
-      {
-        // Homepage
-        source: '/',
-        headers: [
-          { key: 'CDN-Cache-Control', value: 'max-age=3600' },
-        ],
-      },
-      {
-        // Static docs/contribute pages
-        source: '/(docs|contribute)/:path*',
-        headers: [
-          { key: 'CDN-Cache-Control', value: 'max-age=86400' },
+          { key: 'CDN-Cache-Control', value: 'no-store' },
         ],
       },
     ]
