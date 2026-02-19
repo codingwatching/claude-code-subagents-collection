@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Copy, Download, Check, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Copy, Download, Check, ExternalLink, Terminal } from 'lucide-react'
 import { type Skill } from '@/lib/skills-types'
 import { generateSkillMarkdown } from '@/lib/utils'
 import { generateCategoryDisplayName } from '@/lib/category-utils'
@@ -17,6 +17,7 @@ interface SkillPageClientProps {
 
 export function SkillPageClient({ skill }: SkillPageClientProps) {
   const [copied, setCopied] = useState(false)
+  const [copiedNpx, setCopiedNpx] = useState(false)
   const [copiedPath, setCopiedPath] = useState(false)
   const [copiedClawCmd, setCopiedClawCmd] = useState(false)
   const [copiedClawPath, setCopiedClawPath] = useState(false)
@@ -99,9 +100,35 @@ export function SkillPageClient({ skill }: SkillPageClientProps) {
           </p>
         </div>
 
-        {/* Installation */}
+        {/* Quick Install */}
         <div className="mb-10">
-          <h2 className="text-lg font-medium mb-4">Installation</h2>
+          <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+            <Terminal className="h-5 w-5" />
+            Quick Install
+          </h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Install this skill with a single command using <a href="https://github.com/vercel-labs/skills" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">npx skills</a>. Works with Claude Code, Cursor, Windsurf, and other agents.
+          </p>
+          <div className="bg-card rounded-lg p-4 font-mono text-sm flex items-center justify-between gap-2 border border-border">
+            <span className="break-all">npx skills add davepoon/buildwithclaude -s {skill.slug}</span>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="shrink-0"
+              onClick={async () => {
+                await navigator.clipboard.writeText(`npx skills add davepoon/buildwithclaude -s ${skill.slug}`)
+                setCopiedNpx(true)
+                setTimeout(() => setCopiedNpx(false), 2000)
+              }}
+            >
+              {copiedNpx ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Manual Installation */}
+        <div className="mb-10">
+          <h2 className="text-lg font-medium mb-4">Manual Installation</h2>
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-2">

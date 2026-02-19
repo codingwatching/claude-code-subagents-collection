@@ -124,7 +124,7 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
   const handleCopyInstall = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    await navigator.clipboard.writeText('/plugin install all-skills@buildwithclaude')
+    await navigator.clipboard.writeText(`npx skills add davepoon/buildwithclaude -s ${plugin.name}`)
     setCopiedInstall(true)
     setTimeout(() => setCopiedInstall(false), 2000)
   }
@@ -172,82 +172,86 @@ export function UnifiedPluginCard({ plugin }: UnifiedPluginCardProps) {
       <TooltipProvider>
         <div className="flex gap-2">
           {plugin.type === 'skill' && !isExternal ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleDownload}
-                >
-                  <Download className="h-3 w-3 mr-1" />
-                  Download
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Download skill zip</TooltipContent>
-            </Tooltip>
-          ) : !isExternal && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleCopy}
-                >
-                  {copied ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
-                  {copied ? 'Copied' : 'Copy'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Copy install command</TooltipContent>
-            </Tooltip>
-          )}
-          {plugin.type === 'skill' && !isExternal ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleCopyInstall}
-                >
-                  {copiedInstall ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
-                  {copiedInstall ? 'Copied' : 'Install Plugin'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Copy: /plugin install all-skills@buildwithclaude</TooltipContent>
-            </Tooltip>
+            <>
+              {/* Install Skill (npx skills) */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    onClick={handleCopyInstall}
+                  >
+                    {copiedInstall ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                    {copiedInstall ? 'Copied' : 'Install Skill'}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copy: npx skills add davepoon/buildwithclaude -s {plugin.name}</TooltipContent>
+              </Tooltip>
+              {/* Download */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    onClick={handleDownload}
+                  >
+                    <Download className="h-3 w-3 mr-1" />
+                    Download
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Download skill zip</TooltipContent>
+              </Tooltip>
+              {/* OpenClaw */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    onClick={handleCopyOpenClaw}
+                  >
+                    {copiedClaw ? <Check className="h-3 w-3 mr-1" /> : <Terminal className="h-3 w-3 mr-1" />}
+                    {copiedClaw ? 'Copied' : 'OpenClaw'}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copy OpenClaw install command</TooltipContent>
+              </Tooltip>
+            </>
           ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleOpenRepo}
-                >
-                  <Github className="h-3 w-3 mr-1" />
-                  GitHub
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>View on GitHub</TooltipContent>
-            </Tooltip>
-          )}
-          {plugin.type === 'skill' && !isExternal && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                  onClick={handleCopyOpenClaw}
-                >
-                  {copiedClaw ? <Check className="h-3 w-3 mr-1" /> : <Terminal className="h-3 w-3 mr-1" />}
-                  {copiedClaw ? 'Copied' : 'OpenClaw'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Copy OpenClaw install command</TooltipContent>
-            </Tooltip>
+            <>
+              {!isExternal && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                      onClick={handleCopy}
+                    >
+                      {copied ? <Check className="h-3 w-3 mr-1" /> : <Copy className="h-3 w-3 mr-1" />}
+                      {copied ? 'Copied' : 'Copy'}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Copy install command</TooltipContent>
+                </Tooltip>
+              )}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    onClick={handleOpenRepo}
+                  >
+                    <Github className="h-3 w-3 mr-1" />
+                    GitHub
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>View on GitHub</TooltipContent>
+              </Tooltip>
+            </>
           )}
         </div>
       </TooltipProvider>

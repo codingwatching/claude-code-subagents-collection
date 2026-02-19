@@ -25,7 +25,7 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, Store, Loader2, ArrowUpDown, Check, ChevronsUpDown, X, Tags } from 'lucide-react'
+import { Sparkles, Store, Loader2, ArrowUpDown, Check, ChevronsUpDown, X, Tags, Terminal, Copy } from 'lucide-react'
 import { CreateMarketplaceBanner } from '@/components/create-marketplace-banner'
 import { cn } from '@/lib/utils'
 import type { UnifiedPlugin } from '@/lib/plugin-types'
@@ -59,6 +59,7 @@ export default function SkillsPageClient({
   const [sort, setSort] = useState<SortOption>('relevance')
   const [marketplaceOpen, setMarketplaceOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
+  const [copiedBulkInstall, setCopiedBulkInstall] = useState(false)
 
   // Refs
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -220,6 +221,34 @@ export default function SkillsPageClient({
         </div>
 
         <CreateMarketplaceBanner variant="skill" />
+
+        {/* Bulk Install Banner */}
+        <div className="mb-6 p-4 bg-card rounded-lg border border-border flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3 shrink-0">
+            <Terminal className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium">Install all {totalSkills.toLocaleString()}+ skills with one command</p>
+              <p className="text-xs text-muted-foreground">Works with Claude Code, Cursor, Windsurf, and more.</p>
+            </div>
+          </div>
+          <div className="flex-1 min-w-0 w-full sm:w-auto">
+            <div className="bg-muted rounded-md px-3 py-2 font-mono text-sm flex items-center justify-between gap-2">
+              <span className="truncate">npx skills add davepoon/buildwithclaude</span>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="shrink-0 h-7 w-7 p-0"
+                onClick={async () => {
+                  await navigator.clipboard.writeText('npx skills add davepoon/buildwithclaude')
+                  setCopiedBulkInstall(true)
+                  setTimeout(() => setCopiedBulkInstall(false), 2000)
+                }}
+              >
+                {copiedBulkInstall ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              </Button>
+            </div>
+          </div>
+        </div>
 
         {/* Search, Marketplace Filter, and Sort */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
