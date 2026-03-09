@@ -1,7 +1,9 @@
 import { db } from '@/lib/db/client'
-import { marketplaces, marketplaceStats } from '@/lib/db/schema'
+import { marketplaces, marketplaceStats, plugins, submissionReviews } from '@/lib/db/schema'
 import { getGitHubClient, GitHubRepo } from '@/lib/github/client'
 import { parseMarketplaceJson, extractCounts, extractCategories as extractPluginCategories } from './parser'
+import { analyzeRepository, hasSkillIndicators } from './repo-analyzer'
+import { scanSkillContent, getSubmissionStatus } from './content-scanner'
 import { eq, sql } from 'drizzle-orm'
 
 // Known/seed marketplaces with accurate fallback counts
@@ -81,34 +83,51 @@ export async function indexMarketplaces(): Promise<IndexResult> {
   // Add known marketplaces
   KNOWN_MARKETPLACES.forEach((m) => repoSet.add(m.repo))
 
-  // Search GitHub for marketplace.json files
-  const searchQuery = 'filename:marketplace.json path:.claude-plugin'
+  // Search GitHub for marketplace.json files + expanded queries
+  const codeQueries = [
+    'filename:marketplace.json path:.claude-plugin',
+    'filename:SKILL.md',
+    'filename:plugin.json path:.claude',
+  ]
 
-  try {
-    const searchResult = await github.searchCode(searchQuery)
-    console.log(`Found ${searchResult.total_count} marketplace.json files on GitHub`)
+  for (const searchQuery of codeQueries) {
+    try {
+      const searchResult = await github.searchCode(searchQuery)
+      console.log(`Found ${searchResult.total_count} results for: ${searchQuery}`)
 
-    // Process up to 10 pages (1000 results max due to GitHub API limit)
-    const maxPages = Math.min(Math.ceil(searchResult.total_count / 100), 10)
+      const maxPages = Math.min(Math.ceil(searchResult.total_count / 100), 10)
 
-    for (let page = 1; page <= maxPages; page++) {
-      const pageResult = page === 1 ? searchResult : await github.searchCode(searchQuery, page)
+      for (let page = 1; page <= maxPages; page++) {
+        const pageResult = page === 1 ? searchResult : await github.searchCode(searchQuery, page)
 
-      for (const item of pageResult.items) {
-        repoSet.add(item.repository.full_name)
+        for (const item of pageResult.items) {
+          repoSet.add(item.repository.full_name)
+        }
       }
+    } catch (error) {
+      console.error(`GitHub code search failed for "${searchQuery}":`, error)
     }
-  } catch (error) {
-    console.error('GitHub search failed:', error)
-    // Continue with known marketplaces
   }
 
-  // Also search for claude-code-marketplace topic
-  try {
-    // Note: Topic search would require different API endpoint
-    // For now we rely on marketplace.json discovery
-  } catch (error) {
-    console.error('Topic search failed:', error)
+  // Topic-based repository search
+  const topicQueries = [
+    'claude-code-skill',
+    'claude-skill',
+    'agent-skill',
+    'claude-agent-skill',
+    'claude-code-plugins',
+  ]
+
+  for (const topic of topicQueries) {
+    try {
+      const { repos } = await github.searchRepositories(`topic:${topic}`)
+      console.log(`Found ${repos.length} repos for topic: ${topic}`)
+      for (const repo of repos) {
+        repoSet.add(repo.full_name)
+      }
+    } catch (error) {
+      console.error(`Topic search failed for "${topic}":`, error)
+    }
   }
 
   console.log(`Processing ${repoSet.size} repositories...`)
@@ -119,6 +138,17 @@ export async function indexMarketplaces(): Promise<IndexResult> {
       const result = await processRepository(repoFullName)
       if (result) {
         indexed++
+      } else {
+        // Not a marketplace — check if it has skill indicators
+        try {
+          const repoMeta = await github.fetchRepoMetadata(repoFullName)
+          if (!repoMeta.fork && hasSkillIndicators(repoMeta)) {
+            const skillResult = await processSkillRepository(repoFullName)
+            if (skillResult) indexed++
+          }
+        } catch {
+          // Metadata fetch failed, skip
+        }
       }
     } catch (error) {
       console.error(`Failed to process ${repoFullName}:`, error)
@@ -305,4 +335,85 @@ function extractRepoCategories(repo: GitHubRepo): string[] {
   }
 
   return Array.from(categories).slice(0, 5)
+}
+
+/**
+ * Process a repository that has skill indicators but is not a marketplace.
+ * Uses the repo analyzer to extract skills and upserts them into the plugins table.
+ */
+async function processSkillRepository(repoFullName: string): Promise<boolean> {
+  try {
+    const analysis = await analyzeRepository(repoFullName)
+
+    if (analysis.skills.length === 0) {
+      console.log(`No skills found in ${repoFullName}`)
+      return false
+    }
+
+    console.log(`Found ${analysis.skills.length} skills in ${repoFullName} (${analysis.detectionMethod})`)
+
+    for (const skill of analysis.skills) {
+      // Scan content
+      const scanResult = scanSkillContent(skill.content || skill.description, {
+        name: skill.name,
+        description: skill.description,
+        installCommand: skill.installCommand,
+      })
+
+      const status = getSubmissionStatus(scanResult)
+      const namespace = `@${analysis.owner}/${skill.slug}`
+
+      const upserted = await db
+        .insert(plugins)
+        .values({
+          name: skill.name,
+          namespace,
+          slug: skill.slug,
+          marketplaceName: 'Auto-Discovered',
+          repository: `https://github.com/${repoFullName}`,
+          description: skill.description,
+          author: analysis.owner,
+          type: 'skill',
+          categories: skill.category ? [skill.category] : [],
+          keywords: [],
+          installCommand: skill.installCommand || `npx skills add ${repoFullName}`,
+          stars: analysis.stars,
+          submissionStatus: status,
+          lastIndexedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: plugins.namespace,
+          set: {
+            description: sql`EXCLUDED.description`,
+            author: sql`EXCLUDED.author`,
+            categories: sql`EXCLUDED.categories`,
+            installCommand: sql`EXCLUDED.install_command`,
+            stars: sql`EXCLUDED.stars`,
+            submissionStatus: sql`EXCLUDED.submission_status`,
+            lastIndexedAt: sql`EXCLUDED.last_indexed_at`,
+            updatedAt: sql`NOW()`,
+          },
+        })
+        .returning({ id: plugins.id })
+
+      // Record scan review
+      if (upserted.length > 0) {
+        await db.insert(submissionReviews).values({
+          pluginId: upserted[0].id,
+          scanResult: JSON.stringify(scanResult),
+          reviewedBy: 'auto-scanner',
+          decision: status,
+          reason: status !== 'approved'
+            ? `Auto-scan: ${scanResult.flags.map(f => f.detail).join('; ')}`
+            : undefined,
+        })
+      }
+    }
+
+    console.log(`Indexed ${analysis.skills.length} skills from ${repoFullName}`)
+    return true
+  } catch (error) {
+    console.error(`Failed to process skill repo ${repoFullName}:`, error)
+    return false
+  }
 }

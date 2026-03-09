@@ -45,10 +45,36 @@ const GitHubSearchResponseSchema = z.object({
   items: z.array(GitHubSearchItemSchema),
 })
 
+// Tree API response schema
+const GitHubTreeEntrySchema = z.object({
+  path: z.string(),
+  mode: z.string(),
+  type: z.enum(['blob', 'tree', 'commit']),
+  sha: z.string(),
+  size: z.number().optional(),
+  url: z.string().url(),
+})
+
+const GitHubTreeResponseSchema = z.object({
+  sha: z.string(),
+  url: z.string().url(),
+  tree: z.array(GitHubTreeEntrySchema),
+  truncated: z.boolean(),
+})
+
+// Repository search response schema
+const GitHubRepoSearchResponseSchema = z.object({
+  total_count: z.number(),
+  incomplete_results: z.boolean(),
+  items: z.array(GitHubRepoSchema),
+})
+
 // Type exports
 export type GitHubSearchItem = z.infer<typeof GitHubSearchItemSchema>
 export type GitHubSearchResponse = z.infer<typeof GitHubSearchResponseSchema>
 export type GitHubRepo = z.infer<typeof GitHubRepoSchema>
+export type GitHubTreeEntry = z.infer<typeof GitHubTreeEntrySchema>
+export type GitHubTreeResponse = z.infer<typeof GitHubTreeResponseSchema>
 
 /**
  * GitHub API client with rate limiting and retry logic
@@ -162,6 +188,53 @@ export class GitHubClient {
   }
 
   /**
+   * Fetch the full file tree of a repository in a single API call
+   */
+  async fetchRepoTree(repoFullName: string, sha: string = 'HEAD'): Promise<GitHubTreeResponse> {
+    await this.throttle()
+
+    const url = `${this.baseUrl}/repos/${repoFullName}/git/trees/${sha}?recursive=1`
+    const response = await this.fetchWithRetry(url)
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch tree for ${repoFullName}: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return GitHubTreeResponseSchema.parse(data)
+  }
+
+  /**
+   * Search repositories by query (topics, keywords, etc.)
+   */
+  async searchRepositories(query: string, page: number = 1): Promise<{ repos: GitHubRepo[]; totalCount: number }> {
+    await this.throttle()
+
+    const url = `${this.baseUrl}/search/repositories?q=${encodeURIComponent(query)}&per_page=100&sort=stars&order=desc&page=${page}`
+    const response = await this.fetchWithRetry(url)
+
+    if (!response.ok) {
+      throw new Error(`GitHub repository search failed: ${response.status} ${response.statusText}`)
+    }
+
+    // Check rate limit
+    const remaining = parseInt(response.headers.get('x-ratelimit-remaining') || '10')
+    const resetTime = parseInt(response.headers.get('x-ratelimit-reset') || '0')
+
+    if (remaining <= 2) {
+      const waitSeconds = Math.max(0, resetTime - Math.floor(Date.now() / 1000) + 5)
+      if (waitSeconds > 0) {
+        console.warn(`Rate limit low. Waiting ${waitSeconds}s before continuing...`)
+        await this.sleep(waitSeconds * 1000)
+      }
+    }
+
+    const data = await response.json()
+    const parsed = GitHubRepoSearchResponseSchema.parse(data)
+    return { repos: parsed.items, totalCount: parsed.total_count }
+  }
+
+  /**
    * Fetch with exponential backoff retry and circuit breaker
    */
   private async fetchWithRetry(url: string): Promise<Response> {
@@ -174,6 +247,7 @@ export class GitHubClient {
     }
 
     let lastError: Error | null = null
+    let rateLimited = false
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
       try {
@@ -181,6 +255,7 @@ export class GitHubClient {
 
         // Handle rate limiting
         if (response.status === 429 || response.status === 403) {
+          rateLimited = true
           const retryAfter = response.headers.get('retry-after')
           // Cap wait time to avoid consuming entire timeout budget
           const waitTime = Math.min(
@@ -209,6 +284,10 @@ export class GitHubClient {
     // All retries exhausted - increment circuit breaker counter
     this.consecutiveFailures++
     console.warn(`GitHub request failed after ${MAX_RETRIES} retries. Consecutive failures: ${this.consecutiveFailures}/${MAX_CONSECUTIVE_FAILURES}`)
+
+    if (rateLimited && !lastError) {
+      throw new Error('GitHub API rate limit exceeded after retries')
+    }
 
     throw lastError || new Error('Request failed after retries')
   }

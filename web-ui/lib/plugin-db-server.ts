@@ -1,6 +1,6 @@
 import { db } from '@/lib/db/client'
 import { plugins, skills, marketplaces } from '@/lib/db/schema'
-import { eq, ilike, or, sql, desc, asc, and, inArray } from 'drizzle-orm'
+import { eq, ilike, or, sql, desc, asc, and, inArray, ne } from 'drizzle-orm'
 import type { UnifiedPlugin, PluginType } from './plugin-types'
 import { safeDbQuery } from '@/lib/db/safe-query'
 
@@ -292,6 +292,8 @@ export async function getPluginsPaginated(options: {
   // Build where conditions for database query
   const conditions = []
   conditions.push(eq(plugins.active, true))
+  // Exclude rejected submissions from listings
+  conditions.push(ne(plugins.submissionStatus, 'rejected'))
 
   // Type filter
   if (type && type !== 'all') {

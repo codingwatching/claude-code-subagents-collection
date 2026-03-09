@@ -140,6 +140,7 @@ export const plugins = pgTable(
 
     // Status
     active: boolean('active').notNull().default(true),
+    submissionStatus: varchar('submission_status', { length: 32 }).notNull().default('approved'),
 
     // Timestamps
     lastIndexedAt: timestamp('last_indexed_at', { withTimezone: true }),
@@ -153,6 +154,32 @@ export const plugins = pgTable(
     index('idx_plugins_type').on(table.type),
     index('idx_plugins_stars').on(table.stars),
     index('idx_plugins_active').on(table.active),
+    index('idx_plugins_submission_status').on(table.submissionStatus),
+  ]
+)
+
+// Submission reviews table - audit trail for submitted skills
+export const submissionReviews = pgTable(
+  'submission_reviews',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    pluginId: uuid('plugin_id')
+      .notNull()
+      .references(() => plugins.id, { onDelete: 'cascade' }),
+
+    // Scan/review data
+    scanResult: text('scan_result'), // JSON string of ScanResult
+    reviewedBy: varchar('reviewed_by', { length: 255 }).notNull(), // 'auto-scanner' or admin identifier
+    decision: varchar('decision', { length: 32 }).notNull(), // 'approved', 'rejected', 'flagged'
+    reason: text('reason'),
+
+    // Timestamp
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('idx_submission_reviews_plugin').on(table.pluginId),
+    index('idx_submission_reviews_decision').on(table.decision),
+    index('idx_submission_reviews_created_at').on(table.createdAt),
   ]
 )
 
@@ -296,6 +323,8 @@ export type Plugin = typeof plugins.$inferSelect
 export type NewPlugin = typeof plugins.$inferInsert
 export type Skill = typeof skills.$inferSelect
 export type NewSkill = typeof skills.$inferInsert
+export type SubmissionReview = typeof submissionReviews.$inferSelect
+export type NewSubmissionReview = typeof submissionReviews.$inferInsert
 export type MCPServerDB = typeof mcpServers.$inferSelect
 export type NewMCPServerDB = typeof mcpServers.$inferInsert
 export type MCPServerStatsDB = typeof mcpServerStats.$inferSelect
