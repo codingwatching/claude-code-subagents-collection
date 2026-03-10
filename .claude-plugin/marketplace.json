@@ -1338,6 +1338,27 @@
       ],
       "category": "skills",
       "source": "./plugins/obsidian-skills"
+    },
+    {
+      "name": "project-boundary",
+      "description": "Security hook that blocks destructive commands and file operations outside the project directory",
+      "version": "1.0.0",
+      "author": {
+        "name": "Justyna Wojtczak",
+        "url": "https://github.com/justi"
+      },
+      "repository": "https://github.com/justi/claude-code-project-boundary",
+      "homepage": "https://github.com/justi/claude-code-project-boundary",
+      "license": "MIT",
+      "keywords": [
+        "security",
+        "hooks",
+        "safety",
+        "guard",
+        "project-boundary"
+      ],
+      "category": "hooks",
+      "source": "./plugins/project-boundary"
     }
   ]
 }
