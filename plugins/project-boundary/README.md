@@ -81,11 +81,7 @@ A pure-bash PreToolUse hook. Splits chained commands, resolves target paths (han
 
 ## Testing
 
-```
-bash tests/test_guard.sh
-```
-
-125 tests covering all guard scenarios. CI runs on Ubuntu and macOS.
+125 tests and CI (Ubuntu + macOS) in the [source repository](https://github.com/justi/claude-code-project-boundary).
 
 ## License
 
