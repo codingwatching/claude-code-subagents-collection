@@ -477,29 +477,42 @@ export async function getPluginsPaginated(options: {
 /**
  * Get list of marketplaces for filter dropdown
  * Includes Build with Claude (from local files), registered marketplaces, and plugin sources
+ * When `type` is provided, counts only items of that type per marketplace
  */
-export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
-  // Get local Build with Claude plugin count
+export async function getPluginMarketplaces(type?: PluginType): Promise<MarketplaceOption[]> {
   const localPlugins = getLocalBuildWithClaudePlugins()
-  const localCount = localPlugins.length
+  const localFiltered = type ? localPlugins.filter(p => p.type === type) : localPlugins
+  const localCount = localFiltered.length
 
-  // Get registered marketplaces from marketplaces table
-  const { data: dbMarketplaces } = await safeDbQuery(
+  // Build conditions for DB queries scoped by type
+  const typeConditions = type
+    ? and(eq(plugins.active, true), eq(plugins.type, type))
+    : eq(plugins.active, true)
+
+  // For registered marketplaces, compute counts from the plugins table
+  // (the stored pluginCount on marketplaces table is not type-aware)
+  const { data: dbMarketplaceCounts } = await safeDbQuery(
     () => db
       .select({
         id: marketplaces.id,
         name: marketplaces.name,
         displayName: marketplaces.displayName,
-        pluginCount: marketplaces.pluginCount,
+        count: sql<number>`count(${plugins.id})`,
       })
       .from(marketplaces)
+      .leftJoin(plugins, and(
+        eq(plugins.marketplaceId, marketplaces.id),
+        typeConditions,
+        ne(plugins.submissionStatus, 'rejected'),
+      ))
       .where(eq(marketplaces.active, true))
-      .orderBy(desc(marketplaces.pluginCount)),
+      .groupBy(marketplaces.id, marketplaces.name, marketplaces.displayName)
+      .orderBy(desc(sql`count(${plugins.id})`)),
     [],
     'getPluginMarketplaces:marketplaces',
   )
 
-  // Also get unique marketplaceNames from plugins (to include sources not in marketplaces table)
+  // Also get unique marketplaceNames from plugins not tied to a registered marketplace
   const { data: pluginMarketplaces } = await safeDbQuery(
     () => db
       .select({
@@ -507,13 +520,12 @@ export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
         count: sql<number>`count(*)`,
       })
       .from(plugins)
-      .where(eq(plugins.active, true))
+      .where(and(typeConditions, ne(plugins.submissionStatus, 'rejected')))
       .groupBy(plugins.marketplaceName),
     [],
     'getPluginMarketplaces:pluginSources',
   )
 
-  // Start with Build with Claude from local files
   const results: MarketplaceOption[] = [{
     id: BUILD_WITH_CLAUDE_ID,
     name: BUILD_WITH_CLAUDE_ID,
@@ -521,21 +533,19 @@ export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
     pluginCount: localCount,
   }]
 
-  // Map db marketplaces to result format (skip Build with Claude as we handle it locally)
   const existingNames = new Set([BUILD_WITH_CLAUDE_MARKETPLACE])
-  for (const m of dbMarketplaces) {
+  for (const m of dbMarketplaceCounts) {
     if (!existingNames.has(m.displayName)) {
       results.push({
         id: m.id,
         name: m.name,
         displayName: m.displayName,
-        pluginCount: m.pluginCount,
+        pluginCount: Number(m.count),
       })
       existingNames.add(m.displayName)
     }
   }
 
-  // Add any marketplace names from plugins that aren't already in results
   for (const pm of pluginMarketplaces) {
     if (pm.marketplaceName && !existingNames.has(pm.marketplaceName)) {
       results.push({
@@ -548,7 +558,6 @@ export async function getPluginMarketplaces(): Promise<MarketplaceOption[]> {
     }
   }
 
-  // Sort by plugin count descending (Build with Claude will naturally be at top if it has most plugins)
   return results.sort((a, b) => b.pluginCount - a.pluginCount)
 }
 

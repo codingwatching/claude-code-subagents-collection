@@ -14,7 +14,7 @@ const ITEMS_PER_PAGE = 24 // 8 rows of 3 columns
 export default async function PluginsPage() {
   const [{ plugins, hasMore }, marketplaces, categories, totalPlugins] = await Promise.all([
     getPluginsPaginated({ limit: ITEMS_PER_PAGE, offset: 0, sort: 'relevance', type: 'plugin' }),
-    getPluginMarketplaces(),
+    getPluginMarketplaces('plugin'),
     getPluginCategories(),
     getPluginOnlyCount(),
   ])

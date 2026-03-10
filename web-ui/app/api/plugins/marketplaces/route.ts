@@ -1,15 +1,20 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getPluginMarketplaces } from '@/lib/plugin-db-server'
+import type { PluginType } from '@/lib/plugin-types'
 
 export const dynamic = 'force-dynamic'
+
+const validTypes: PluginType[] = ['subagent', 'command', 'hook', 'skill', 'plugin']
 
 /**
  * GET /api/plugins/marketplaces
  * Get list of marketplaces for filter dropdown
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const marketplaces = await getPluginMarketplaces()
+    const typeParam = request.nextUrl.searchParams.get('type') as PluginType | null
+    const type = typeParam && validTypes.includes(typeParam) ? typeParam : undefined
+    const marketplaces = await getPluginMarketplaces(type)
 
     return NextResponse.json({ marketplaces })
   } catch (error) {
