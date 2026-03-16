@@ -12,6 +12,7 @@
     "hooks",
     "automation",
     "performance",
-    "performance-monitor"
+    "performance-monitor",
+    "context-monitor"
   ]
 }
