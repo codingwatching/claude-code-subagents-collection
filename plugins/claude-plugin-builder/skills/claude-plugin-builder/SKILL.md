@@ -104,12 +104,18 @@ TIER 3 — PATTERN ONLY
 After reading sources, do an **affinity mapping** — group tools by HOW they solve, not WHAT domain:
 ```
 AFFINITY CLUSTERS (by solution pattern):
-  Pure reasoning + judgment + narrative  →  SKILL
-  Python computation + formulas + data   →  AGENT
-  Named composable operation             →  COMMAND
-  Taxonomy / schema / rubric / guide     →  embed in SKILL.md prompt body
-  Full application (not callable)        →  extract pattern/schema only
+  Pure reasoning + judgment + narrative             →  SKILL (skills/ folder, no scripts)
+  Python computation + user needs explicit trigger  →  SKILL with scripts/ subfolder
+  Python computation + auto-trigger only            →  AGENT (agents/ folder)
+  Named composable operation                        →  COMMAND
+  Taxonomy / schema / rubric / guide                →  embed in SKILL.md prompt body
+  Full application (not callable)                   →  extract pattern/schema only
 ```
+
+**ROUTING RULE — skills/ vs agents/:**
+- `skills/[name]/SKILL.md` → user can trigger with `/plugin:name` slash command AND auto-trigger. Can have a `scripts/` subfolder for Python computation.
+- `agents/[name].md` → auto-trigger ONLY. Claude invokes it based on intent. NEVER slash-command accessible.
+- **If user needs explicit `/command` access → it MUST go in `skills/`, even if it runs Python scripts.**
 
 Show the clusters to the user before designing. Ask: *"Does this grouping match your mental model? Anything misclassified?"*
 
@@ -165,16 +171,21 @@ Suggest alternatives if the name is too generic or conflicts with common terms.
 
 Apply these rules:
 
-**SKILL** — if ALL true:
+**SKILL (no scripts)** — if ALL true:
 - Works with Claude reasoning only (no scripts, no file system, no terminal)
 - Input is conversational (text, URL, topic)
 - Compatible with claude.ai AND Claude Code
 
-**AGENT** — if ANY true:
-- Requires running Python, Bash, or external scripts
+**SKILL with scripts** — if ALL true:
+- Requires Python computation BUT user needs explicit `/plugin:name` slash-command access
+- Goes in `skills/[name]/SKILL.md` + `skills/[name]/scripts/`
+- Compatible with Claude Code only (needs Python + Bash)
+
+**AGENT** — if ALL true:
+- Requires Python computation AND auto-trigger only is acceptable (no slash-command needed)
 - Needs to read/write files on disk
 - Requires multi-step computation Claude can't do natively
-- Output involves generated files or git push
+- Goes in `agents/[name].md` + `agents/[name]/scripts/`
 
 **COMMANDS** — if ANY true:
 - Has 3+ distinct named operations with structurally different outputs
@@ -183,6 +194,11 @@ Apply these rules:
 **SKILL + AGENT** — build both:
 - Skill works on claude.ai (reasoning only)
 - Agent extends it on Claude Code (with scripts)
+
+**CRITICAL — slash-command routing:**
+- `/plugin:name` ONLY works for files in `skills/` folder
+- Files in `agents/` are INVISIBLE to slash commands — auto-trigger only
+- If user asks "how do I explicitly trigger this?" and it's in `agents/` → it cannot be slash-triggered; must move to `skills/`
 
 Output:
 ```
@@ -255,24 +271,27 @@ description: >
 [One complete worked example: input → full output]
 ```
 
-### Step 15 — Generate Agent File *(Agent only)*
+### Step 15 — Generate Skill-with-Scripts File *(Skill+Scripts only)*
+
+For computation-heavy skills that need explicit slash-command access, generate as a SKILL with scripts subfolder:
 
 ```markdown
 ---
 name: [kebab-case-name]
+category: [category]
 description: >
-  [Same trigger description as SKILL.md. Add: REQUIRES Bash + Python 3.x.]
+  [Activation trigger description. Add: REQUIRES Claude Code + Python 3.x for computation.]
 ---
 
-# [Plugin Name] — Agent
+# [Plugin Name]
 
-[Intro + what this agent does]
+[Intro + what this skill does]
 
 ## PIPELINE
-[Numbered steps with: step name, whether Claude or Python handles it, script path using ${CLAUDE_PLUGIN_ROOT}]
+[Numbered steps with: step name, whether Claude or Python handles it]
 
 ## SCRIPTS
-[List all scripts at ${CLAUDE_PLUGIN_ROOT}/skills/[name]/scripts/]
+[List all scripts at skills/[name]/scripts/]
 
 ## ERROR HANDLING
 [What to do when each step fails]
@@ -281,12 +300,30 @@ description: >
 [Final output format]
 ```
 
-### Step 16 — Generate Scripts *(Agent only)*
+Place at: `skills/[name]/SKILL.md` with `skills/[name]/scripts/*.py`
+
+### Step 15b — Generate Agent File *(auto-trigger-only agents)*
+
+Only use `agents/` folder for capabilities that should NEVER be explicitly slash-triggered:
+
+```markdown
+---
+name: [kebab-case-name]
+category: [category]
+description: >
+  [Trigger description. Note: auto-triggered by Claude — not slash-command accessible.]
+---
+```
+
+Place at: `agents/[name].md`
+
+### Step 16 — Generate Scripts
 Generate Python/Bash script stubs for each step that requires code execution. Include:
 - Clear docstring explaining what the script does
 - Input/output specification
 - Error handling with exit codes
 - `print()` outputs Claude reads between steps
+- Last script is always `report_formatter.py` — reads all prior JSON outputs, prints final report
 
 ### Step 17 — Generate `plugin.json`
 
@@ -297,54 +334,72 @@ Generate Python/Bash script stubs for each step that requires code execution. In
   "description": "[tagline from Step 10b]",
   "author": {
     "name": "[Full Name]",
-    "email": "[email]"
+    "url": "https://github.com/[github-username]"
   },
   "homepage": "[github-repo-url]",
   "repository": "[github-repo-url]",
-  "license": "MIT",
-  "skills": ["skills/[name]"],
-  "agents": [],
-  "commands": []
+  "license": "MIT"
 }
 ```
 
-**CRITICAL:** `"repository"` field is required for GitHub URL installation to work. Never omit it.
+**CRITICAL rules for `plugin.json`:**
+- `"repository"` is required — GitHub URL installation fails without it
+- `"author"` must use `"url"` not `"email"` — community validator rejects `email`
+- Do NOT include `"skills"`, `"agents"`, or `"commands"` arrays — Claude Code discovers by folder convention; these fields cause schema errors
 
 ### Step 18 — Generate `marketplace.json`
 
 ```json
 {
-  "name": "[kebab-case-name]",
-  "version": "1.0.0",
-  "description": "[tagline]",
-  "author": "[github-username]",
-  "repository": "[github-repo-url]",
+  "name": "[github-username]",
+  "owner": {
+    "name": "[Full Name]",
+    "url": "https://github.com/[github-username]"
+  },
+  "metadata": {
+    "description": "[tagline]",
+    "version": "1.0.0"
+  },
   "plugins": [
     {
       "name": "[kebab-case-name]",
+      "source": "./",
       "description": "[tagline]",
       "version": "1.0.0",
-      "path": "."
+      "author": {
+        "name": "[Full Name]",
+        "url": "https://github.com/[github-username]"
+      },
+      "homepage": "[github-repo-url]",
+      "repository": "[github-repo-url]",
+      "license": "MIT",
+      "keywords": ["[topic1]", "[topic2]"],
+      "category": "[category]"
     }
   ]
 }
 ```
 
+**CRITICAL rules for `marketplace.json`:**
+- `"name"` at top level = **GitHub username** (registry key), NOT the plugin name — using plugin name here is the #1 cause of install failure
+- `"owner"` object is REQUIRED — validator error if missing: `Invalid schema: owner: Invalid input`
+- `"plugins"` array is REQUIRED — validator error if missing: `Invalid schema: plugins: Invalid input`
+- `"source": "./"` NOT `"path": "."` — wrong key causes plugin files to not load
+- `"author"` inside plugins entry uses `"url"` not `"email"`
+
 ### Step 19 — Generate `README.md`
 
 Write as an **instruction manual**, not a technical spec. Structure:
-1. Plugin name + tagline + one-line who-it's-for
-2. Install command
-3. **How to Use** — one section per use case, each formatted as:
-   - `### [User question ending in ?]` (e.g., "Evaluating a startup?")
-   - Bold one-liner: what they get
-   - Example prompt in blockquote
-   - What the output includes
-   - Command(s) to invoke
-4. Two Modes table (Skill vs Agent — plain English comparison)
-5. What's Inside — "Inspired From" table with columns: Category | Inspired From | Learnings
-6. Repository structure
-7. License
+1. Plugin name + tagline + author + version + one-line who-it's-for
+2. **"Try Asking"** section — 6–8 real example prompts users can copy-paste immediately, before reading anything else
+3. Install commands — ALWAYS two steps: `marketplace add` first, then `plugin install`. Never show `plugin install` alone.
+4. **All Skills Quick Reference table** — one row per skill, columns: `#` | `Skill` | `Explicit Command` | `What to Pass` | `Runs On` (🟢 Claude Only / 🔵 Claude + Python)
+5. **Input Examples** — one copy-paste-ready example per skill with real numbers
+6. Output example — one complete ASCII output block
+7. Two Modes table (Soft vs Hard — plain English comparison including reproducibility row)
+8. What's Inside — "Inspired From" table with columns: Category | Inspired From | Learnings
+9. Repository structure (reflecting actual `skills/` structure, no phantom `agents/`)
+10. License
 
 ---
 
@@ -353,6 +408,8 @@ Write as an **instruction manual**, not a technical spec. Structure:
 ### Step 20 — File Tree Review + Privacy Flag
 
 Show complete file tree of everything that will be created:
+
+**For SKILL (reasoning only):**
 ```
 [plugin-name]/
 ├── .claude-plugin/
@@ -361,12 +418,40 @@ Show complete file tree of everything that will be created:
 ├── skills/
 │   └── [name]/
 │       └── SKILL.md
-├── agents/          ← if Agent
-│   └── [name].md
-├── scripts/         ← if Agent
-│   └── [script].py
 └── README.md
 ```
+
+**For SKILL with Python scripts (explicit slash-command + computation):**
+```
+[plugin-name]/
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── marketplace.json
+├── skills/
+│   └── [name]/
+│       ├── SKILL.md
+│       └── scripts/
+│           ├── [step1].py
+│           ├── [step2].py
+│           └── report_formatter.py   ← always last
+└── README.md
+```
+
+**For AGENT (auto-trigger only, no slash-command):**
+```
+[plugin-name]/
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── marketplace.json
+├── agents/
+│   └── [name].md
+└── README.md
+```
+
+**ROUTING REMINDER before generating:**
+- Ask: "Does the user need to explicitly trigger this with `/plugin:name`?"
+- YES → `skills/` folder (with or without scripts)
+- NO → `agents/` folder (auto-trigger only)
 
 **Privacy Flag:** If any described inputs involve names, emails, health data, financial data, or location — flag it:
 ```
@@ -453,7 +538,7 @@ Topics to add manually on GitHub:
 - Affinity map by solution pattern first, workflow phase second
 - Dual-mode parity: every high-value capability deserves both a Skill (soft, claude.ai) and an Agent (hard, Claude Code)
 - If classified as AGENT but platform is claude.ai → downgrade to SKILL + warn user
-- Plugin description must include capability count: "X skills · Y agents · Z commands"
+- Plugin description must include capability count: "X skills · Y agents" — only count what actually exists as files; never inflate with phantom "commands" if no commands/ directory exists
 
 **Agent script rules:**
 - Python scripts do computation only — no external API keys, no pip install of heavy dependencies
@@ -479,10 +564,101 @@ Topics to add manually on GitHub:
 - Open-source acknowledgment table uses columns: Category | Inspired From | Learnings — never "Tools Used" or "What Was Extracted"
 - Capability count order in all descriptions: "X skills · Y agents · Z commands" (skills first, commands last)
 
+**plugin.json rules:**
+- ONLY valid fields: `name`, `version`, `description`, `author` (`name` + `url`), `homepage`, `repository`, `license`, `keywords` — do NOT add `skills`, `agents`, or `commands` arrays; the validator rejects them
+- `author.url` not `author.email`
+- The plugin system auto-discovers skills in `skills/*/SKILL.md` and agents in `agents/*.md` — no manifest needed
+
+**Skill-as-plugin structure (when submitting a standalone skill to a marketplace):**
+- A bare `SKILL.md` file is NOT a valid plugin — it must be wrapped:
+  ```
+  plugin-name/
+  ├── .claude-plugin/plugin.json
+  └── skills/plugin-name/SKILL.md
+  ```
+- Without the `.claude-plugin/plugin.json` wrapper, the UI shows "This plugin doesn't have any skills or agents"
+
+**Umbrella marketplace rules (for personal multi-plugin install):**
+- Umbrella repo needs a ROOT-LEVEL `.claude-plugin/marketplace.json` with `$schema`, `name`, `owner`, `metadata`, and a `plugins[]` array — each entry has `name`, `description`, `version`, `author`, `repository`, `license`, `keywords`, `category`, `source` (relative path)
+- Marketplace `name` field cannot contain "claude", "anthropic", or "official" — use `username-plugins` pattern
+- The umbrella marketplace.json `source` must point to a proper plugin folder (with `.claude-plugin/plugin.json` inside), not a bare skill directory
+
 **Community marketplace rules (buildwithclaude / davepoon/buildwithclaude):**
 - Every agent `.md` file MUST have `category:` in its frontmatter — without it the marketplace validator rejects the plugin
-- Valid category for VC/finance/business agents: `business-finance`
-- `plugin.json` author field must use `"url"` not `"email"`: `{"name": "...", "url": "https://github.com/username"}`
-- Personal plugin repos (one repo per plugin on GitHub) hit a marketplace key collision when a user has more than one — the system uses the GitHub username as the key, so only one repo per user can be registered as a marketplace at a time
-- The long-term fix is an umbrella marketplace repo (`username/claude-plugins`) with a `plugins/` folder containing all plugins as subfolders — but this creates a dual-maintenance burden; individual repos stay for discoverability, umbrella is the install entrypoint
-- For now: guide users to submit to `davepoon/buildwithclaude` via PR so their plugin is installable from the community marketplace without the personal collision problem
+- Every skill `.md` file should also have `category:` in frontmatter
+- Valid agent/skill categories: `business-finance`, `specialized-domains`, `development-architecture`, `data-ai`, `quality-security`, etc.
+- Personal plugin repos hit a marketplace key collision when a user has more than one — GitHub username is the key, so only one repo per user can be registered as a marketplace at a time
+- Fix: submit to `davepoon/buildwithclaude` via PR (community marketplace, no collision) OR create a private umbrella repo as personal marketplace
+- When submitting PR to buildwithclaude: plugins go under `plugins/<plugin-name>/` with full structure; skills go under `plugins/all-skills/skills/<skill-name>/SKILL.md` BUT must also be wrapped as a plugin if submitting standalone
+
+**Official Anthropic submission rules (`claude.ai/settings/plugins/submit`):**
+- This is SEPARATE from buildwithclaude — it submits to Anthropic's official Plugin Directory (inside Claude UI itself)
+- Submission does NOT guarantee inclusion — Anthropic reviews and may reject
+- Form fields (3 steps): Step 1 → authorization checkbox; Step 2 → Link to plugin (GitHub URL), Plugin homepage, Plugin name (kebab-case), Plugin description, Example use cases (6+ concrete examples); Step 3 → Supported platforms + License
+- Supported platforms: `Claude Code` (agents + scripts) and/or `Claude Cowork` (skills only) — skills work on both; agents only on Claude Code
+- Submit to BOTH Anthropic official form AND buildwithclaude PR for maximum discoverability — they serve different audiences
+- Anthropic official = inside Claude UI, higher trust, slower review; buildwithclaude = external website, community-reviewed, faster
+
+**Two-track publishing strategy (always do both):**
+1. PR to `davepoon/buildwithclaude` → community discoverability, fast merge
+2. Submit at `claude.ai/settings/plugins/submit` → official Claude Plugin Directory, Anthropic-reviewed
+- Submit Anthropic form AFTER the plugin is stable and tested — submission cannot be edited after sending
+- Use the same description from `plugin.json` in the Anthropic form for consistency
+
+**Branch + cache + session rules (learned from real installs):**
+- **Always use `main` branch** — the installer defaults to `main`. A repo on `master` causes the installer to fall back to a stale cached version silently. Rename at creation or immediately after: `gh api repos/[user]/[repo] -X PATCH -f default_branch=main`
+- **Cache staleness** — the installer caches by version number. If version hasn't changed, fresh GitHub changes are NOT fetched. To force a fresh install: manually clear cache at `~/.claude/plugins/cache/[marketplace]/[plugin-name]/` then reinstall. Or bump version in both `plugin.json` and `marketplace.json`.
+- **Session reload** — newly installed or reinstalled plugins are only picked up in a NEW Claude Code session. No hot-reload. Always tell the user: "Open a new session to use this plugin." Testing in the same session after reinstall will always show "Unknown skill."
+- **Verify cache after install** — after `claude plugin install`, always run: `find ~/.claude/plugins/cache -name "SKILL.md" | sort` to confirm all expected skills loaded. If fewer files than expected, it served a stale cache.
+
+**README install command rules (non-negotiable):**
+- ALWAYS show two steps — never show `plugin install` alone as the only command:
+  ```bash
+  # Step 1 — Add the marketplace (one-time)
+  claude plugin marketplace add [github-username]/[repo-name]
+  # Step 2 — Install
+  claude plugin install [plugin-name]
+  ```
+- Showing only `claude plugin install username/repo-name` WILL fail — that syntax only works if the repo is already registered as a marketplace. New users have nothing registered.
+
+**Skills vs agents folder decision tree (quick reference):**
+```
+Does user need /plugin:name slash command?
+  YES → skills/[name]/SKILL.md (+ scripts/ if Python needed)
+  NO  → agents/[name].md (auto-trigger only)
+
+Does it run Python?
+  YES + slash-command needed  → skills/[name]/SKILL.md + skills/[name]/scripts/
+  YES + auto-trigger only     → agents/[name].md + agents/[name]/scripts/
+  NO                          → skills/[name]/SKILL.md (pure reasoning)
+```
+
+**Naming consistency rules (naming drift kills trust):**
+- Pick ONE canonical name at creation. Use it everywhere without exception:
+  - GitHub repo URL → `github.com/user/foresight-intelligence`
+  - README `# Title` → `# Foresight Intelligence`
+  - Install command → `claude plugin install foresight-intelligence`
+  - Explicit trigger → `/foresight-intelligence:skill-name`
+  - Report header inside output template → `FORESIGHT INTELLIGENCE`
+  - GitHub About description → starts with the plugin name
+- A user following the README who hits a broken install command (wrong repo name) abandons on day one. There is no recovery from a broken first install.
+- Before pushing, do a final grep for any old or alternate name: `grep -r "[old-name]" .` — any hit means naming drift exists.
+
+**Semantic capability count rules (structure ≠ meaning):**
+- "X skills · Y agents" is a SEMANTIC count, not a folder count:
+  - **Skills** = pure Claude reasoning, no Python, works on claude.ai + Claude Code
+  - **Agents** = Python scripts required, Claude Code only
+- Moving an agent into `skills/` folder for slash-command access does NOT make it a "skill" semantically. The capability count stays `Y agents`.
+- GitHub About description, README intro line, marketplace.json description, and plugin.json description must ALL use the same semantic count.
+- Never inflate or deflate: "9 skills" when 6 run Python is wrong. "3 skills · 6 agents" when 6 use scripts is correct.
+
+**Multi-repo sync rules:**
+- Every plugin typically lives in 4 places: public repo, private umbrella, community fork (buildwithclaude PR branch), and local clone. Any change to one must be synced to all others immediately — not batched.
+- Sync order: fix public repo first → copy to private umbrella → copy to fork → push all three in one session.
+- Never assume the umbrella or fork is "close enough" — they hold real copies, not symlinks.
+- After any README, marketplace.json, or plugin.json change: run a final check that all 4 copies match before closing the session.
+
+**LICENSE rules:**
+- Every public plugin repo MUST have a LICENSE file. No LICENSE = legal ambiguity for anyone who wants to fork, adapt, or build on the plugin.
+- Default: MIT License. Generate it at Step 20 alongside the file tree review — do not leave it for later.
+- Sync LICENSE to private umbrella and community fork at the same time as the public repo.
