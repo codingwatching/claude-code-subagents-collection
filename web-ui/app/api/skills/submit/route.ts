@@ -238,7 +238,7 @@ export async function POST(request: NextRequest) {
           name: skill.name,
           namespace: skillNamespace,
           slug: skill.slug,
-          marketplaceName: 'Community Submitted',
+          marketplaceName: analysis.owner,
           repository: repoUrl,
           description: skill.description,
           author: analysis.owner,
@@ -253,6 +253,8 @@ export async function POST(request: NextRequest) {
         .onConflictDoUpdate({
           target: plugins.namespace,
           set: {
+            name: sql`EXCLUDED.name`,
+            marketplaceName: sql`EXCLUDED.marketplace_name`,
             description: sql`EXCLUDED.description`,
             author: sql`EXCLUDED.author`,
             categories: sql`EXCLUDED.categories`,

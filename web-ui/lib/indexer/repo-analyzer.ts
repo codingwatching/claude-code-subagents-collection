@@ -33,6 +33,16 @@ const MAX_DESCRIPTION_LENGTH = 2000
 const MAX_NAME_LENGTH = 255
 
 /**
+ * Convert a slug-like string to Title Case (e.g. "design-taste-frontend" → "Design Taste Frontend")
+ */
+function humanizeName(slug: string): string {
+  return slug
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .trim()
+}
+
+/**
  * Create URL-safe slug from name
  */
 function createSlug(name: string): string {
@@ -242,10 +252,14 @@ async function parseSkillMdFiles(
       const content = await github.fetchFileContent(repoFullName, filePath)
       const { data, content: body } = matter(content)
 
-      // Infer name from frontmatter or directory/filename
+      // Infer name from frontmatter, H1 heading, or directory/filename
       const dirName = filePath.split('/').slice(-2, -1)[0]
       const fileName = filePath.split('/').pop()?.replace(/\.md$/, '') || ''
-      const name = data.name || dirName || fileName
+      let name = data.name
+      if (!name) {
+        const h1Match = body.match(/^#\s+(.+)$/m)
+        name = h1Match ? h1Match[1].trim() : humanizeName(dirName || fileName)
+      }
 
       skills.push({
         name: truncate(name, MAX_NAME_LENGTH),
@@ -330,8 +344,17 @@ async function tryReadmeInference(
 
   const category = normalizeSkillCategory(inferCategory(repo.topics, nameDesc))
 
+  // Derive display name from README H1 or humanize repo name
+  let displayName: string
+  if (readmeContent) {
+    const h1Match = readmeContent.match(/^#\s+(.+)$/m)
+    displayName = h1Match ? h1Match[1].trim() : humanizeName(repo.name)
+  } else {
+    displayName = humanizeName(repo.name)
+  }
+
   return {
-    name: truncate(repo.name, MAX_NAME_LENGTH),
+    name: truncate(displayName, MAX_NAME_LENGTH),
     slug: createSlug(repo.name),
     description: truncate(description, MAX_DESCRIPTION_LENGTH),
     category,

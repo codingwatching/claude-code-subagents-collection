@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { UnifiedPluginCard } from '@/components/unified-plugin-card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -66,13 +67,65 @@ export default function SkillsPageClient({
   const offsetRef = useRef(initialSkills.length)
   const isFirstRender = useRef(true)
 
+  // URL sync
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const updateURL = useCallback((newParams: { q?: string; category?: string[]; source?: string; sort?: string }) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (newParams.q !== undefined) {
+      if (newParams.q === '') params.delete('q')
+      else params.set('q', newParams.q)
+    }
+    if (newParams.category !== undefined) {
+      if (newParams.category.length === 0) params.delete('category')
+      else params.set('category', newParams.category.join(','))
+    }
+    if (newParams.source !== undefined) {
+      if (newParams.source === 'all') params.delete('source')
+      else params.set('source', newParams.source)
+    }
+    if (newParams.sort !== undefined) {
+      if (newParams.sort === 'relevance') params.delete('sort')
+      else params.set('sort', newParams.sort)
+    }
+
+    const qs = params.toString()
+    router.replace(qs ? `/skills?${qs}` : '/skills', { scroll: false })
+  }, [searchParams, router])
+
+  // Initialize state from URL on mount
+  useEffect(() => {
+    const qParam = searchParams.get('q')
+    const categoryParam = searchParams.get('category')
+    const sourceParam = searchParams.get('source')
+    const sortParam = searchParams.get('sort')
+
+    if (qParam) {
+      setSearchQuery(qParam)
+      setDebouncedSearch(qParam)
+    }
+    if (categoryParam) {
+      const cats = categoryParam.split(',').filter(Boolean)
+      setSelectedCategories(cats)
+    }
+    if (sourceParam) {
+      setSelectedMarketplace(sourceParam)
+    }
+    if (sortParam && ['relevance', 'stars', 'newest', 'oldest', 'name', 'name-desc'].includes(sortParam)) {
+      setSort(sortParam as SortOption)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- only on mount
+
   // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery)
+      updateURL({ q: searchQuery })
     }, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery])
+  }, [searchQuery]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset and fetch when filters change
   useEffect(() => {
@@ -108,10 +161,11 @@ export default function SkillsPageClient({
       }
     }
 
-    // Skip fetch on initial mount (we have server-rendered data)
+    // Skip fetch on initial mount only if no URL params (server data matches)
     if (isFirstRender.current) {
       isFirstRender.current = false
-      return
+      const hasUrlFilters = searchParams.get('q') || searchParams.get('category') || searchParams.get('source') || searchParams.get('sort')
+      if (!hasUrlFilters) return
     }
 
     fetchFiltered()
@@ -286,6 +340,7 @@ export default function SkillsPageClient({
                         onSelect={() => {
                           setSelectedMarketplace('all')
                           setMarketplaceOpen(false)
+                          updateURL({ source: 'all' })
                         }}
                       >
                         <Check
@@ -303,6 +358,7 @@ export default function SkillsPageClient({
                           onSelect={() => {
                             setSelectedMarketplace(mp.id)
                             setMarketplaceOpen(false)
+                            updateURL({ source: mp.id })
                           }}
                         >
                           <Check
@@ -320,7 +376,7 @@ export default function SkillsPageClient({
               </PopoverContent>
             </Popover>
           )}
-          <Select value={sort} onValueChange={(value) => setSort(value as SortOption)}>
+          <Select value={sort} onValueChange={(value) => { setSort(value as SortOption); updateURL({ sort: value }) }}>
             <SelectTrigger className="w-[150px] bg-card border-border">
               <ArrowUpDown className="h-4 w-4 mr-2 text-muted-foreground" />
               <SelectValue placeholder="Sort by" />
@@ -351,7 +407,11 @@ export default function SkillsPageClient({
                   {formatCategoryName(catName)}
                   {cat && <span className="text-xs opacity-70">({cat.count})</span>}
                   <button
-                    onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catName))}
+                    onClick={() => {
+                      const newCats = selectedCategories.filter(c => c !== catName)
+                      setSelectedCategories(newCats)
+                      updateURL({ category: newCats })
+                    }}
                     className="ml-1 rounded-full p-0.5 hover:bg-primary/20 transition-colors"
                   >
                     <X className="h-3 w-3" />
@@ -383,7 +443,7 @@ export default function SkillsPageClient({
                     <CommandGroup>
                       {selectedCategories.length > 0 && (
                         <CommandItem
-                          onSelect={() => setSelectedCategories([])}
+                          onSelect={() => { setSelectedCategories([]); updateURL({ category: [] }) }}
                           className="text-muted-foreground"
                         >
                           <X className="mr-2 h-4 w-4" />
@@ -398,11 +458,11 @@ export default function SkillsPageClient({
                             value={cat.name}
                             className="group"
                             onSelect={() => {
-                              if (isSelected) {
-                                setSelectedCategories(prev => prev.filter(c => c !== cat.name))
-                              } else {
-                                setSelectedCategories(prev => [...prev, cat.name])
-                              }
+                              const newCats = isSelected
+                                ? selectedCategories.filter(c => c !== cat.name)
+                                : [...selectedCategories, cat.name]
+                              setSelectedCategories(newCats)
+                              updateURL({ category: newCats })
                             }}
                           >
                             <Check
