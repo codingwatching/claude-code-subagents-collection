@@ -1,0 +1,12 @@
+{
+  "name": "claude-plugin-builder",
+  "description": "23-step guided assistant for building and publishing Claude plugins from scratch — architecture, affinity mapping, file generation, GitHub push, and marketplace compliance.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Santhosh Gandhi",
+    "url": "https://github.com/isanthoshgandhi"
+  },
+  "homepage": "https://github.com/isanthoshgandhi/claude-plugin-builder",
+  "repository": "https://github.com/isanthoshgandhi/claude-plugin-builder",
+  "license": "MIT"
+}
