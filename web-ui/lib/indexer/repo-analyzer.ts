@@ -6,6 +6,7 @@
 import matter from 'gray-matter'
 import { getGitHubClient, type GitHubTreeEntry } from '@/lib/github/client'
 import { parseMarketplaceJson } from './parser'
+import { normalizeSkillCategory } from '@/lib/category-utils'
 
 export interface AnalyzedSkill {
   name: string
@@ -51,23 +52,29 @@ function truncate(str: string, max: number): string {
 /**
  * Map common topics/keywords to categories
  */
-function inferCategory(topics: string[], nameDesc: string): string | null {
+function inferCategory(topics: string[], nameDesc: string): string {
   const topicSet = new Set(topics.map(t => t.toLowerCase()))
   const text = nameDesc.toLowerCase()
 
   const categoryMap: Record<string, string[]> = {
-    'development': ['development', 'dev', 'coding', 'programming', 'developer'],
-    'ai': ['ai', 'machine-learning', 'ml', 'artificial-intelligence', 'llm'],
-    'devops': ['devops', 'infrastructure', 'deployment', 'ci-cd', 'docker'],
-    'security': ['security', 'auth', 'authentication', 'encryption'],
-    'testing': ['testing', 'test', 'qa', 'quality'],
-    'documentation': ['documentation', 'docs', 'readme'],
-    'database': ['database', 'sql', 'postgres', 'mongo'],
-    'frontend': ['frontend', 'ui', 'ux', 'react', 'css', 'design'],
-    'backend': ['backend', 'api', 'server', 'rest', 'graphql'],
-    'mobile': ['mobile', 'ios', 'android', 'swift', 'swiftui', 'kotlin'],
-    'data': ['data', 'analytics', 'visualization', 'data-science'],
-    'automation': ['automation', 'workflow', 'scripting'],
+    'development-code': ['development', 'dev', 'coding', 'programming', 'developer', 'testing', 'test', 'qa', 'database', 'sql', 'postgres', 'mongo', 'frontend', 'backend', 'api', 'server', 'rest', 'graphql', 'mobile', 'ios', 'android', 'react', 'css'],
+    'ai-ml': ['ai', 'machine-learning', 'ml', 'artificial-intelligence', 'llm', 'deep-learning', 'neural', 'nlp'],
+    'devops': ['devops', 'infrastructure', 'deployment', 'ci-cd', 'docker', 'kubernetes', 'terraform'],
+    'security': ['security', 'auth', 'authentication', 'encryption', 'vulnerability', 'pentest'],
+    'document-processing': ['documentation', 'docs', 'readme', 'pdf', 'markdown', 'document'],
+    'analytics': ['data', 'analytics', 'visualization', 'data-science', 'dashboard', 'metrics'],
+    'automation': ['automation', 'workflow', 'scripting', 'cron', 'pipeline'],
+    'design': ['design', 'ui', 'ux', 'figma', 'sketch'],
+    'communication': ['chat', 'messaging', 'slack', 'discord', 'notification'],
+    'ecommerce': ['ecommerce', 'commerce', 'shop', 'payment', 'stripe'],
+    'email': ['email', 'smtp', 'newsletter', 'mailgun'],
+    'project-management': ['project-management', 'task', 'kanban', 'agile', 'jira', 'linear'],
+    'social-media': ['social-media', 'twitter', 'marketing', 'seo'],
+    'storage-docs': ['storage', 'cloud', 's3', 'bucket', 'file-storage'],
+    'customer-support': ['support', 'helpdesk', 'ticket', 'zendesk'],
+    'crm': ['crm', 'customer', 'salesforce', 'hubspot'],
+    'business-productivity': ['productivity', 'spreadsheet', 'office', 'calendar'],
+    'creative-collaboration': ['collaboration', 'creative', 'whiteboard', 'brainstorm'],
   }
 
   for (const [category, keywords] of Object.entries(categoryMap)) {
@@ -78,7 +85,7 @@ function inferCategory(topics: string[], nameDesc: string): string | null {
     }
   }
 
-  return null
+  return 'uncategorized'
 }
 
 /**
@@ -206,7 +213,7 @@ async function tryMarketplaceJson(
           name: truncate(p.name, MAX_NAME_LENGTH),
           slug: createSlug(p.name),
           description: truncate(p.description || `Plugin from ${repoFullName}`, MAX_DESCRIPTION_LENGTH),
-          category: p.category || null,
+          category: normalizeSkillCategory(p.category || null),
           installCommand: `npx skills add ${repoFullName}`,
           source: path.includes('marketplace') ? 'marketplace-json' as const : 'plugin-json' as const,
         }))
@@ -247,7 +254,7 @@ async function parseSkillMdFiles(
           data.description || body.split('\n').find(l => l.trim().length > 0) || `Skill from ${repoFullName}`,
           MAX_DESCRIPTION_LENGTH,
         ),
-        category: data.category || null,
+        category: normalizeSkillCategory(data.category || null),
         allowedTools: data['allowed-tools']
           ? String(data['allowed-tools']).split(',').map(t => t.trim())
           : undefined,
@@ -321,7 +328,7 @@ async function tryReadmeInference(
     installCommand = `npx skills add ${repoFullName}`
   }
 
-  const category = inferCategory(repo.topics, nameDesc)
+  const category = normalizeSkillCategory(inferCategory(repo.topics, nameDesc))
 
   return {
     name: truncate(repo.name, MAX_NAME_LENGTH),

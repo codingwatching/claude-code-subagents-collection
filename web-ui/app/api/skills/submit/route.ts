@@ -5,6 +5,7 @@ import { plugins, submissionReviews } from '@/lib/db/schema'
 import { eq, sql } from 'drizzle-orm'
 import { analyzeRepository } from '@/lib/indexer/repo-analyzer'
 import { scanSkillContent, getSubmissionStatus } from '@/lib/indexer/content-scanner'
+import { normalizeSkillCategory } from '@/lib/category-utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,6 +49,11 @@ const GITHUB_URL_REGEX = /^https?:\/\/github\.com\/([a-zA-Z0-9._-]+)\/([a-zA-Z0-
 
 const SubmitBodySchema = z.object({
   url: z.string().url().max(500),
+  mode: z.enum(['analyze', 'confirm']).optional().default('confirm'),
+  skills: z.array(z.object({
+    name: z.string(),
+    category: z.string(),
+  })).optional(),
 })
 
 /**
@@ -102,7 +108,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { url } = parseResult.data
+    const { url, mode, skills: userSkills } = parseResult.data
 
     // Validate GitHub URL
     const repoFullName = extractRepoFullName(url)
@@ -179,6 +185,32 @@ export async function POST(request: NextRequest) {
         message: 'No skills found in this repository. Make sure the repo contains SKILL.md files, a skills/ directory, or a marketplace.json.',
         detectionMethod: analysis.detectionMethod,
       })
+    }
+
+    // Analyze mode: return discovered skills without saving
+    if (mode === 'analyze') {
+      return NextResponse.json({
+        success: true,
+        message: `Found ${analysis.skills.length} skill${analysis.skills.length !== 1 ? 's' : ''}`,
+        skills: analysis.skills.slice(0, MAX_SKILLS_PER_REPO).map(s => ({
+          name: s.name,
+          slug: s.slug,
+          description: s.description,
+          category: s.category || 'uncategorized',
+        })),
+        detectionMethod: analysis.detectionMethod,
+      })
+    }
+
+    // Confirm mode: apply user-provided categories if present
+    if (userSkills && userSkills.length > 0) {
+      const categoryOverrides = new Map(userSkills.map(s => [s.name, s.category]))
+      for (const skill of analysis.skills) {
+        const override = categoryOverrides.get(skill.name)
+        if (override) {
+          skill.category = normalizeSkillCategory(override)
+        }
+      }
     }
 
     // Process each discovered skill: scan, upsert, record review

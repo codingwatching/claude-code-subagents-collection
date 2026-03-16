@@ -78,6 +78,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'devops': '🚀',
   'ecommerce': '🛍️',
   'email': '📧',
+  'ai-ml': '🤖',
   'project-management': '📋',
   'social-media': '📱',
   'storage-docs': '☁️',
@@ -141,4 +142,64 @@ export function generateCategoryMetadata(
       count
     }))
     .sort((a, b) => a.displayName.localeCompare(b.displayName));
+}
+
+/**
+ * Valid skill categories (ordered for display)
+ */
+export const VALID_SKILL_CATEGORIES = [
+  'ai-ml',
+  'analytics',
+  'automation',
+  'business-productivity',
+  'communication',
+  'creative-collaboration',
+  'crm',
+  'customer-support',
+  'design',
+  'development-code',
+  'devops',
+  'document-processing',
+  'ecommerce',
+  'email',
+  'project-management',
+  'security',
+  'social-media',
+  'storage-docs',
+  'uncategorized',
+] as const;
+
+const SKILL_CATEGORY_SET = new Set<string>(VALID_SKILL_CATEGORIES);
+
+const SKILL_CATEGORY_ALIASES: Record<string, string> = {
+  'ai': 'ai-ml',
+  'machine-learning': 'ai-ml',
+  'ml': 'ai-ml',
+  'development': 'development-code',
+  'coding': 'development-code',
+  'frontend': 'development-code',
+  'backend': 'development-code',
+  'testing': 'development-code',
+  'database': 'development-code',
+  'mobile': 'development-code',
+  'documentation': 'document-processing',
+  'data': 'analytics',
+  'workflow': 'automation',
+  'commerce': 'ecommerce',
+  'marketing': 'social-media',
+  'support': 'customer-support',
+  'productivity': 'business-productivity',
+  'collaboration': 'creative-collaboration',
+  'storage': 'storage-docs',
+};
+
+/**
+ * Normalize a skill category string to a valid skill category.
+ * Returns 'uncategorized' if the category is not recognized.
+ */
+export function normalizeSkillCategory(category: string | null): string {
+  if (!category) return 'uncategorized';
+  const lower = category.toLowerCase().trim();
+  if (SKILL_CATEGORY_SET.has(lower)) return lower;
+  return SKILL_CATEGORY_ALIASES[lower] || 'uncategorized';
 }
