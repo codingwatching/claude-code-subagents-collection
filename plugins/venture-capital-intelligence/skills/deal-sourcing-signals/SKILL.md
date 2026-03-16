@@ -1,6 +1,6 @@
 ---
 name: deal-sourcing-signals
-description: Scan a company or sector for deal-sourcing signals across 6 dimensions. Triggered by: "/venture-capital-intelligence:deal-sourcing-signals", "scan signals for X", "what signals is X showing", "deal sourcing scan", "hiring signals for X", "is X raising soon", "monitor this company", "company signal scan", "sourcing brief for X". Claude Code only. Requires Python 3.x. Uses web search for live signal data.
+description: Scan a company or sector for deal-sourcing signals across 6 dimensions. Triggered by: "/venture-capital-intelligence:deal-sourcing-signals", "scan signals for X", "what signals is X showing", "deal sourcing scan", "hiring signals for X", "is X raising soon", "monitor this company", "company signal scan", "sourcing brief for X", "what is X up to", "is X growing", "track this company", "deal signal report for X", "is this company fundraising", "what are the momentum signals for X", "find signals on X", "is X worth tracking". Claude Code only. Requires Python 3.x. Uses web search for live signal data.
 category: business-finance
 platform: claude-code
 requires: python3
@@ -52,7 +52,7 @@ Look for: tech stack clues from job postings, GitHub activity, API announcements
 
 ## STEP 3 — CLAUDE: EXTRACT AND CLASSIFY RAW SIGNALS
 
-For each search, extract up to 5 specific signals found. Save to `${CLAUDE_PLUGIN_ROOT}/agents/deal-sourcing-signals/output/raw_signals.json`:
+For each search, extract up to 5 specific signals found. Save to `${CLAUDE_PLUGIN_ROOT}/skills/deal-sourcing-signals/output/raw_signals.json`:
 
 ```json
 {
@@ -86,7 +86,7 @@ For each search, extract up to 5 specific signals found. Save to `${CLAUDE_PLUGI
 
 ## STEP 4 — PYTHON: SCORE SIGNALS AND COMPUTE DEAL SCORE
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/deal-sourcing-signals/scripts/signal_scorer.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/deal-sourcing-signals/scripts/signal_scorer.py"`
 
 Computes:
 - Score per signal type (0–100)
@@ -107,7 +107,7 @@ Using the signal data, write a 200-word sourcing brief:
 
 ## STEP 6 — PYTHON: FORMAT FINAL REPORT
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/deal-sourcing-signals/scripts/sourcing_formatter.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/deal-sourcing-signals/scripts/sourcing_formatter.py"`
 
 ---
 

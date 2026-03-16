@@ -1,6 +1,6 @@
 ---
 name: fund-operations
-description: Compute fund KPIs (TVPI, DPI, IRR, MOIC), model carried interest and management fees, and generate LP quarterly update narratives. Triggered by: "/venture-capital-intelligence:fund-operations", "calculate fund KPIs", "what is my fund TVPI", "IRR calculation", "compute MOIC", "LP report", "quarterly update draft", "carried interest calculation", "management fee calculation", "fund performance report". Claude Code only. Requires Python 3.x.
+description: Compute fund KPIs (TVPI, DPI, IRR, MOIC), model carried interest and management fees, and generate LP quarterly update narratives. Triggered by: "/venture-capital-intelligence:fund-operations", "calculate fund KPIs", "what is my fund TVPI", "IRR calculation", "compute MOIC", "LP report", "quarterly update draft", "carried interest calculation", "management fee calculation", "fund performance report", "write my LP update", "how is my fund performing", "what is my DPI", "fund returns analysis", "model my carry", "how much carry do I earn", "portfolio performance summary", "generate investor update". Claude Code only. Requires Python 3.x.
 category: business-finance
 platform: claude-code
 requires: python3
@@ -41,7 +41,7 @@ Company name | Invested amount | Current fair value | Realized proceeds | Invest
 
 ## STEP 2 — CLAUDE: PREPARE FUND INPUTS
 
-Save to `${CLAUDE_PLUGIN_ROOT}/agents/fund-operations/output/fund_inputs.json`:
+Save to `${CLAUDE_PLUGIN_ROOT}/skills/fund-operations/output/fund_inputs.json`:
 
 ```json
 {
@@ -73,7 +73,7 @@ Save to `${CLAUDE_PLUGIN_ROOT}/agents/fund-operations/output/fund_inputs.json`:
 
 ## STEP 3 — PYTHON: COMPUTE FUND KPIs AND ECONOMICS
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/fund-operations/scripts/fund_kpi_calc.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/fund-operations/scripts/fund_kpi_calc.py"`
 
 Computes:
 - **TVPI** = (Realized + Unrealized FMV) / Total Invested
@@ -108,7 +108,7 @@ Using fund_output.json, write a 300-word LP quarterly update in the tone of a pr
 
 ## STEP 5 — PYTHON: FORMAT FINAL REPORT
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/fund-operations/scripts/fund_formatter.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/fund-operations/scripts/fund_formatter.py"`
 
 ---
 

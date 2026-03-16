@@ -1,6 +1,6 @@
 ---
 name: hard-screening-startup
-description: Deterministic Python-scored startup screening with full audit trail. Use when you need a reproducible, weighted-score verdict on a startup — not just a qualitative opinion. Triggered by: "/venture-capital-intelligence:hard-screening-startup", "hard screen this startup", "run a hard screen on X", "score this startup with Python", "give me an auditable screen". Claude Code only. Requires Python 3.x. For conversational soft-mode screening, use /venture-capital-intelligence:soft-screening-startup.
+description: Deterministic Python-scored startup screening with full audit trail. Use when you need a reproducible, weighted-score verdict on a startup — not just a qualitative opinion. Triggered by: "/venture-capital-intelligence:hard-screening-startup", "hard screen this startup", "run a hard screen on X", "score this startup with Python", "give me an auditable screen", "run a scored evaluation on X", "give me a weighted score for this startup", "screen with numbers", "objective startup score", "reproducible screen", "investment scorecard for X", "score this company out of 100", "run the full screen on X". Claude Code only. Requires Python 3.x. For conversational soft-mode screening, use /venture-capital-intelligence:soft-screening-startup.
 category: business-finance
 platform: claude-code
 requires: python3
@@ -33,7 +33,7 @@ If information is incomplete, proceed with available data and flag gaps as 0-sco
 
 ## STEP 2 — CLAUDE: EXTRACT AND SCORE DIMENSIONS
 
-Based on the information gathered, score each of the 8 dimensions 1–10 and write a 1-sentence rationale. Then save to `${CLAUDE_PLUGIN_ROOT}/agents/hard-screening-startup/output/company_profile.json`:
+Based on the information gathered, score each of the 8 dimensions 1–10 and write a 1-sentence rationale. Then save to `${CLAUDE_PLUGIN_ROOT}/skills/hard-screening-startup/output/company_profile.json`:
 
 ```json
 {
@@ -76,7 +76,7 @@ Based on the information gathered, score each of the 8 dimensions 1–10 and wri
 
 ## STEP 3 — PYTHON: COMPUTE WEIGHTED SCORE AND VERDICT
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/hard-screening-startup/scripts/verdict_calc.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/hard-screening-startup/scripts/verdict_calc.py"`
 
 This script reads `company_profile.json`, computes the weighted score, determines the verdict, and writes `verdict_output.json`.
 
@@ -95,7 +95,7 @@ Read `verdict_output.json`. Interpret the results:
 
 ## STEP 5 — PYTHON: FORMAT FINAL REPORT
 
-Run: `python "${CLAUDE_PLUGIN_ROOT}/agents/hard-screening-startup/scripts/report_formatter.py"`
+Run: `python "${CLAUDE_PLUGIN_ROOT}/skills/hard-screening-startup/scripts/report_formatter.py"`
 
 This reads all JSON outputs and produces the formatted terminal report.
 
