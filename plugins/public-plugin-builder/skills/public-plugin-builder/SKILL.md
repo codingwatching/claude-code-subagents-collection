@@ -398,7 +398,7 @@ Write as an **instruction manual**, not a technical spec. Structure:
 6. Output example — one complete ASCII output block
 7. Two Modes table (Soft vs Hard — plain English comparison including reproducibility row)
 8. What's Inside — "Inspired From" table with columns: Category | Inspired From | Learnings
-9. Repository structure (reflecting actual `skills/` structure, no phantom `agents/`)
+9. Repository structure (reflecting actual `skills/` structure)
 10. License
 
 ---
@@ -554,18 +554,19 @@ Topics to add manually on GitHub:
 - Industry-standard schemas (e.g., Open Cap Format / OCF) become the input contract for agents — use them
 
 **Naming rules:**
-- Use gerund form consistently: `soft-screening-startup` / `hard-screening-startup` (not `screen` vs `screening`)
+- Use gerund form consistently across all skill names (e.g., `screening-startup` not `screen-startup`)
 - Command names must match the agent/skill name exactly
 
 **README rules:**
-- Write README as an instruction manual, not a technical spec — structure it around questions real users ask ("Evaluating a startup?", "Confused by a term sheet?"), not around internal architecture
+- Write README as an instruction manual, not a technical spec
 - Each section = one user question → one example prompt → what they get → the command to use
-- marketplace.json description must follow the same HOW TO USE bullet format: "Doing X? → Describe it and get Y"
-- Open-source acknowledgment table uses columns: Category | Inspired From | Learnings — never "Tools Used" or "What Was Extracted"
+- marketplace.json description must follow the same HOW TO USE bullet format
+- Open-source acknowledgment table uses columns: Category | Inspired From | Learnings
 - Capability count order in all descriptions: "X skills · Y agents · Z commands" (skills first, commands last)
 
 **plugin.json rules:**
-- ONLY valid fields: `name`, `version`, `description`, `author` (`name` + `url`), `homepage`, `repository`, `license`, `keywords` — do NOT add `skills`, `agents`, or `commands` arrays; the validator rejects them
+- ONLY valid fields: `name`, `version`, `description`, `author` (`name` + `url`), `homepage`, `repository`, `license`, `keywords`
+- Do NOT add `skills`, `agents`, or `commands` arrays — the validator rejects them
 - `author.url` not `author.email`
 - The plugin system auto-discovers skills in `skills/*/SKILL.md` and agents in `agents/*.md` — no manifest needed
 
@@ -578,50 +579,38 @@ Topics to add manually on GitHub:
   ```
 - Without the `.claude-plugin/plugin.json` wrapper, the UI shows "This plugin doesn't have any skills or agents"
 
-**Umbrella marketplace rules (for personal multi-plugin install):**
-- Umbrella repo needs a ROOT-LEVEL `.claude-plugin/marketplace.json` with `$schema`, `name`, `owner`, `metadata`, and a `plugins[]` array — each entry has `name`, `description`, `version`, `author`, `repository`, `license`, `keywords`, `category`, `source` (relative path)
+**Umbrella marketplace rules (for multi-plugin install):**
+- Umbrella repo needs a ROOT-LEVEL `.claude-plugin/marketplace.json` with `$schema`, `name`, `owner`, `metadata`, and a `plugins[]` array
 - Marketplace `name` field cannot contain "claude", "anthropic", or "official" — use `username-plugins` pattern
 - The umbrella marketplace.json `source` must point to a proper plugin folder (with `.claude-plugin/plugin.json` inside), not a bare skill directory
 
-**Community marketplace rules (buildwithclaude / davepoon/buildwithclaude):**
+**Community marketplace rules (buildwithclaude):**
 - Every agent `.md` file MUST have `category:` in its frontmatter — without it the marketplace validator rejects the plugin
 - Every skill `.md` file should also have `category:` in frontmatter
-- Valid agent/skill categories: `business-finance`, `specialized-domains`, `development-architecture`, `data-ai`, `quality-security`, etc.
-- Personal plugin repos hit a marketplace key collision when a user has more than one — GitHub username is the key, so only one repo per user can be registered as a marketplace at a time
-- Fix: submit to `davepoon/buildwithclaude` via PR (community marketplace, no collision) OR create a private umbrella repo as personal marketplace
-- When submitting PR to buildwithclaude: plugins go under `plugins/<plugin-name>/` with full structure; skills go under `plugins/all-skills/skills/<skill-name>/SKILL.md` BUT must also be wrapped as a plugin if submitting standalone
+- Valid categories: `business-finance`, `specialized-domains`, `development-architecture`, `data-ai`, `quality-security`
+- Submit to `davepoon/buildwithclaude` via PR — plugins go under `plugins/<plugin-name>/` with full structure
 
 **Official Anthropic submission rules (`claude.ai/settings/plugins/submit`):**
-- This is SEPARATE from buildwithclaude — it submits to Anthropic's official Plugin Directory (inside Claude UI itself)
-- Submission does NOT guarantee inclusion — Anthropic reviews and may reject
-- Form fields (3 steps): Step 1 → authorization checkbox; Step 2 → Link to plugin (GitHub URL), Plugin homepage, Plugin name (kebab-case), Plugin description, Example use cases (6+ concrete examples); Step 3 → Supported platforms + License
-- Supported platforms: `Claude Code` (agents + scripts) and/or `Claude Cowork` (skills only) — skills work on both; agents only on Claude Code
-- Submit to BOTH Anthropic official form AND buildwithclaude PR for maximum discoverability — they serve different audiences
-- Anthropic official = inside Claude UI, higher trust, slower review; buildwithclaude = external website, community-reviewed, faster
+- Separate from buildwithclaude — submits to Anthropic's official Plugin Directory
+- Form fields: Step 1 → authorization; Step 2 → GitHub URL, plugin name, description, 6+ example use cases; Step 3 → supported platforms + license
+- Submit to BOTH Anthropic official form AND buildwithclaude PR for maximum discoverability
 
-**Two-track publishing strategy (always do both):**
-1. PR to `davepoon/buildwithclaude` → community discoverability, fast merge
-2. Submit at `claude.ai/settings/plugins/submit` → official Claude Plugin Directory, Anthropic-reviewed
-- Submit Anthropic form AFTER the plugin is stable and tested — submission cannot be edited after sending
-- Use the same description from `plugin.json` in the Anthropic form for consistency
-
-**Branch + cache + session rules (learned from real installs):**
-- **Always use `main` branch** — the installer defaults to `main`. A repo on `master` causes the installer to fall back to a stale cached version silently. Rename at creation or immediately after: `gh api repos/[user]/[repo] -X PATCH -f default_branch=main`
-- **Cache staleness** — the installer caches by version number. If version hasn't changed, fresh GitHub changes are NOT fetched. To force a fresh install: manually clear cache at `~/.claude/plugins/cache/[marketplace]/[plugin-name]/` then reinstall. Or bump version in both `plugin.json` and `marketplace.json`.
-- **Session reload** — newly installed or reinstalled plugins are only picked up in a NEW Claude Code session. No hot-reload. Always tell the user: "Open a new session to use this plugin." Testing in the same session after reinstall will always show "Unknown skill."
-- **Verify cache after install** — after `claude plugin install`, always run: `find ~/.claude/plugins/cache -name "SKILL.md" | sort` to confirm all expected skills loaded. If fewer files than expected, it served a stale cache.
+**Branch + cache + session rules:**
+- **Always use `main` branch** — installer defaults to `main`. A repo on `master` causes silent stale cache fallback.
+- **Cache staleness** — installer caches by version number. Bump version in both `plugin.json` and `marketplace.json` to force a fresh install.
+- **Session reload** — newly installed plugins are only picked up in a NEW Claude Code session. Always tell the user: "Open a new session to use this plugin."
+- **Verify cache after install** — run: `find ~/.claude/plugins/cache -name "SKILL.md" | sort` to confirm all expected skills loaded.
 
 **README install command rules (non-negotiable):**
-- ALWAYS show two steps — never show `plugin install` alone as the only command:
+- ALWAYS show two steps — never show `plugin install` alone:
   ```bash
   # Step 1 — Add the marketplace (one-time)
   claude plugin marketplace add [github-username]/[repo-name]
   # Step 2 — Install
   claude plugin install [plugin-name]
   ```
-- Showing only `claude plugin install username/repo-name` WILL fail — that syntax only works if the repo is already registered as a marketplace. New users have nothing registered.
 
-**Skills vs agents folder decision tree (quick reference):**
+**Skills vs agents folder decision tree:**
 ```
 Does user need /plugin:name slash command?
   YES → skills/[name]/SKILL.md (+ scripts/ if Python needed)
@@ -633,32 +622,15 @@ Does it run Python?
   NO                          → skills/[name]/SKILL.md (pure reasoning)
 ```
 
-**Naming consistency rules (naming drift kills trust):**
-- Pick ONE canonical name at creation. Use it everywhere without exception:
-  - GitHub repo URL → `github.com/user/foresight-intelligence`
-  - README `# Title` → `# Foresight Intelligence`
-  - Install command → `claude plugin install foresight-intelligence`
-  - Explicit trigger → `/foresight-intelligence:skill-name`
-  - Report header inside output template → `FORESIGHT INTELLIGENCE`
-  - GitHub About description → starts with the plugin name
-- A user following the README who hits a broken install command (wrong repo name) abandons on day one. There is no recovery from a broken first install.
-- Before pushing, do a final grep for any old or alternate name: `grep -r "[old-name]" .` — any hit means naming drift exists.
+**Naming consistency rules:**
+- Pick ONE canonical name at creation. Use it everywhere: repo URL, README title, install command, explicit trigger, report header, GitHub About.
+- Before pushing, grep for any old or alternate name: `grep -r "[old-name]" .` — any hit means naming drift exists.
 
-**Semantic capability count rules (structure ≠ meaning):**
-- "X skills · Y agents" is a SEMANTIC count, not a folder count:
-  - **Skills** = pure Claude reasoning, no Python, works on claude.ai + Claude Code
-  - **Agents** = Python scripts required, Claude Code only
-- Moving an agent into `skills/` folder for slash-command access does NOT make it a "skill" semantically. The capability count stays `Y agents`.
-- GitHub About description, README intro line, marketplace.json description, and plugin.json description must ALL use the same semantic count.
-- Never inflate or deflate: "9 skills" when 6 run Python is wrong. "3 skills · 6 agents" when 6 use scripts is correct.
-
-**Multi-repo sync rules:**
-- Every plugin typically lives in 4 places: public repo, private umbrella, community fork (buildwithclaude PR branch), and local clone. Any change to one must be synced to all others immediately — not batched.
-- Sync order: fix public repo first → copy to private umbrella → copy to fork → push all three in one session.
-- Never assume the umbrella or fork is "close enough" — they hold real copies, not symlinks.
-- After any README, marketplace.json, or plugin.json change: run a final check that all 4 copies match before closing the session.
+**Semantic capability count rules:**
+- "X skills · Y agents" is a SEMANTIC count, not a folder count
+- Skills = pure Claude reasoning, no Python, works on claude.ai + Claude Code
+- Agents = Python scripts required, Claude Code only
+- Moving an agent into `skills/` for slash-command access does NOT make it a "skill" semantically
 
 **LICENSE rules:**
-- Every public plugin repo MUST have a LICENSE file. No LICENSE = legal ambiguity for anyone who wants to fork, adapt, or build on the plugin.
-- Default: MIT License. Generate it at Step 20 alongside the file tree review — do not leave it for later.
-- Sync LICENSE to private umbrella and community fork at the same time as the public repo.
+- Every public plugin repo MUST have a LICENSE file. Default: MIT. Generate it at Step 20.
