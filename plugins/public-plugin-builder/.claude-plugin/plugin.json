@@ -1,5 +1,5 @@
 {
-  "name": "claude-plugin-builder",
+  "name": "public-plugin-builder",
   "description": "23-step guided assistant for building and publishing Claude plugins from scratch — architecture, affinity mapping, file generation, GitHub push, and marketplace compliance.",
   "version": "1.0.0",
   "author": {
