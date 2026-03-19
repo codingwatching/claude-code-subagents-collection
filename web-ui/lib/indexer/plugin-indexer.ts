@@ -1,8 +1,9 @@
 import { db } from '@/lib/db/client'
 import { plugins, skills, marketplaces } from '@/lib/db/schema'
 import { getGitHubClient } from '@/lib/github/client'
-import { eq, sql } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { z } from 'zod'
+import { expandSkillCollection } from './skill-expander'
 
 // Plugin schema for GitHub marketplace data
 const PluginSchema = z.object({
@@ -74,7 +75,7 @@ async function fetchGitHubMarketplacePlugins(repoFullName: string): Promise<Plug
             keywords: plugin.keywords || plugin.tags,
             skills: plugin.skills,
             author: plugin.author || repoFullName.split('/')[0],
-            gitUrl: `https://github.com/${repoFullName}`,
+            gitUrl: plugin.repository || `https://github.com/${repoFullName}`,
             stars: 0,
             downloads: 0,
             verified: false,
@@ -233,6 +234,10 @@ export async function indexPlugins(): Promise<PluginIndexResult> {
 
   console.log(`Indexing plugins from ${activeMarketplaces.length} marketplaces...`)
 
+  const MAX_SKILL_EXPANSIONS = 10
+  const expandedRepos = new Set<string>()
+  let expansionCount = 0
+
   for (const marketplace of activeMarketplaces) {
     // Skip Build with Claude - loaded from local files in hybrid approach
     if (marketplace.name === 'davepoon/buildwithclaude' ||
@@ -249,8 +254,72 @@ export async function indexPlugins(): Promise<PluginIndexResult> {
 
       console.log(`Fetched ${fetchedPlugins.length} plugins from ${marketplace.displayName}`)
 
-      // Upsert plugins into database
+      // Expand skill collections into individual skills
+      const expandedPlugins: Plugin[] = []
+      const collectionNamespaces: Set<string> = new Set()
+
       for (const plugin of fetchedPlugins) {
+        const pluginType = determinePluginType(plugin)
+        const isExternalSkillRepo = pluginType === 'skill'
+          && plugin.gitUrl
+          && plugin.gitUrl !== marketplace.repository
+          && expansionCount < MAX_SKILL_EXPANSIONS
+
+        if (isExternalSkillRepo) {
+          try {
+            const expanded = await expandSkillCollection(
+              plugin.gitUrl!,
+              marketplace.repository,
+              expandedRepos,
+            )
+            if (expanded && expanded.length > 0) {
+              expansionCount++
+              // Track the collection namespace so we can deactivate it
+              collectionNamespaces.add(`@${plugin.namespace}/${plugin.name}`)
+
+              // Replace single collection entry with individual skill entries
+              for (const skill of expanded) {
+                expandedPlugins.push({
+                  id: `${plugin.namespace}/${skill.slug}`,
+                  name: skill.name,
+                  namespace: plugin.namespace,
+                  description: skill.description,
+                  category: skill.category || plugin.category,
+                  keywords: plugin.keywords,
+                  skills: [],
+                  author: skill.owner || plugin.author,
+                  gitUrl: skill.repoUrl,
+                  stars: skill.stars,
+                  downloads: 0,
+                  verified: false,
+                })
+              }
+              console.log(`Expanded ${plugin.name} into ${expanded.length} individual skills`)
+              continue
+            }
+          } catch (error) {
+            console.error(`Failed to expand skill collection ${plugin.name}:`, error)
+          }
+        }
+
+        // Keep non-skill or non-expandable plugins as-is
+        expandedPlugins.push(plugin)
+      }
+
+      // Deactivate parent collection entries that were expanded
+      for (const ns of collectionNamespaces) {
+        try {
+          await db
+            .update(plugins)
+            .set({ active: false, updatedAt: new Date() })
+            .where(and(eq(plugins.namespace, ns), eq(plugins.type, 'skill')))
+        } catch (error) {
+          console.error(`Failed to deactivate collection entry ${ns}:`, error)
+        }
+      }
+
+      // Upsert plugins into database
+      for (const plugin of expandedPlugins) {
         try {
           const slug = createSlug(plugin.name)
           const pluginType = determinePluginType(plugin)
@@ -325,7 +394,7 @@ export async function indexPlugins(): Promise<PluginIndexResult> {
       await db
         .update(marketplaces)
         .set({
-          pluginCount: fetchedPlugins.length,
+          pluginCount: expandedPlugins.length,
           lastIndexedAt: new Date(),
           updatedAt: new Date(),
         })

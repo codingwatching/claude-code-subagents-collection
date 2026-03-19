@@ -14,7 +14,7 @@ const ITEMS_PER_PAGE = 24
 
 export default async function SkillsPage() {
   const [{ plugins: skills, hasMore }, marketplaces, categories, totalSkills] = await Promise.all([
-    getPluginsPaginated({ limit: ITEMS_PER_PAGE, offset: 0, sort: 'relevance', type: 'skill' }),
+    getPluginsPaginated({ limit: ITEMS_PER_PAGE, offset: 0, sort: 'stars', type: 'skill' }),
     getSkillMarketplaces(),
     getSkillCategories(),
     getSkillOnlyCount(),

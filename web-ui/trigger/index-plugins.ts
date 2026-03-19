@@ -2,8 +2,10 @@ import { task, logger } from "@trigger.dev/sdk/v3";
 import { db } from "@/lib/db/client";
 import { plugins, skills, marketplaces } from "@/lib/db/schema";
 import { getGitHubClient } from "@/lib/github/client";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
+import { expandSkillCollection } from "@/lib/indexer/skill-expander";
+import { smartCategorizeSkill } from "@/lib/category-utils";
 
 // Plugin schema for GitHub marketplace data
 const PluginSchema = z.object({
@@ -83,7 +85,7 @@ async function fetchGitHubMarketplacePlugins(
             keywords: plugin.keywords || plugin.tags,
             skills: plugin.skills,
             author: plugin.author || repoFullName.split("/")[0],
-            gitUrl: `https://github.com/${repoFullName}`,
+            gitUrl: plugin.repository || `https://github.com/${repoFullName}`,
             stars: 0,
             downloads: 0,
             verified: false,
@@ -439,7 +441,9 @@ export const indexPluginsTask = task({
             version: plugin.version,
             author: plugin.author || plugin.namespace,
             type: pluginType,
-            categories: plugin.category ? [plugin.category] : [],
+            categories: pluginType === 'skill'
+              ? [smartCategorizeSkill(plugin.category, plugin.name, plugin.description || '')]
+              : plugin.category ? [plugin.category] : [],
             keywords: plugin.keywords || [],
             installCommand: `bwc add --plugin ${plugin.namespace}/${plugin.name}`,
             stars: plugin.stars || 0,
@@ -457,7 +461,7 @@ export const indexPluginsTask = task({
                 marketplaceName: marketplace.displayName,
                 repository: plugin.gitUrl || marketplace.repository,
                 description: `Skill from ${plugin.name}`,
-                category: plugin.category,
+                category: smartCategorizeSkill(plugin.category, skillName, plugin.description || ''),
                 lastIndexedAt: new Date(),
               });
             }
@@ -470,12 +474,112 @@ export const indexPluginsTask = task({
       }
     }
 
+    // Expand skill collections into individual skills
+    const MAX_SKILL_EXPANSIONS = 50;
+    const expandedRepos = new Set<string>();
+    let expansionCount = 0;
+    const collectionNamespaces: Set<string> = new Set();
+
+    const expandedPluginRecords: typeof pluginRecords = [];
+
+    for (const record of pluginRecords) {
+      const isExternalSkillRepo =
+        record.type === "skill" &&
+        record.repository &&
+        expansionCount < MAX_SKILL_EXPANSIONS;
+
+      if (isExternalSkillRepo) {
+        // Check if repo differs from any marketplace repo
+        const isExternal = activeMarketplaces.some(
+          (mp) => mp.repository === record.repository
+        )
+          ? false
+          : true;
+
+        if (isExternal) {
+          try {
+            const expanded = await expandSkillCollection(
+              record.repository,
+              // Use the marketplace repo for this record
+              activeMarketplaces.find((mp) => mp.id === record.marketplaceId)
+                ?.repository || "",
+              expandedRepos
+            );
+
+            if (expanded && expanded.length > 0) {
+              expansionCount++;
+              collectionNamespaces.add(record.namespace);
+
+              for (const skill of expanded) {
+                expandedPluginRecords.push({
+                  name: skill.name,
+                  namespace: `@${skill.owner}/${skill.slug}`,
+                  slug: skill.slug,
+                  marketplaceId: record.marketplaceId,
+                  marketplaceName: record.marketplaceName,
+                  repository: skill.repoUrl,
+                  description: skill.description,
+                  version: undefined,
+                  author: skill.owner,
+                  type: "skill",
+                  categories: [smartCategorizeSkill(skill.category, skill.name, skill.description)],
+                  keywords: record.keywords || [],
+                  installCommand:
+                    skill.installCommand ||
+                    `npx skills add ${skill.repoUrl.replace("https://github.com/", "")}`,
+                  stars: skill.stars,
+                  lastIndexedAt: new Date(),
+                });
+              }
+
+              // Remove corresponding skill records for this collection
+              // (they would be stale skill-name-only entries)
+              const collectionRepo = record.repository;
+              const filteredSkillRecords = skillRecords.filter(
+                (sr) => sr.repository !== collectionRepo
+              );
+              skillRecords.length = 0;
+              skillRecords.push(...filteredSkillRecords);
+
+              logger.info(
+                `Expanded ${record.name} into ${expanded.length} individual skills`
+              );
+              continue;
+            }
+          } catch (error) {
+            logger.error(
+              `Failed to expand skill collection ${record.name}`,
+              { error }
+            );
+          }
+        }
+      }
+
+      expandedPluginRecords.push(record);
+    }
+
+    // Replace pluginRecords with expanded version
+    pluginRecords.length = 0;
+    pluginRecords.push(...expandedPluginRecords);
+
     logger.info(
-      `Collected ${pluginRecords.length} plugins and ${skillRecords.length} skills`
+      `Collected ${pluginRecords.length} plugins and ${skillRecords.length} skills (after expansion)`
     );
 
     // Batch insert all plugins
     const { indexed, failed } = await batchUpsertPlugins(pluginRecords);
+
+    // Deactivate parent collection entries that were expanded
+    for (const ns of collectionNamespaces) {
+      try {
+        await db
+          .update(plugins)
+          .set({ active: false, updatedAt: new Date() })
+          .where(and(eq(plugins.namespace, ns), eq(plugins.type, "skill")));
+      } catch (error) {
+        logger.error(`Failed to deactivate collection entry ${ns}`, { error });
+      }
+    }
 
     // Batch insert all skills
     const skillsInserted = await batchUpsertSkills(skillRecords);

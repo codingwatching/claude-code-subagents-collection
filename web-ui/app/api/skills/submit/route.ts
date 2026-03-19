@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db } from '@/lib/db/client'
 import { plugins, submissionReviews } from '@/lib/db/schema'
-import { eq, sql } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { analyzeRepository } from '@/lib/indexer/repo-analyzer'
 import { scanSkillContent, getSubmissionStatus } from '@/lib/indexer/content-scanner'
-import { normalizeSkillCategory } from '@/lib/category-utils'
+import { normalizeSkillCategory, smartCategorizeSkill } from '@/lib/category-utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -120,7 +120,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check deduplication — if recently indexed, return existing data
-    const namespace = `@${repoFullName.split('/')[0]}`
     const repoUrl = `https://github.com/${repoFullName}`
 
     const existing = await db
@@ -131,8 +130,7 @@ export async function POST(request: NextRequest) {
         submissionStatus: plugins.submissionStatus,
       })
       .from(plugins)
-      .where(eq(plugins.repository, repoUrl))
-      .limit(1)
+      .where(and(eq(plugins.repository, repoUrl), eq(plugins.type, 'skill')))
 
     if (existing.length > 0 && existing[0].lastIndexedAt) {
       const timeSinceIndex = Date.now() - existing[0].lastIndexedAt.getTime()
@@ -141,7 +139,7 @@ export async function POST(request: NextRequest) {
           success: true,
           message: 'Repository was recently indexed',
           deduplicated: true,
-          skills: [{ name: existing[0].name, status: existing[0].submissionStatus }],
+          skills: existing.map(s => ({ name: s.name, status: s.submissionStatus })),
         })
       }
     }
@@ -243,7 +241,7 @@ export async function POST(request: NextRequest) {
           description: skill.description,
           author: analysis.owner,
           type: 'skill',
-          categories: skill.category ? [skill.category] : [],
+          categories: [smartCategorizeSkill(skill.category, skill.name, skill.description)],
           keywords: [],
           installCommand: skill.installCommand || `npx skills add ${repoFullName}`,
           stars: analysis.stars,

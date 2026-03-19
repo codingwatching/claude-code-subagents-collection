@@ -191,6 +191,11 @@ const SKILL_CATEGORY_ALIASES: Record<string, string> = {
   'productivity': 'business-productivity',
   'collaboration': 'creative-collaboration',
   'storage': 'storage-docs',
+  // Useless source categories — trigger inference
+  'skills': 'uncategorized',
+  'skill': 'uncategorized',
+  'skill-enhancers': 'uncategorized',
+  'skills-library': 'uncategorized',
 };
 
 /**
@@ -202,4 +207,53 @@ export function normalizeSkillCategory(category: string | null): string {
   const lower = category.toLowerCase().trim();
   if (SKILL_CATEGORY_SET.has(lower)) return lower;
   return SKILL_CATEGORY_ALIASES[lower] || 'uncategorized';
+}
+
+/**
+ * Keyword map for inferring skill categories from name + description.
+ */
+const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  'security': ['security', 'vulnerability', 'pentest', 'encryption', 'defense in depth'],
+  'ai-ml': ['hallucination', 'prompt engineering', 'llm', 'ai model', 'ai agent', 'confidence', 'uncertainty', 'citation', 'grounding', 'output-audit', 'source-verif', 'cross-check', 'opencode', 'truncation', 'foresight', 'anti-hallucination'],
+  'design': ['design', 'ui/ux', 'visual', 'redesign', 'figma', 'high end visual', 'typography', 'fonts', 'spacing', 'animation', 'color scheme', 'premium quality', 'aesthetic', 'pixel perfect', 'agency'],
+  'devops': ['ci-cd', 'ci cd', 'deployment', 'deploy', 'docker', 'kubernetes', 'infrastructure', 'port killer', 'smithery'],
+  'project-management': ['writing plans', 'executing plans', 'task manage', 'kanban', 'project manage'],
+  'automation': ['workflow', 'automat', 'pipeline', 'scripting', 'calendar'],
+  'communication': ['slack', 'discord', 'messaging', 'notification'],
+  'creative-collaboration': ['brainstorm', 'creative', 'whiteboard', 'ideation'],
+  'business-productivity': ['venture capital', 'finance', 'sales', 'prospect', 'productivity', 'spreadsheet'],
+  'analytics': ['analytics', 'data science', 'metrics', 'dashboard'],
+  'document-processing': ['document', 'pdf', 'markdown process'],
+  'development-code': ['code review', 'debug', 'testing', 'tdd', 'test writer', 'refactor', 'github', 'git', 'commit', 'api doc', 'frontend', 'backend', 'typescript', 'javascript', 'php', 'elixir', 'swift', 'nest', 'astro', 'vitest', 'linting', 'web fetch', 'error explain', 'pr analy', 'codebase', 'full-stack', 'full stack', 'coding', 'programmer'],
+};
+
+/**
+ * Infer a skill category from name and description using keyword matching.
+ * Returns a valid category or 'uncategorized'.
+ */
+export function inferSkillCategory(name: string, description: string): string {
+  const text = `${name} ${description}`.toLowerCase();
+
+  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    for (const keyword of keywords) {
+      if (text.includes(keyword)) {
+        return category;
+      }
+    }
+  }
+
+  return 'uncategorized';
+}
+
+/**
+ * Smart categorization: normalize source category, then infer from name/description if uncategorized.
+ */
+export function smartCategorizeSkill(
+  sourceCategory: string | null | undefined,
+  name: string,
+  description: string,
+): string {
+  const normalized = normalizeSkillCategory(sourceCategory ?? null);
+  if (normalized !== 'uncategorized') return normalized;
+  return inferSkillCategory(name, description);
 }
