@@ -13,6 +13,17 @@ import { getAllPlugins as getLocalPlugins } from './plugins-server'
 
 export type SortOption = 'relevance' | 'stars' | 'newest' | 'oldest' | 'name' | 'name-desc' | 'updated'
 
+/** Allowed `sort` query values for `/api/plugins/list` — keep in sync with SortOption */
+export const PLUGIN_LIST_SORT_OPTIONS: SortOption[] = [
+  'relevance',
+  'stars',
+  'newest',
+  'oldest',
+  'name',
+  'name-desc',
+  'updated',
+]
+
 export interface PluginFilters {
   search?: string
   type?: PluginType | 'all'
@@ -189,6 +200,12 @@ function filterLocalPlugins(
   return filtered
 }
 
+function pluginUpdatedAtMs(p: UnifiedPlugin): number | null {
+  if (!p.updatedAt) return null
+  const t = new Date(p.updatedAt).getTime()
+  return Number.isNaN(t) ? null : t
+}
+
 /**
  * Sort plugins by the given sort option
  */
@@ -203,10 +220,26 @@ function sortPlugins(plugins: UnifiedPlugin[], sort: SortOption, search?: string
     case 'stars':
       return sorted.sort((a, b) => (b.stars || 0) - (a.stars || 0))
     case 'newest':
-    case 'oldest':
     case 'updated':
-      // Local plugins don't have dates, keep current order
-      return sorted
+      return sorted.sort((a, b) => {
+        const ta = pluginUpdatedAtMs(a)
+        const tb = pluginUpdatedAtMs(b)
+        if (ta === null && tb === null) return a.name.localeCompare(b.name)
+        if (ta === null) return 1
+        if (tb === null) return -1
+        if (tb !== ta) return tb - ta
+        return a.name.localeCompare(b.name)
+      })
+    case 'oldest':
+      return sorted.sort((a, b) => {
+        const ta = pluginUpdatedAtMs(a)
+        const tb = pluginUpdatedAtMs(b)
+        if (ta === null && tb === null) return a.name.localeCompare(b.name)
+        if (ta === null) return -1
+        if (tb === null) return 1
+        if (ta !== tb) return ta - tb
+        return a.name.localeCompare(b.name)
+      })
     case 'relevance':
     default:
       if (search) {
@@ -433,6 +466,12 @@ export async function getPluginsPaginated(options: {
     namespace: p.namespace,
     author: p.author || undefined,
     version: p.version || undefined,
+    updatedAt:
+      p.updatedAt instanceof Date
+        ? p.updatedAt.toISOString()
+        : p.updatedAt != null
+          ? String(p.updatedAt)
+          : undefined,
   }))
 
   // 4. Merge local and DB plugins (local first for relevance sort)

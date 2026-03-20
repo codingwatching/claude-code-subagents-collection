@@ -75,6 +75,8 @@ export interface UnifiedPlugin {
   path?: string
   // Slug for download/install endpoints
   slug?: string
+  // DB-sourced rows (ISO string); local/BWC plugins omit
+  updatedAt?: string
 }
 
 export interface PluginRegistryData {

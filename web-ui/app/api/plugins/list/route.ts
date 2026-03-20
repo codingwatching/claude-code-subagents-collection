@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPluginsPaginated, type SortOption } from '@/lib/plugin-db-server'
+import { getPluginsPaginated, PLUGIN_LIST_SORT_OPTIONS, type SortOption } from '@/lib/plugin-db-server'
 import type { PluginType } from '@/lib/plugin-types'
 
 export const dynamic = 'force-dynamic'
-
-const validSortOptions: SortOption[] = ['relevance', 'stars', 'name', 'updated']
 const validTypes: (PluginType | 'all')[] = ['all', 'subagent', 'command', 'hook', 'skill', 'plugin']
 
 /**
@@ -18,7 +16,8 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0', 10)
   const search = searchParams.get('search') || undefined
   const sortParam = searchParams.get('sort') as SortOption | null
-  const sort = sortParam && validSortOptions.includes(sortParam) ? sortParam : 'relevance'
+  const sort =
+    sortParam && PLUGIN_LIST_SORT_OPTIONS.includes(sortParam) ? sortParam : 'relevance'
   const typeParam = searchParams.get('type') as PluginType | 'all' | null
   const type = typeParam && validTypes.includes(typeParam) ? typeParam : 'all'
   const marketplaceId = searchParams.get('marketplaceId') || undefined
