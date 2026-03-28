@@ -1,6 +1,6 @@
 # Ultraship
 
-Claude Code plugin for pre-deploy auditing, workflow enforcement, and project tooling.
+Claude Code plugin — 32 expert-level skills for building, shipping, and scaling production software. 29 audit tools close the loop before deploy.
 
 ## Install
 
@@ -17,27 +17,19 @@ npx ultraship ship .
 
 ## What it does
 
-`/ship` runs 5 tools in parallel and outputs a scorecard covering SEO/GEO/AEO, security, code quality, and bundle size.
+`/ship` runs 5 tools in parallel and outputs a scorecard covering security, code quality, bundle size, and SEO/GEO/AEO.
 
-### Auditing (7 tools)
+### Builder Skills (32)
 
-SEO scanner (60+ rules including GEO/AEO), secret scanner, code profiler (N+1 queries, memory leaks, ReDoS), bundle tracker, dependency doctor, content scorer, Lighthouse runner.
+TDD enforcement, code review with confidence scoring, structured planning, frontend design, API design, data modeling, deploy pipeline with rollback plans, debugging, refactoring, git workflow, competitive analysis, incident response, launch prep, and more.
 
-### Validation (6 tools)
+### Audit Tools (29)
 
-Health check (HTTP + SSL + security headers), env validator, migration checker (Drizzle/Prisma/Knex), OG validator, redirect checker, API smoke test.
+Secret scanner, code profiler (N+1 queries, memory leaks, ReDoS), bundle tracker, dependency doctor (import graph analysis), Lighthouse runner, health check (HTTP + SSL + security headers), env validator, migration checker, SEO/GEO/AEO scanner (60+ rules), and more.
 
-### Generators (4 tools)
+### Agents (9)
 
-Sitemap, robots.txt (AI-crawler friendly), llms.txt, JSON-LD structured data.
-
-### Project & Operations (12 tools)
-
-Competitive analysis, launch prep, demo readiness, incident commander, growth tracker, cost tracker, onboarding generator, architecture mapper, pattern analyzer, audit history, Google Search Console client, Bing Webmaster client.
-
-### Workflows (32 skills)
-
-Brainstorming, planning, TDD, implementation, code review, debugging, refactoring, frontend design, API design, data modeling, git workflow, deploy pipeline, release, SEO/GEO/AEO audit, security audit, performance audit, and more.
+Parallel dispatching for `/ship` scorecard generation, code review, security audit, performance audit, browser verification, competitive analysis, launch prep, incident response, growth tracking.
 
 ## Technical details
 
@@ -52,4 +44,3 @@ Brainstorming, planning, TDD, implementation, code review, debugging, refactorin
 
 - [npm](https://www.npmjs.com/package/ultraship)
 - [GitHub](https://github.com/Houseofmvps/ultraship)
-- [Documentation](https://github.com/Houseofmvps/ultraship#readme)
