@@ -1,0 +1,25 @@
+{
+  "name": "ultraship",
+  "version": "2.1.2",
+  "description": "Pre-deploy auditing (SEO, security, code profiling, bundle size), structured workflows (TDD, code review, planning), and project tooling (architecture mapping, incident response, competitive analysis). 29 Node.js tools, 32 skills, 9 agents.",
+  "author": {
+    "name": "Houseofmvps",
+    "url": "https://github.com/Houseofmvps"
+  },
+  "repository": "https://github.com/Houseofmvps/ultraship",
+  "license": "MIT",
+  "keywords": [
+    "seo",
+    "geo",
+    "aeo",
+    "security",
+    "lighthouse",
+    "code-review",
+    "deploy",
+    "performance",
+    "bundle-size",
+    "competitive-analysis",
+    "architecture",
+    "incident-response"
+  ]
+}
