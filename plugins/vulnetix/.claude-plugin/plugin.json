@@ -1,7 +1,7 @@
 {
   "name": "vulnetix",
   "version": "1.0.0",
-  "description": "Vulnerability intelligence and remediation skills for Claude Code — 7 skills for exploit analysis, fix proposals, CWSS scoring, threat modeling, and package security via the Vulnetix VDB API",
+  "description": "Vulnerability intelligence and remediation skills for Claude Code — 7 skills for exploit analysis, fix proposals, scoring, exploits, and package security via the Vulnetix VDB API",
   "author": {
     "name": "Vulnetix",
     "url": "https://github.com/Vulnetix"
@@ -14,8 +14,11 @@
     "exploits",
     "remediation",
     "cve",
-    "cwss",
-    "threat-modeling",
+    "cvss",
+    "epss",
+    "threat",
+    "exploit",
+    "eol",
     "package-security",
     "vdb"
   ]
