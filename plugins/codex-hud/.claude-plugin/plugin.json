@@ -1,0 +1,23 @@
+{
+  "name": "codex-hud",
+  "version": "0.1.0",
+  "description": "Display OpenAI Codex usage and rate limits inside Claude Code. Real-time statusline integration with claude-hud, slash commands for usage/costs/summary, and local Codex CLI session log parsing.",
+  "author": {
+    "name": "Haenara Shin",
+    "url": "https://github.com/haenara-shin"
+  },
+  "repository": "https://github.com/haenara-shin/codex-hud",
+  "homepage": "https://github.com/haenara-shin/codex-hud",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "openai",
+    "usage",
+    "rate-limits",
+    "costs",
+    "hud",
+    "statusline",
+    "monitoring",
+    "claude-hud"
+  ]
+}
