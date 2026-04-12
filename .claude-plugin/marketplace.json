@@ -1362,7 +1362,7 @@
     },
     {
       "name": "shipwright",
-      "description": "Describe your app in plain English \u2014 Shipwright builds, tests, and deploys it autonomously. 9-phase pipeline, 4 stacks, enterprise-grade safety hooks.",
+      "description": "Describe your app in plain English — Shipwright builds, tests, and deploys it autonomously. 9-phase pipeline, 4 stacks, enterprise-grade safety hooks.",
       "version": "1.0.0",
       "author": {
         "name": "Nate Nelson",
@@ -1381,6 +1381,28 @@
       ],
       "category": "app-builder",
       "source": "./plugins/shipwright"
+    },
+    {
+      "name": "codex-hud",
+      "description": "Display OpenAI Codex usage and rate limits inside Claude Code. Real-time statusline integration with claude-hud.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Haenara Shin",
+        "url": "https://github.com/haenara-shin"
+      },
+      "repository": "https://github.com/haenara-shin/codex-hud",
+      "license": "MIT",
+      "keywords": [
+        "codex",
+        "openai",
+        "usage",
+        "rate-limits",
+        "monitoring",
+        "statusline",
+        "hud"
+      ],
+      "category": "monitoring",
+      "source": "./plugins/codex-hud"
     }
   ]
 }
