@@ -5,7 +5,8 @@
   "description": "A comprehensive collection of specialized AI subagents for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), designed to enhance development workflows with domain-specific expertise.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run validate",
+    "test": "npm run validate && npm run test:unit",
+    "test:unit": "node --test scripts/github-search-pagination.test.js && node --experimental-strip-types --test web-ui/lib/indexer/search-pagination.test.ts",
     "test:integration": "./tests/plugin-test-harness.sh",
     "validate": "node scripts/validate-all.js",
     "validate:subagents": "node scripts/validate-subagents.js",
@@ -13,6 +14,7 @@
     "generate:registry": "node scripts/generate-registry.js",
     "fetch:plugins": "node scripts/fetch-plugins.js",
     "fetch:all": "npm run fetch:plugins && npm run generate:registry",
+    "categorize:skills": "node scripts/categorize-skills.js",
     "start": "node web-ui/server.js"
   },
   "workspaces": [

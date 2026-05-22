@@ -4,6 +4,7 @@ import { getGitHubClient, GitHubRepo } from '@/lib/github/client'
 import { parseMarketplaceJson, extractCounts, extractCategories as extractPluginCategories } from './parser'
 import { analyzeRepository, hasSkillIndicators } from './repo-analyzer'
 import { scanSkillContent, getSubmissionStatus } from './content-scanner'
+import { getSearchMaxPages } from './search-pagination'
 import { eq, sql } from 'drizzle-orm'
 
 // Known/seed marketplaces with accurate fallback counts
@@ -95,7 +96,7 @@ export async function indexMarketplaces(): Promise<IndexResult> {
       const searchResult = await github.searchCode(searchQuery)
       console.log(`Found ${searchResult.total_count} results for: ${searchQuery}`)
 
-      const maxPages = Math.min(Math.ceil(searchResult.total_count / 100), 10)
+      const maxPages = getSearchMaxPages(searchResult.total_count)
 
       for (let page = 1; page <= maxPages; page++) {
         const pageResult = page === 1 ? searchResult : await github.searchCode(searchQuery, page)
@@ -122,7 +123,7 @@ export async function indexMarketplaces(): Promise<IndexResult> {
     try {
       const first = await github.searchRepositories(`topic:${topic}`)
       console.log(`Found ${first.totalCount} repos for topic: ${topic}`)
-      const maxPages = Math.min(Math.ceil(first.totalCount / 100), 10)
+      const maxPages = getSearchMaxPages(first.totalCount)
       for (let page = 1; page <= maxPages; page++) {
         const pageResult = page === 1 ? first : await github.searchRepositories(`topic:${topic}`, page)
         for (const repo of pageResult.repos) {

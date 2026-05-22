@@ -13,6 +13,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const { getSearchMaxPages } = require('./github-search-pagination');
 
 const GITHUB_API = 'https://api.github.com';
 const CACHE_FILE = path.join(__dirname, '.plugin-cache.json');
@@ -58,11 +59,17 @@ const KNOWN_MARKETPLACES = [
 const CODE_QUERIES = [
   'filename:marketplace.json path:claude-plugin',
   'filename:plugin.json path:.claude-plugin',
+  'filename:SKILL.md',
+  'filename:plugin.json path:.claude',
 ];
 
 const TOPIC_QUERIES = [
   'claude-code-plugins',
   'claude-code-plugin',
+  'claude-code-skill',
+  'claude-skill',
+  'agent-skill',
+  'claude-agent-skill',
 ];
 
 /**
@@ -97,16 +104,21 @@ async function searchGitHubCode(query) {
   const repos = new Set();
 
   try {
-    const url = `${GITHUB_API}/search/code?q=${encodeURIComponent(query)}&per_page=100`;
-    const data = await githubFetch(url);
+    const baseUrl = `${GITHUB_API}/search/code?q=${encodeURIComponent(query)}&per_page=100`;
+    const first = await githubFetch(`${baseUrl}&page=1`);
+    const maxPages = getSearchMaxPages(first.total_count);
 
-    for (const item of data.items || []) {
-      if (item.repository?.full_name) {
-        repos.add(item.repository.full_name);
+    for (let page = 1; page <= maxPages; page++) {
+      const data = page === 1 ? first : await githubFetch(`${baseUrl}&page=${page}`);
+
+      for (const item of data.items || []) {
+        if (item.repository?.full_name) {
+          repos.add(item.repository.full_name);
+        }
       }
     }
 
-    console.log(`  Found ${repos.size} repos for query: ${query}`);
+    console.log(`  Found ${repos.size} repos for query: ${query} (${first.total_count ?? 0} total)`);
   } catch (error) {
     console.warn(`  Warning: Code search failed for "${query}": ${error.message}`);
   }
@@ -121,14 +133,19 @@ async function searchGitHubTopics(topic) {
   const repos = [];
 
   try {
-    const url = `${GITHUB_API}/search/repositories?q=topic:${topic}&per_page=100&sort=stars&order=desc`;
-    const data = await githubFetch(url);
+    const baseUrl = `${GITHUB_API}/search/repositories?q=topic:${topic}&per_page=100&sort=stars&order=desc`;
+    const first = await githubFetch(`${baseUrl}&page=1`);
+    const maxPages = getSearchMaxPages(first.total_count);
 
-    for (const item of data.items || []) {
-      repos.push(item.full_name);
+    for (let page = 1; page <= maxPages; page++) {
+      const data = page === 1 ? first : await githubFetch(`${baseUrl}&page=${page}`);
+
+      for (const item of data.items || []) {
+        repos.push(item.full_name);
+      }
     }
 
-    console.log(`  Found ${repos.length} repos for topic: ${topic}`);
+    console.log(`  Found ${repos.length} repos for topic: ${topic} (${first.total_count ?? 0} total)`);
   } catch (error) {
     console.warn(`  Warning: Topic search failed for "${topic}": ${error.message}`);
   }
@@ -228,6 +245,17 @@ function isMarketplace(repo, pluginConfig) {
 
   return hasManyComanands || hasManyAgents || hasManySkills ||
          hasMarketplaceTopic || hasMarketplaceKeyword;
+}
+
+/**
+ * Check if a repo appears to be a skill repo (not a marketplace)
+ */
+function isSkillRepo(repo, pluginConfig) {
+  const skillTopics = ['claude-code-skill', 'claude-skill', 'agent-skill', 'claude-agent-skill'];
+  if (repo.topics?.some(t => skillTopics.includes(t.toLowerCase()))) return true;
+
+  const nameDesc = `${repo.name} ${repo.description || ''}`.toLowerCase();
+  return nameDesc.includes('skill') && nameDesc.includes('claude');
 }
 
 /**
@@ -429,6 +457,22 @@ async function discoverPlugins() {
       marketplaces.push(formatMarketplace(repo, pluginConfig));
     } else if (pluginConfig) {
       plugins.push(formatPlugin(repo, pluginConfig));
+    } else if (isSkillRepo(repo, pluginConfig)) {
+      // Treat skill repos as individual plugins
+      plugins.push({
+        name: repo.name,
+        namespace: repo.fullName,
+        description: repo.description,
+        repository: repo.url,
+        stars: repo.stars,
+        installCommand: `npx skills add ${repo.fullName}`,
+        categories: extractCategories(repo, pluginConfig),
+        skills: [],
+        version: '1.0.0',
+        author: repo.owner,
+        keywords: repo.topics || [],
+        updatedAt: repo.updatedAt,
+      });
     }
 
     await sleep(500); // Rate limit delay
