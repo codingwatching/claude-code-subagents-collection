@@ -50,13 +50,16 @@ function renderInline(text: string, kp: string): ReactNode[] {
     if (m[1] !== undefined) {
       const label = m[1]
       const href = m[2]
-      nodes.push(
-        href.startsWith('/') && !href.startsWith('//') ? (
-          <Link key={`${kp}-${i}`} href={href} style={linkStyle}>{label}</Link>
-        ) : (
-          <a key={`${kp}-${i}`} href={href} target="_blank" rel="noopener noreferrer" style={linkStyle}>{label}</a>
-        ),
-      )
+      const internal = href.startsWith('/') && !href.startsWith('//')
+      const external = /^(https?:|mailto:)/i.test(href)
+      if (internal) {
+        nodes.push(<Link key={`${kp}-${i}`} href={href} style={linkStyle}>{label}</Link>)
+      } else if (external) {
+        nodes.push(<a key={`${kp}-${i}`} href={href} target="_blank" rel="noopener noreferrer" style={linkStyle}>{label}</a>)
+      } else {
+        // Unsafe scheme (javascript:, data:, etc.) — render the label as plain text.
+        nodes.push(label)
+      }
     } else if (m[3] !== undefined) {
       nodes.push(<code key={`${kp}-${i}`} style={inlineCodeStyle}>{m[3]}</code>)
     } else if (m[4] !== undefined) {

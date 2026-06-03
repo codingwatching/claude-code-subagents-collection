@@ -14,7 +14,10 @@
 const postgres = require('postgres')
 
 const POSTGRES_URL = process.env.POSTGRES_URL
-  || 'postgresql://postgres:AXCPpZmtCYzSvuqAhSowrlVyCcwLizaZ@shortline.proxy.rlwy.net:12137/bwc-db'
+if (!POSTGRES_URL) {
+  console.error('POSTGRES_URL is required (set it in the environment).')
+  process.exit(1)
+}
 
 const DRY_RUN = process.argv.includes('--dry-run')
 
