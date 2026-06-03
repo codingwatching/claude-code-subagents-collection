@@ -1,5 +1,6 @@
 node_modules
 validation-report.txt
+skill-validation-report.txt
 mise.toml
 yarn.lock
 .DS_Store
@@ -12,3 +13,15 @@ yarn.lock
 scripts/mcp-importers/.env
 .mcp.json
 docs
+
+# Build-time copy of story cover images (source lives in stories/<slug>/cover.*)
+web-ui/public/stories
+CLAUDE.md
+GEMINI.md
+
+# Editor + local caches
+.vscode
+__pycache__/
+*.pyc
+scripts/.discovered-plugins.json
+scripts/.plugin-cache.json
