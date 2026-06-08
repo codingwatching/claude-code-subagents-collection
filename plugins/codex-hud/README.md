@@ -9,6 +9,8 @@
 
 A [Claude Code](https://claude.ai/code) plugin that displays OpenAI Codex usage and rate limits — right inside your Claude Code session.
 
+> Listed in [Anthropic's community plugin marketplace](https://github.com/anthropics/claude-plugins-community) and [buildwithclaude](https://github.com/davepoon/buildwithclaude).
+
 ## Why?
 
 If you use [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) to delegate tasks to Codex from Claude Code, you have no way to check your Codex rate limits without leaving your terminal. **codex-hud** fills that gap.
@@ -22,9 +24,10 @@ If you use [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) to deleg
 
 ## Features
 
-- **Real-time statusline**: Integrates with [claude-hud](https://github.com/jarrodwatts/claude-hud) to show Codex Usage/Weekly rate limits alongside Claude Code's own statusline
+- **Real-time statusline**: Integrates with [claude-hud](https://github.com/jarrodwatts/claude-hud) to show Codex Usage/Weekly rate limits alongside Claude Code's own statusline, with a 60s refresh so reset countdowns stay current while the session is idle
 - **Slash commands**: Dedicated commands for usage, costs, and summary
 - **Dual data sources**: Local Codex CLI session logs (no API key needed) + OpenAI Usage API (optional, for dollar costs)
+- **Plan-agnostic**: Renders correctly on any Codex plan (free, Plus, Pro, Team, Enterprise) — rate-limit windows that aren't reported are simply skipped, never crash the statusline
 - **Zero npm runtime dependencies**: Only uses Node.js built-in modules (statusline wrapper requires Bash and Perl)
 - **Graceful degradation**: Works with just local logs if no API key is configured
 
@@ -46,21 +49,30 @@ Weekly  ░░░░░░░░░░ 0% (resets in 7d)
 
 ## Installation
 
-### Option A: via buildwithclaude marketplace
+### Option A: via Anthropic's community marketplace *(recommended)*
+
+Anthropic-maintained directory, nightly-synced from the internal review pipeline.
+
+```
+/plugin marketplace add anthropics/claude-plugins-community
+/plugin install codex-hud@claude-community
+```
+
+### Option B: via buildwithclaude marketplace
 
 ```
 /plugin marketplace add davepoon/buildwithclaude
 /plugin install codex-hud@buildwithclaude
 ```
 
-### Option B: via this repo directly
+### Option C: via this repo directly
 
 ```
 /plugin marketplace add haenara-shin/codex-hud
 /plugin install codex-hud@codex-hud
 ```
 
-### Option C: from source
+### Option D: from source
 
 ```bash
 git clone https://github.com/haenara-shin/codex-hud.git
@@ -85,7 +97,7 @@ After installing the plugin, run:
 
 This command is idempotent and only touches the statusline integration:
 - Creates the symlink at `~/.claude/codex-hud-statusline.sh`
-- Updates `~/.claude/settings.json` so the Codex rate limits appear below claude-hud's statusline
+- Updates `~/.claude/settings.json` so the Codex rate limits appear below claude-hud's statusline (sets `statusLine.refreshInterval` to 60s to keep reset countdowns fresh while idle)
 
 Restart Claude Code or run `/reload-plugins` to see the Codex statusline.
 
@@ -173,7 +185,7 @@ To update to a newer version, **run both commands** (the plugin manager UI's "Up
 /reload-plugins
 ```
 
-Substitute `codex-hud` with your marketplace alias (e.g. `buildwithclaude`) if you installed via that marketplace.
+Substitute `codex-hud` with your marketplace alias — `claude-community` for Anthropic's community marketplace, `buildwithclaude` for buildwithclaude, or `codex-hud` for the direct repo install.
 
 ## Requirements
 
@@ -183,16 +195,23 @@ Substitute `codex-hud` with your marketplace alias (e.g. `buildwithclaude`) if y
 - [claude-hud](https://github.com/jarrodwatts/claude-hud) (optional, for statusline integration)
 - OpenAI Admin API key (optional, for cost data)
 
+## Acknowledgments
+
+codex-hud was inspired by [claude-hud](https://github.com/jarrodwatts/claude-hud) — which solved the same usage-visibility problem for Claude Code itself. codex-hud extends that idea to OpenAI Codex and integrates with claude-hud via the included wrapper script when both are installed.
+
+## Changelog
+
+### v0.5.0
+
+- **Fix:** statusline no longer crashes on plans where a rate-limit window is absent (e.g. free / no-limit plans report `primary` or `secondary` as `null`). Missing windows are skipped and the rest still render.
+- **Fix:** `costs-month` / `usage-month` now report the full range. The OpenAI Costs/Usage APIs cap daily buckets per page (default 7), so 30-day queries previously returned only ~7 days with no error. The plugin now sizes the request and follows `has_more`/`next_page` pagination.
+- **Add:** statusline registration sets `refreshInterval: 60` so reset countdowns stay current while the session is idle.
+- **Chore:** drop the explicit `commands[]` array from `plugin.json` (commands are auto-discovered), add `$schema` to both manifests, and verify against current Claude Code 2.1.x / Codex CLI 0.125+ contracts.
+
+### v0.4.0
+
+- Add horizontal layout (Usage + Weekly side-by-side); 3 layouts total (expanded / horizontal / compact).
+
 ## License
 
 MIT
-
-## Star History
-
-<a href="https://star-history.com/#haenara-shin/codex-hud&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=haenara-shin/codex-hud&type=Date&theme=dark" width="600" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=haenara-shin/codex-hud&type=Date" width="600" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=haenara-shin/codex-hud&type=Date" width="600" />
- </picture>
-</a>
