@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { indexSkillsFromSkillsSh } from '@/lib/indexer/skills-sh-indexer'
+import { reindexType } from '@/lib/search/indexer'
+import { isSearchEnabled } from '@/lib/search/meilisearch-client'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
@@ -25,7 +27,17 @@ export async function GET(request: NextRequest) {
     console.log(
       `skills.sh indexer done: discovered ${result.discovered}, contentSynced ${result.contentSynced} in ${result.durationMs}ms`,
     )
-    return NextResponse.json({ success: true, ...result })
+
+    // Refresh the Meilisearch skill index from the just-synced DB rows so new /
+    // updated skills are searchable immediately (runs here on the web service,
+    // which has the local skill files + Meilisearch env). No-ops if search is
+    // unconfigured.
+    let searchReindex: unknown
+    if (isSearchEnabled()) {
+      searchReindex = await reindexType('skill').catch((e) => ({ error: String(e) }))
+    }
+
+    return NextResponse.json({ success: true, ...result, searchReindex })
   } catch (error) {
     console.error('skills.sh CRON indexer failed:', error)
     return NextResponse.json(

@@ -600,6 +600,31 @@ export const indexPluginsTask = task({
         .where(eq(marketplaces.id, marketplaceId));
     }
 
+    // Refresh the Meilisearch index for the types this task touched. We delegate
+    // to the web app's admin endpoint rather than reindexing inline: the web
+    // service has the local markdown files (so a 'skill'/'plugin' reindex won't
+    // drop locally-sourced docs) and the Meilisearch connection. Requires
+    // ADMIN_API_TOKEN in this task's env; no-ops with a warning otherwise.
+    const appBaseUrl = process.env.APP_BASE_URL || "https://buildwithclaude.com";
+    const adminToken = process.env.ADMIN_API_TOKEN;
+    let searchReindexed = false;
+    if (adminToken) {
+      for (const type of ["plugin", "skill"] as const) {
+        try {
+          const res = await fetch(
+            `${appBaseUrl}/api/admin/reindex-search?mode=type&type=${type}`,
+            { method: "POST", headers: { Authorization: `Bearer ${adminToken}` } }
+          );
+          logger.info(`Search reindex ${type} → HTTP ${res.status}`);
+        } catch (error) {
+          logger.error(`Search reindex ${type} failed`, { error });
+        }
+      }
+      searchReindexed = true;
+    } else {
+      logger.warn("ADMIN_API_TOKEN not set; skipping post-index search reindex");
+    }
+
     const durationMs = Date.now() - startTime;
 
     logger.info("Plugin indexing completed", {
@@ -607,6 +632,7 @@ export const indexPluginsTask = task({
       failed,
       skipped,
       skillsInserted,
+      searchReindexed,
       durationMs,
     });
 
@@ -615,6 +641,7 @@ export const indexPluginsTask = task({
       failed,
       skipped,
       skillsInserted,
+      searchReindexed,
       durationMs,
     };
   },
