@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPluginsPaginated, PLUGIN_LIST_SORT_OPTIONS, type SortOption } from '@/lib/plugin-db-server'
+import { searchPluginsHydrated } from '@/lib/search/search-hydrate'
+import { isSearchEnabled } from '@/lib/search/meilisearch-client'
 import type { PluginType } from '@/lib/plugin-types'
 
 export const dynamic = 'force-dynamic'
@@ -24,15 +26,13 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category') || undefined
 
   try {
-    const result = await getPluginsPaginated({
-      limit,
-      offset,
-      search,
-      sort,
-      type,
-      marketplaceId,
-      category,
-    })
+    // When there's a search query and Meilisearch is configured, rank with
+    // Meilisearch (typo tolerance + relevance) then hydrate full records; the
+    // browse/filter/sort path stays on Postgres.
+    const result =
+      search && isSearchEnabled()
+        ? await searchPluginsHydrated({ query: search, type, category, marketplaceId, limit, offset })
+        : await getPluginsPaginated({ limit, offset, search, sort, type, marketplaceId, category })
 
     return NextResponse.json(result, {
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' }

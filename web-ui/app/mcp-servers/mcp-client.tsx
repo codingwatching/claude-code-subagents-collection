@@ -12,13 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  type MCPServer,
-  SOURCE_INDICATORS
-} from '@/lib/mcp-types'
+import { useDebounce } from '@/hooks/use-debounce'
+import { type MCPServer, SOURCE_INDICATORS } from '@/lib/mcp-types'
 import { type MCPCategoryMetadata } from '@/lib/mcp-server'
 
 const ITEMS_PER_PAGE = 24
+const SEARCH_LIMIT = 100
 
 interface MCPPageClientProps {
   allServers: MCPServer[]
@@ -28,12 +27,19 @@ interface MCPPageClientProps {
   trendingServers?: MCPServer[]
 }
 
+function matchesSource(server: MCPServer, source: string): boolean {
+  if (source === 'all') return true
+  if (source === 'docker') {
+    return server.source_registry?.type === 'docker' || server.docker_mcp_available === true
+  }
+  return server.source_registry?.type === source
+}
+
 export default function MCPPageClient({
   allServers,
   categories,
   popularServers = [],
   featuredServers = [],
-  trendingServers = []
 }: MCPPageClientProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -44,23 +50,50 @@ export default function MCPPageClient({
   const [sortBy, setSortBy] = useState<'stars' | 'newest' | 'oldest' | 'name' | 'name-desc'>('stars')
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
+  // Meilisearch results: ranked slugs for the current query (null = browse mode).
+  const [searchedSlugs, setSearchedSlugs] = useState<string[] | null>(null)
+  const [searchTotal, setSearchTotal] = useState(0)
+  const [searching, setSearching] = useState(false)
+  const debouncedQuery = useDebounce(searchQuery, 300)
+
   useEffect(() => {
     const categoryParam = searchParams.get('category')
     const sourceParam = searchParams.get('source')
     const sortParam = searchParams.get('sort')
-
-    if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
+    if (categoryParam && categories.some((cat) => cat.id === categoryParam)) {
       setSelectedCategory(categoryParam)
     }
-
     if (sourceParam && ['official-mcp', 'docker'].includes(sourceParam)) {
       setSelectedSource(sourceParam)
     }
-
     if (sortParam && ['stars', 'newest', 'oldest', 'name', 'name-desc'].includes(sortParam)) {
       setSortBy(sortParam as typeof sortBy)
     }
+    const qParam = searchParams.get('q')
+    if (qParam) setSearchQuery(qParam)
   }, [searchParams, categories])
+
+  const updateURL = (newParams: { category?: string | 'all'; source?: string; sort?: string; q?: string }) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (newParams.category !== undefined) {
+      if (newParams.category === 'all') params.delete('category')
+      else params.set('category', newParams.category)
+    }
+    if (newParams.source !== undefined) {
+      if (newParams.source === 'all') params.delete('source')
+      else params.set('source', newParams.source)
+    }
+    if (newParams.sort !== undefined) {
+      if (newParams.sort === 'stars') params.delete('sort')
+      else params.set('sort', newParams.sort)
+    }
+    if (newParams.q !== undefined) {
+      if (newParams.q === '') params.delete('q')
+      else params.set('q', newParams.q)
+    }
+    const qs = params.toString()
+    router.replace(qs ? `/mcp-servers?${qs}` : '/mcp-servers', { scroll: false })
+  }
 
   const handleCategoryChange = (category: string | 'all') => {
     setSelectedCategory(category)
@@ -72,66 +105,54 @@ export default function MCPPageClient({
     updateURL({ source })
   }
 
-  const updateURL = (newParams: { category?: string | 'all', source?: string, sort?: string }) => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    if (newParams.category !== undefined) {
-      if (newParams.category === 'all') {
-        params.delete('category')
-      } else {
-        params.set('category', newParams.category)
-      }
+  // Run Meilisearch on query change; category/source filters are applied
+  // client-side after hydration (relevance order is preserved during search).
+  useEffect(() => {
+    const q = debouncedQuery.trim()
+    updateURL({ q })
+    if (!q) {
+      setSearchedSlugs(null)
+      setSearching(false)
+      return
     }
+    const ac = new AbortController()
+    setSearching(true)
+    fetch(`/api/search?type=mcp-server&q=${encodeURIComponent(q)}&limit=${SEARCH_LIMIT}`, { signal: ac.signal })
+      .then((r) => r.json())
+      .then((data) => {
+        setSearchedSlugs((data.hits ?? []).map((h: { slug: string }) => h.slug))
+        setSearchTotal(data.totalHits ?? 0)
+        setSearching(false)
+      })
+      .catch((err) => {
+        if (err?.name !== 'AbortError') setSearching(false)
+      })
+    return () => ac.abort()
+  }, [debouncedQuery]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    if (newParams.source !== undefined) {
-      if (newParams.source === 'all') {
-        params.delete('source')
-      } else {
-        params.set('source', newParams.source)
-      }
-    }
-
-    if (newParams.sort !== undefined) {
-      if (newParams.sort === 'stars') {
-        params.delete('sort')
-      } else {
-        params.set('sort', newParams.sort)
-      }
-    }
-
-    const newUrl = params.toString() ? `/mcp-servers?${params.toString()}` : '/mcp-servers'
-    router.replace(newUrl)
-  }
+  const bySlug = useMemo(() => new Map(allServers.map((s) => [s.path, s])), [allServers])
 
   const filteredServers = useMemo(() => {
+    if (searchedSlugs !== null) {
+      // Search mode: hydrate ranked items, then apply category + source filters.
+      return searchedSlugs
+        .map((slug) => bySlug.get(slug))
+        .filter(Boolean)
+        .filter((s) => {
+          const server = s as MCPServer
+          if (selectedCategory !== 'all' && server.category !== selectedCategory) return false
+          if (!matchesSource(server, selectedSource)) return false
+          return true
+        }) as MCPServer[]
+    }
+
+    // Browse mode: full filter + sort over all servers.
     let filtered = allServers
+    if (selectedCategory !== 'all') filtered = filtered.filter((s) => s.category === selectedCategory)
+    if (selectedSource !== 'all') filtered = filtered.filter((s) => matchesSource(s, selectedSource))
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(server => server.category === selectedCategory)
-    }
-
-    if (selectedSource !== 'all') {
-      if (selectedSource === 'docker') {
-        filtered = filtered.filter(server =>
-          server.source_registry?.type === 'docker' || server.docker_mcp_available
-        )
-      } else {
-        filtered = filtered.filter(server => server.source_registry?.type === selectedSource)
-      }
-    }
-
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase()
-      filtered = filtered.filter(server =>
-        server.name.toLowerCase().includes(q) ||
-        server.display_name.toLowerCase().includes(q) ||
-        server.description.toLowerCase().includes(q) ||
-        server.tags.some(tag => tag.toLowerCase().includes(q))
-      )
-    }
-
-    const sorted = [...filtered].sort((a, b) => {
-      switch(sortBy) {
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
         case 'stars':
           return (b.stats?.github_stars || 0) - (a.stats?.github_stars || 0)
         case 'newest':
@@ -146,48 +167,38 @@ export default function MCPPageClient({
           return 0
       }
     })
-
-    return sorted
-  }, [allServers, selectedCategory, selectedSource, searchQuery, sortBy])
+  }, [searchedSlugs, bySlug, allServers, selectedCategory, selectedSource, sortBy])
 
   const sourceCounts = useMemo(() => {
-    const officialMcp = allServers.filter(server => server.source_registry?.type === 'official-mcp').length
-    const docker = allServers.filter(server =>
-      server.source_registry?.type === 'docker' || server.docker_mcp_available
-    ).length
+    const officialMcp = allServers.filter((s) => s.source_registry?.type === 'official-mcp').length
+    const docker = allServers.filter((s) => s.source_registry?.type === 'docker' || s.docker_mcp_available).length
     return { 'official-mcp': officialMcp, docker }
   }, [allServers])
 
-  const hasActiveFilters = useMemo(() => {
-    return searchQuery !== '' || selectedCategory !== 'all' || selectedSource !== 'all'
-  }, [searchQuery, selectedCategory, selectedSource])
+  const isSearching = searchedSlugs !== null
+  const hasActiveFilters = isSearching || selectedCategory !== 'all' || selectedSource !== 'all'
 
-  // Items to display (sliced for infinite scroll)
   const displayedServers = filteredServers.slice(0, displayCount)
   const hasMore = displayCount < filteredServers.length
 
-  // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(ITEMS_PER_PAGE)
-  }, [searchQuery, selectedCategory, selectedSource, sortBy])
+  }, [searchedSlugs, selectedCategory, selectedSource, sortBy])
 
-  // IntersectionObserver for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+          setDisplayCount((prev) => prev + ITEMS_PER_PAGE)
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '100px' },
     )
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current)
-    }
-
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current)
     return () => observer.disconnect()
   }, [hasMore])
+
+  const cappedResults = isSearching && searchTotal > filteredServers.length
 
   return (
     <div className="min-h-screen">
@@ -195,20 +206,21 @@ export default function MCPPageClient({
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-display-2 mb-2">MCP Servers</h1>
-          <p className="text-muted-foreground">
-            {allServers.length} Model Context Protocol servers
-          </p>
+          <p className="text-muted-foreground">{allServers.length} Model Context Protocol servers</p>
         </div>
 
         {/* Search */}
-        <div className="mb-6">
+        <div className="mb-6 relative max-w-md">
           <Input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search MCP servers..."
-            className="max-w-md bg-card border-border"
+            className="bg-card border-border"
           />
+          {searching && (
+            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+          )}
         </div>
 
         {/* Category filters */}
@@ -240,7 +252,6 @@ export default function MCPPageClient({
 
         {/* Source and Sort controls */}
         <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
-          {/* Source filters */}
           <div className="flex gap-2">
             <span className="text-sm text-muted-foreground py-1.5">Source:</span>
             <button
@@ -275,7 +286,6 @@ export default function MCPPageClient({
             </button>
           </div>
 
-          {/* Sort Dropdown */}
           <Select
             value={sortBy}
             onValueChange={(value) => {
@@ -297,7 +307,7 @@ export default function MCPPageClient({
           </Select>
         </div>
 
-        {/* Featured Sections - Only show when no filters active */}
+        {/* Featured Sections - Only show when no filters/search active */}
         {!hasActiveFilters && (popularServers.length > 0 || featuredServers.length > 0) && (
           <div className="mb-12">
             {popularServers.length > 0 && (
@@ -326,8 +336,7 @@ export default function MCPPageClient({
           </div>
         )}
 
-        {/* All Servers header when featured visible */}
-        {(!hasActiveFilters && (popularServers.length > 0 || featuredServers.length > 0)) && (
+        {!hasActiveFilters && (popularServers.length > 0 || featuredServers.length > 0) && (
           <h2 className="text-xl font-medium mb-4 mt-8">All Servers</h2>
         )}
 
@@ -335,7 +344,8 @@ export default function MCPPageClient({
         {hasActiveFilters && (
           <p className="text-sm text-muted-foreground mb-6">
             {filteredServers.length} result{filteredServers.length !== 1 ? 's' : ''}
-            {selectedCategory !== 'all' && ` in ${categories.find(c => c.id === selectedCategory)?.displayName || selectedCategory}`}
+            {selectedCategory !== 'all' && ` in ${categories.find((c) => c.id === selectedCategory)?.displayName || selectedCategory}`}
+            {cappedResults && ` (top matches of ${searchTotal.toLocaleString()} — refine to narrow)`}
           </p>
         )}
 
@@ -354,9 +364,7 @@ export default function MCPPageClient({
 
         {/* Load more trigger / Loading indicator */}
         <div ref={loadMoreRef} className="py-8 flex justify-center">
-          {hasMore && (
-            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-          )}
+          {hasMore && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
           {!hasMore && displayedServers.length > 0 && (
             <p className="text-sm text-muted-foreground">
               Showing all {filteredServers.length} MCP servers

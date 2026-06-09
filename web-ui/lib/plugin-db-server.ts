@@ -50,10 +50,19 @@ export interface MarketplaceOption {
 const BUILD_WITH_CLAUDE_MARKETPLACE = 'Build with Claude'
 const BUILD_WITH_CLAUDE_ID = 'build-with-claude'
 
+// Cached for the process lifetime in production: these come from deploy-static
+// local files, and reading hundreds of them on every plugins/skills request
+// (and now every Meilisearch-hydrated search) is wasteful. Dev stays uncached so
+// content edits hot-reload. Consumers only read, never mutate, the array.
+let _localBwcPluginsCache: UnifiedPlugin[] | null = null
+
 /**
  * Load all local Build with Claude plugins and convert to UnifiedPlugin format
  */
-function getLocalBuildWithClaudePlugins(): UnifiedPlugin[] {
+export function getLocalBuildWithClaudePlugins(): UnifiedPlugin[] {
+  if (_localBwcPluginsCache && process.env.NODE_ENV === 'production') {
+    return _localBwcPluginsCache
+  }
   const results: UnifiedPlugin[] = []
 
   // Load subagents
@@ -150,6 +159,7 @@ function getLocalBuildWithClaudePlugins(): UnifiedPlugin[] {
     console.warn('Error loading local plugins:', e)
   }
 
+  if (process.env.NODE_ENV === 'production') _localBwcPluginsCache = results
   return results
 }
 
@@ -1061,6 +1071,65 @@ export async function getSkillsPaginated(options: {
     total,
     hasMore: offset + results.length < total,
   }
+}
+
+/**
+ * Batch-hydrate DB plugins/skills by slug into UnifiedPlugin shape (the shape the
+ * cards expect). Used by the Meilisearch-backed search path to turn ranked slugs
+ * into full records. Order is NOT guaranteed; callers reorder by rank.
+ */
+export async function getDbPluginsBySlugs(slugs: string[]): Promise<UnifiedPlugin[]> {
+  if (slugs.length === 0) return []
+  const { data: rows } = await safeDbQuery(
+    () =>
+      db
+        .select({
+          name: plugins.name,
+          namespace: plugins.namespace,
+          slug: plugins.slug,
+          description: plugins.description,
+          version: plugins.version,
+          author: plugins.author,
+          type: plugins.type,
+          categories: plugins.categories,
+          keywords: plugins.keywords,
+          repository: plugins.repository,
+          stars: plugins.stars,
+          installs: plugins.installs,
+          installCommand: plugins.installCommand,
+          marketplaceId: plugins.marketplaceId,
+          marketplaceName: plugins.marketplaceName,
+          updatedAt: plugins.updatedAt,
+        })
+        .from(plugins)
+        .where(and(eq(plugins.active, true), inArray(plugins.slug, slugs))),
+    [],
+    'getDbPluginsBySlugs',
+  )
+
+  return rows.map((p) => ({
+    type: (p.type as PluginType) || 'plugin',
+    name: p.name,
+    description: p.description || '',
+    category: p.categories?.[0] || 'uncategorized',
+    tags: p.keywords || [],
+    slug: p.slug,
+    marketplaceId: p.marketplaceId || undefined,
+    marketplaceName: p.marketplaceName || undefined,
+    repository: p.repository || undefined,
+    stars: p.stars,
+    installs: p.installs,
+    installCommand: p.installCommand || undefined,
+    namespace: p.namespace,
+    author: p.author || undefined,
+    version: p.version || undefined,
+    updatedAt:
+      p.updatedAt instanceof Date
+        ? p.updatedAt.toISOString()
+        : p.updatedAt != null
+          ? String(p.updatedAt)
+          : undefined,
+  }))
 }
 
 /**

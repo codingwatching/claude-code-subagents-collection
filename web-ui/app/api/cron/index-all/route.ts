@@ -4,6 +4,8 @@ import { indexMarketplaces } from '@/lib/indexer/marketplace-indexer'
 import { indexPlugins } from '@/lib/indexer/plugin-indexer'
 import { tasks } from '@trigger.dev/sdk/v3'
 import type { indexPluginsTask } from '@/trigger/index-plugins'
+import { reindexAll, reindexType, ensureContentIndex } from '@/lib/search/indexer'
+import { isSearchEnabled } from '@/lib/search/meilisearch-client'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,6 +20,7 @@ const TASK_NAMES = {
   marketplaces: 'Marketplaces',
   plugins: 'Plugins',
   stats: 'MCP server stats',
+  search: 'Search reindex (full)',
 } as const
 
 type TaskType = keyof typeof TASK_NAMES
@@ -89,12 +92,20 @@ export async function GET(request: NextRequest) {
   try {
     console.log(`Running task: ${TASK_NAMES[taskToRun]}`)
 
+    // Make sure the search index + settings exist before any per-type sync.
+    if (isSearchEnabled()) {
+      await ensureContentIndex().catch((e) => console.error('ensureContentIndex failed:', e))
+    }
+
     switch (taskToRun) {
       case 'mcp':
         results.mcpServers = await indexMCPServers()
+        // Refresh the search index for MCP servers from the just-updated DB rows.
+        results.searchMcp = await reindexType('mcp-server').catch((e) => ({ error: String(e) }))
         break
       case 'marketplaces':
         results.marketplaces = await indexMarketplaces()
+        results.searchMarketplaces = await reindexType('marketplace').catch((e) => ({ error: String(e) }))
         break
       case 'plugins':
         if (USE_TRIGGER_DEV) {
@@ -106,13 +117,25 @@ export async function GET(request: NextRequest) {
             taskId: handle.id,
             message: 'Plugin indexing started as background task',
           }
+          // NOTE: plugin/skill DB rows are written by the background task, so the
+          // Meilisearch sync must run inside that task after it finishes (follow-up).
+          // Inline mode (below) syncs immediately.
         } else {
           // Fallback to inline execution
           results.plugins = await indexPlugins()
+          results.searchPlugins = await reindexType('plugin').catch((e) => ({ error: String(e) }))
+          results.searchSkills = await reindexType('skill').catch((e) => ({ error: String(e) }))
         }
         break
       case 'stats':
         results.mcpStats = await syncMCPServerStats()
+        // Stats only change star/install counts; refresh the sortable signals.
+        results.searchMcp = await reindexType('mcp-server').catch((e) => ({ error: String(e) }))
+        break
+      case 'search':
+        // Full rebuild — covers markdown-sourced content (agents/commands/hooks/
+        // local skills) that no daily task touches. Run via ?task=search.
+        results.search = await reindexAll()
         break
       default:
         // TypeScript exhaustiveness check

@@ -1,4 +1,4 @@
-import { desc, asc, eq, sql, ilike, or, and } from 'drizzle-orm'
+import { desc, asc, eq, sql, ilike, or, and, inArray } from 'drizzle-orm'
 import type { MarketplaceRegistry } from './marketplace-types'
 import { db } from './db/client'
 import { marketplaces } from './db/schema'
@@ -181,6 +181,29 @@ export async function getMarketplaceTotals(): Promise<{
     totalSkills: Number(result[0]?.totalSkills || 0),
     totalMarketplaces: Number(result[0]?.totalMarketplaces || 0),
   }
+}
+
+/**
+ * Batch-hydrate marketplaces by namespace into MarketplaceRegistry shape.
+ * Used by the Meilisearch-backed search path. Order is NOT guaranteed; callers
+ * reorder by rank.
+ */
+export async function getMarketplacesByNamespaces(namespaces: string[]): Promise<MarketplaceRegistry[]> {
+  if (namespaces.length === 0) return []
+  const { data: results } = await safeDbQuery(
+    () => db
+      .select()
+      .from(marketplaces)
+      .where(and(eq(marketplaces.active, true), inArray(marketplaces.namespace, namespaces))),
+    [],
+    'getMarketplacesByNamespaces',
+  )
+  // Preserve the input (Meilisearch rank) order.
+  const byNamespace = new Map(results.map((r) => [r.namespace, r]))
+  return namespaces
+    .map((ns) => byNamespace.get(ns))
+    .filter((r): r is NonNullable<typeof r> => Boolean(r))
+    .map(transformRow)
 }
 
 /**

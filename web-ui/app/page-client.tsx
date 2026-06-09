@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { HeroSearch } from '@/components/hero-search'
 import { ArrowRight, Bot, Terminal, Webhook, Sparkles, Package } from 'lucide-react'
 import type { Plugin } from '@/lib/plugins-types'
 import type { Skill } from '@/lib/skills-types'
@@ -18,6 +17,9 @@ interface HomePageClientProps {
   commandCount: number
   skillCount: number
   hookCount: number
+  pluginTotal: number
+  skillTotal: number
+  mcpTotal: number
   featuredPlugins: Plugin[]
   featuredSkills: Skill[]
   featuredSubagents: Subagent[]
@@ -26,7 +28,11 @@ interface HomePageClientProps {
   featuredStories: Story[]
 }
 
-const words = ['plugins', 'skills', 'tools', 'agents']
+// Floor a count to a clean round number for the hero copy (e.g. 17519 → "17,500").
+function floorToRound(n: number): string {
+  const step = n >= 10000 ? 500 : n >= 1000 ? 100 : 10
+  return (Math.floor(n / step) * step).toLocaleString()
+}
 
 interface FeaturedSectionProps {
   title: string
@@ -81,6 +87,9 @@ export default function HomePageClient({
   commandCount,
   skillCount,
   hookCount,
+  pluginTotal,
+  skillTotal,
+  mcpTotal,
   featuredPlugins,
   featuredSkills,
   featuredSubagents,
@@ -88,20 +97,6 @@ export default function HomePageClient({
   featuredHooks,
   featuredStories,
 }: HomePageClientProps) {
-  const [wordIndex, setWordIndex] = useState(0)
-  const [isVisible, setIsVisible] = useState(true)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false)
-      setTimeout(() => {
-        setWordIndex((prev) => (prev + 1) % words.length)
-        setIsVisible(true)
-      }, 200)
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [])
-
   const categories = [
     { href: '/plugins', label: 'Plugins', count: pluginCount, icon: Package, color: 'purple' as const },
     { href: '/skills', label: 'Skills', count: skillCount, icon: Sparkles, color: 'yellow' as const },
@@ -118,34 +113,30 @@ export default function HomePageClient({
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Text content */}
             <div className="max-w-xl">
-              <h1 className="text-display-1 mb-8">
-                Extend Claude with curated{' '}
-                <span
-                  className={`text-[#e89a7a] inline-block transition-all duration-200 ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'
-                  }`}
-                >
-                  {words[wordIndex]}
-                </span>
+              <h1 className="text-display-1 mb-6">
+                Discover <span className="text-[#e89a7a]">everything</span> for Claude
               </h1>
-              <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
-                A collection of {pluginCount + subagentCount + commandCount + skillCount + hookCount}+ practical extensions
-                to enhance your productivity across Claude.ai, Claude Code, and the Claude API.
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                Search {floorToRound(pluginTotal)}+ plugins, {floorToRound(skillTotal)}+ skills, and{' '}
+                {floorToRound(mcpTotal)}+ MCP servers. Or start with our curated picks.
               </p>
-              <div className="flex gap-4 flex-wrap">
-                <Link href="/plugins">
-                  <Button size="lg" className="btn-primary gap-2">
-                    Browse Plugins <ArrowRight className="h-4 w-4" />
-                  </Button>
+
+              <HeroSearch />
+
+              <div className="mt-5 flex items-center gap-5 text-sm">
+                <Link
+                  href="/plugins"
+                  className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Browse all <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 <a
                   href="https://github.com/davepoon/buildwithclaude"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Button size="lg" variant="outline">
-                    View on GitHub
-                  </Button>
+                  View on GitHub
                 </a>
               </div>
 

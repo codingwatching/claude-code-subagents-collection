@@ -48,6 +48,8 @@ export default function MarketplacesPageClient({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(initialMarketplaces.length)
   const isFirstRender = useRef(true)
+  // Monotonic request id: ignore responses superseded by a newer request.
+  const reqIdRef = useRef(0)
 
   // Debounce search query
   useEffect(() => {
@@ -60,6 +62,7 @@ export default function MarketplacesPageClient({
   // Reset when search or sort changes
   useEffect(() => {
     const fetchInitial = async () => {
+      const reqId = ++reqIdRef.current
       setIsLoading(true)
       try {
         const params = new URLSearchParams({
@@ -74,13 +77,14 @@ export default function MarketplacesPageClient({
         const response = await fetch(`/api/marketplaces/list?${params}`)
         const data = await response.json()
 
+        if (reqId !== reqIdRef.current) return // superseded by a newer request
         setMarketplaces(data.marketplaces)
         setHasMore(data.hasMore)
         offsetRef.current = data.marketplaces.length
       } catch (error) {
         console.error('Error fetching marketplaces:', error)
       } finally {
-        setIsLoading(false)
+        if (reqId === reqIdRef.current) setIsLoading(false)
       }
     }
 
@@ -97,6 +101,7 @@ export default function MarketplacesPageClient({
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return
 
+    const reqId = ++reqIdRef.current
     setIsLoading(true)
     try {
       const params = new URLSearchParams({
@@ -111,13 +116,14 @@ export default function MarketplacesPageClient({
       const response = await fetch(`/api/marketplaces/list?${params}`)
       const data = await response.json()
 
+      if (reqId !== reqIdRef.current) return // superseded by a newer request
       setMarketplaces((prev) => [...prev, ...data.marketplaces])
       setHasMore(data.hasMore)
       offsetRef.current += data.marketplaces.length
     } catch (error) {
       console.error('Error loading more marketplaces:', error)
     } finally {
-      setIsLoading(false)
+      if (reqId === reqIdRef.current) setIsLoading(false)
     }
   }, [isLoading, hasMore, debouncedQuery, sort])
 

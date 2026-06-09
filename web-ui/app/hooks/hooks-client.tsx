@@ -5,9 +5,11 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { HookCard } from '@/components/hook-card'
 import { Input } from '@/components/ui/input'
 import { Webhook, Loader2 } from 'lucide-react'
+import { useDebounce } from '@/hooks/use-debounce'
 import { type Hook, type CategoryMetadata, generateCategoryDisplayName } from '@/lib/hooks-types'
 
 const ITEMS_PER_PAGE = 24
+const SEARCH_LIMIT = 100
 
 interface HooksPageClientProps {
   allHooks: Hook[]
@@ -24,16 +26,37 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE)
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
+  const [searchedSlugs, setSearchedSlugs] = useState<string[] | null>(null)
+  const [searchTotal, setSearchTotal] = useState(0)
+  const [searching, setSearching] = useState(false)
+  const debouncedQuery = useDebounce(searchQuery, 300)
+
   useEffect(() => {
     const categoryParam = searchParams.get('category')
     const eventParam = searchParams.get('event')
-    if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
+    if (categoryParam && categories.some((cat) => cat.id === categoryParam)) {
       setSelectedCategory(categoryParam)
     }
     if (eventParam && eventTypes.includes(eventParam)) {
       setSelectedEvent(eventParam)
     }
+    const qParam = searchParams.get('q')
+    if (qParam) setSearchQuery(qParam)
   }, [searchParams, categories, eventTypes])
+
+  const updateURL = (category: string | 'all', event: string | 'all', q?: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (category === 'all') params.delete('category')
+    else params.set('category', category)
+    if (event === 'all') params.delete('event')
+    else params.set('event', event)
+    if (q !== undefined) {
+      if (q === '') params.delete('q')
+      else params.set('q', q)
+    }
+    const qs = params.toString()
+    router.replace(qs ? `/hooks?${qs}` : '/hooks', { scroll: false })
+  }
 
   const handleCategoryChange = (category: string | 'all') => {
     setSelectedCategory(category)
@@ -45,71 +68,68 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
     updateURL(selectedCategory, event)
   }
 
-  const updateURL = (category: string | 'all', event: string | 'all') => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (category === 'all') {
-      params.delete('category')
-    } else {
-      params.set('category', category)
+  // Search via Meilisearch (category as a server filter); event is applied
+  // client-side after hydration since /api/search has no event param.
+  useEffect(() => {
+    const q = debouncedQuery.trim()
+    updateURL(selectedCategory, selectedEvent, q)
+    if (!q) {
+      setSearchedSlugs(null)
+      setSearching(false)
+      return
     }
-    if (event === 'all') {
-      params.delete('event')
-    } else {
-      params.set('event', event)
-    }
-    const newUrl = params.toString() ? `/hooks?${params.toString()}` : '/hooks'
-    router.replace(newUrl)
-  }
+    const ac = new AbortController()
+    setSearching(true)
+    const params = new URLSearchParams({ type: 'hook', q, limit: String(SEARCH_LIMIT) })
+    if (selectedCategory !== 'all') params.set('category', selectedCategory)
+    fetch(`/api/search?${params}`, { signal: ac.signal })
+      .then((r) => r.json())
+      .then((data) => {
+        setSearchedSlugs((data.hits ?? []).map((h: { slug: string }) => h.slug))
+        setSearchTotal(data.totalHits ?? 0)
+        setSearching(false)
+      })
+      .catch((err) => {
+        if (err?.name !== 'AbortError') setSearching(false)
+      })
+    return () => ac.abort()
+  }, [debouncedQuery, selectedCategory]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const bySlug = useMemo(() => new Map(allHooks.map((h) => [h.slug, h])), [allHooks])
 
   const filteredHooks = useMemo(() => {
-    let filtered = allHooks
-
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(hook => hook.category === selectedCategory)
+    let list: Hook[]
+    if (searchedSlugs !== null) {
+      list = searchedSlugs.map((slug) => bySlug.get(slug)).filter(Boolean) as Hook[]
+    } else {
+      list = selectedCategory === 'all' ? allHooks : allHooks.filter((h) => h.category === selectedCategory)
     }
+    if (selectedEvent !== 'all') list = list.filter((h) => h.event === selectedEvent)
+    return list
+  }, [searchedSlugs, bySlug, allHooks, selectedCategory, selectedEvent])
 
-    if (selectedEvent !== 'all') {
-      filtered = filtered.filter(hook => hook.event === selectedEvent)
-    }
-
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase()
-      filtered = filtered.filter(hook =>
-        hook.name.toLowerCase().includes(q) ||
-        hook.description.toLowerCase().includes(q) ||
-        hook.event.toLowerCase().includes(q)
-      )
-    }
-
-    return filtered
-  }, [allHooks, selectedCategory, selectedEvent, searchQuery])
-
-  // Items to display (sliced for infinite scroll)
   const displayedHooks = filteredHooks.slice(0, displayCount)
   const hasMore = displayCount < filteredHooks.length
 
-  // Reset display count when filters change
   useEffect(() => {
     setDisplayCount(ITEMS_PER_PAGE)
-  }, [selectedCategory, selectedEvent, searchQuery])
+  }, [selectedCategory, selectedEvent, searchedSlugs])
 
-  // IntersectionObserver for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setDisplayCount(prev => prev + ITEMS_PER_PAGE)
+          setDisplayCount((prev) => prev + ITEMS_PER_PAGE)
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '100px' },
     )
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current)
-    }
-
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current)
     return () => observer.disconnect()
   }, [hasMore])
+
+  const isSearching = searchedSlugs !== null
+  const cappedResults = isSearching && searchTotal > filteredHooks.length
 
   return (
     <div className="min-h-screen">
@@ -120,20 +140,21 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
             <Webhook className="h-8 w-8 text-orange-500" />
             Hooks
           </h1>
-          <p className="text-muted-foreground">
-            {allHooks.length} automation hooks for Claude Code
-          </p>
+          <p className="text-muted-foreground">{allHooks.length} automation hooks for Claude Code</p>
         </div>
 
         {/* Search */}
-        <div className="mb-6">
+        <div className="mb-6 relative max-w-md">
           <Input
             type="text"
             placeholder="Search hooks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-md bg-card border-border"
+            className="bg-card border-border"
           />
+          {searching && (
+            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+          )}
         </div>
 
         {/* Category filters */}
@@ -192,11 +213,12 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
         </div>
 
         {/* Results count */}
-        {(selectedCategory !== 'all' || selectedEvent !== 'all' || searchQuery) && (
+        {(selectedCategory !== 'all' || selectedEvent !== 'all' || isSearching) && (
           <p className="text-sm text-muted-foreground mb-6">
             {filteredHooks.length} result{filteredHooks.length !== 1 ? 's' : ''}
             {selectedCategory !== 'all' && ` in ${generateCategoryDisplayName(selectedCategory)}`}
             {selectedEvent !== 'all' && ` for ${selectedEvent}`}
+            {cappedResults && ` (top matches of ${searchTotal.toLocaleString()} — refine to narrow)`}
           </p>
         )}
 
@@ -215,13 +237,9 @@ export default function HooksPageClient({ allHooks, categories, eventTypes }: Ho
 
         {/* Load more trigger / Loading indicator */}
         <div ref={loadMoreRef} className="py-8 flex justify-center">
-          {hasMore && (
-            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-          )}
+          {hasMore && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
           {!hasMore && displayedHooks.length > 0 && (
-            <p className="text-sm text-muted-foreground">
-              Showing all {filteredHooks.length} hooks
-            </p>
+            <p className="text-sm text-muted-foreground">Showing all {filteredHooks.length} hooks</p>
           )}
         </div>
       </div>

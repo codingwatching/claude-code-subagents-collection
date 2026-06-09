@@ -64,6 +64,8 @@ export default function SkillsPageClient({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(initialSkills.length)
   const isFirstRender = useRef(true)
+  // Monotonic request id: ignore responses superseded by a newer request.
+  const reqIdRef = useRef(0)
 
   // URL sync
   const searchParams = useSearchParams()
@@ -128,6 +130,7 @@ export default function SkillsPageClient({
   // Reset and fetch when filters change
   useEffect(() => {
     const fetchFiltered = async () => {
+      const reqId = ++reqIdRef.current
       setIsLoading(true)
       try {
         const params = new URLSearchParams({
@@ -149,13 +152,14 @@ export default function SkillsPageClient({
         const response = await fetch(`/api/plugins/list?${params}`)
         const data = await response.json()
 
+        if (reqId !== reqIdRef.current) return // superseded by a newer request
         setSkills(data.plugins)
         setHasMore(data.hasMore)
         offsetRef.current = data.plugins.length
       } catch (error) {
         console.error('Error fetching skills:', error)
       } finally {
-        setIsLoading(false)
+        if (reqId === reqIdRef.current) setIsLoading(false)
       }
     }
 
@@ -173,6 +177,7 @@ export default function SkillsPageClient({
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return
 
+    const reqId = ++reqIdRef.current
     setIsLoading(true)
     try {
       const params = new URLSearchParams({
@@ -194,13 +199,14 @@ export default function SkillsPageClient({
       const response = await fetch(`/api/plugins/list?${params}`)
       const data = await response.json()
 
+      if (reqId !== reqIdRef.current) return // superseded by a newer request
       setSkills((prev) => [...prev, ...data.plugins])
       setHasMore(data.hasMore)
       offsetRef.current += data.plugins.length
     } catch (error) {
       console.error('Error loading more skills:', error)
     } finally {
-      setIsLoading(false)
+      if (reqId === reqIdRef.current) setIsLoading(false)
     }
   }, [isLoading, hasMore, debouncedSearch, selectedCategories, selectedMarketplace, sort])
 

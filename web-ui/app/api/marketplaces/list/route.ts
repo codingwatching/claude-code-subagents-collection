@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getMarketplacesPaginated, type SortOption } from '@/lib/marketplace-server'
+import { searchMarketplacesHydrated } from '@/lib/search/search-hydrate'
+import { isSearchEnabled } from '@/lib/search/meilisearch-client'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +21,10 @@ export async function GET(request: NextRequest) {
   const sort = sortParam && validSortOptions.includes(sortParam) ? sortParam : 'relevance'
 
   try {
-    const result = await getMarketplacesPaginated({ limit, offset, search, sort })
+    const result =
+      search && isSearchEnabled()
+        ? await searchMarketplacesHydrated({ query: search, limit, offset })
+        : await getMarketplacesPaginated({ limit, offset, search, sort })
 
     return NextResponse.json(result, {
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' }
