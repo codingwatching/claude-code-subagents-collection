@@ -152,6 +152,24 @@ export function localSkillsToDocs(): SearchDocument[] {
 // Queried directly so we get the sortable signals (stars/installs/updatedAt).
 // ---------------------------------------------------------------------------
 
+/**
+ * Detail link for a plugin search doc, mirroring UnifiedPluginCard.getDetailUrl:
+ * only Build with Claude plugins have an on-site page (app/plugin/[slug], which
+ * resolves by name from local marketplace files); every external-marketplace
+ * plugin links to its repository. Without this, external plugins linked to
+ * /plugin/<slug>, which 404s because that route only resolves local plugins.
+ * Falls back to the /plugins list on the (currently non-existent) case of an
+ * external plugin with no repository.
+ */
+function pluginDetailUrl(
+  marketplaceName: string | null | undefined,
+  name: string,
+  repository: string | null | undefined,
+): string {
+  if (marketplaceName === 'Build with Claude') return `/plugin/${name}`
+  return repository || '/plugins'
+}
+
 export async function pluginsToDocs(): Promise<SearchDocument[]> {
   const docs: SearchDocument[] = []
 
@@ -167,6 +185,7 @@ export async function pluginsToDocs(): Promise<SearchDocument[]> {
         keywords: plugins.keywords,
         marketplaceName: plugins.marketplaceName,
         marketplaceId: plugins.marketplaceId,
+        repository: plugins.repository,
         stars: plugins.stars,
         installs: plugins.installs,
         updatedAt: plugins.updatedAt,
@@ -195,7 +214,7 @@ export async function pluginsToDocs(): Promise<SearchDocument[]> {
         stars: p.stars ?? 0,
         installs: p.installs ?? 0,
         updatedAt: epoch(p.updatedAt),
-        url: urlForDocument('plugin', p.slug),
+        url: pluginDetailUrl(p.marketplaceName, p.name, p.repository),
       })
     }
   } catch (e) {
@@ -223,7 +242,7 @@ export async function pluginsToDocs(): Promise<SearchDocument[]> {
         stars: p.stars ?? 0,
         installs: p.installs ?? 0,
         updatedAt: 0,
-        url: urlForDocument('plugin', slug),
+        url: pluginDetailUrl(p.marketplaceName, p.name, p.repository),
       })
     }
   } catch (e) {
