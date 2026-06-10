@@ -12,7 +12,40 @@ import { indexSkillsFromSkillsSh } from '@/lib/indexer/skills-sh-indexer'
  * - Monday: MCP servers indexing
  * - Tuesday & Friday: Marketplaces indexing
  * - Wednesday & Saturday: Plugins indexing
+ * - Daily: skills.sh
+ *
+ * Each task refreshes the Meilisearch index for the type it just synced (see
+ * reindexSearch) so search stays in step with the DB.
  */
+
+const APP_BASE_URL = process.env.APP_BASE_URL || 'https://buildwithclaude.com'
+
+/**
+ * Ask the web app to refresh the Meilisearch index for the given content types.
+ * We delegate to the web admin endpoint rather than reindexing inside the
+ * Trigger.dev task: the web service has the local markdown files (so a
+ * 'skill'/'plugin' reindex won't drop locally-sourced docs) and the Meilisearch
+ * connection. Requires ADMIN_API_TOKEN in this task's env; logs and skips
+ * otherwise. Never throws — a search hiccup must not fail the DB sync.
+ */
+async function reindexSearch(types: string[]): Promise<void> {
+  const adminToken = process.env.ADMIN_API_TOKEN
+  if (!adminToken) {
+    console.warn('[search] ADMIN_API_TOKEN not set; skipping reindex')
+    return
+  }
+  for (const type of types) {
+    try {
+      const res = await fetch(`${APP_BASE_URL}/api/admin/reindex-search?mode=type&type=${type}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${adminToken}` },
+      })
+      console.log(`[search] reindex ${type} -> HTTP ${res.status}`)
+    } catch (error) {
+      console.error(`[search] reindex ${type} failed:`, error)
+    }
+  }
+}
 
 // MCP Servers - Monday at 5 AM UTC
 export const scheduledMcpServersIndex = schedules.task({
@@ -21,6 +54,7 @@ export const scheduledMcpServersIndex = schedules.task({
   run: async (payload) => {
     console.log(`MCP servers indexing started at ${payload.timestamp}`)
     const result = await indexMCPServers()
+    await reindexSearch(['mcp-server'])
     return { ...result, scheduledAt: payload.timestamp }
   },
 })
@@ -32,6 +66,7 @@ export const scheduledMarketplacesIndex = schedules.task({
   run: async (payload) => {
     console.log(`Marketplaces indexing started at ${payload.timestamp}`)
     const result = await indexMarketplaces()
+    await reindexSearch(['marketplace'])
     return { ...result, scheduledAt: payload.timestamp }
   },
 })
@@ -43,6 +78,7 @@ export const scheduledPluginsIndex = schedules.task({
   run: async (payload) => {
     console.log(`Plugins indexing started at ${payload.timestamp}`)
     const result = await indexPlugins()
+    await reindexSearch(['plugin'])
     return { ...result, scheduledAt: payload.timestamp }
   },
 })
@@ -55,6 +91,7 @@ export const scheduledSkillsShIndex = schedules.task({
   run: async (payload) => {
     console.log(`skills.sh indexing started at ${payload.timestamp}`)
     const result = await indexSkillsFromSkillsSh()
+    await reindexSearch(['skill'])
     return { ...result, scheduledAt: payload.timestamp }
   },
 })
@@ -66,6 +103,7 @@ export const scheduledMcpStatsSync = schedules.task({
   run: async (payload) => {
     console.log(`MCP stats sync started at ${payload.timestamp}`)
     const result = await syncMCPServerStats()
+    await reindexSearch(['mcp-server'])
     return { ...result, scheduledAt: payload.timestamp }
   },
 })
