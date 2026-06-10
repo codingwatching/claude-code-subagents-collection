@@ -825,27 +825,60 @@ export async function getPluginCategories(): Promise<PluginCategory[]> {
 }
 
 /**
- * Get total count of plugins (type='plugin' only) from all sources
+ * Count distinct, browsable items of a type so the browse-page header matches
+ * what the user can actually find. This mirrors how the Meilisearch index (and
+ * the paginated list) build their sets, so the `/skills` and `/plugins` headers,
+ * the list below them, and the `/search` facet all agree:
+ *   - active rows only
+ *   - excludes rejected submissions (the listings hide these)
+ *   - dedupes by slug — a plugin/skill listed under several marketplaces shares
+ *     one slug and collapses to a single search doc (Meilisearch primary key),
+ *     so we count `distinct slug`, not raw rows
+ *   - adds local Build with Claude items whose slug isn't already a DB row
+ *
+ * `localSlugs` are the locally-sourced slugs of this type, keyed exactly as the
+ * indexer keys them (so the local/DB overlap matches the index's dedupe).
  */
-export async function getPluginOnlyCount(): Promise<number> {
-  // Count local plugins
-  const localPlugins = getLocalBuildWithClaudePlugins()
-  const localCount = localPlugins.filter(p => p.type === 'plugin').length
-
-  // Count database plugins
-  const { data: dbCount } = await safeDbQuery(
-    () => db
-      .select({ count: sql<number>`count(*)` })
-      .from(plugins)
-      .where(and(
-        eq(plugins.active, true),
-        eq(plugins.type, 'plugin')
-      )),
-    [{ count: 0 }],
-    'getPluginOnlyCount',
+async function getDistinctActiveCount(type: PluginType, localSlugs: string[]): Promise<number> {
+  const uniqueLocal = Array.from(new Set(localSlugs))
+  const baseConditions = and(
+    eq(plugins.active, true),
+    eq(plugins.type, type),
+    ne(plugins.submissionStatus, 'rejected'),
   )
 
-  return localCount + Number(dbCount[0]?.count || 0)
+  const { data } = await safeDbQuery<[{ n: number }[], { slug: string }[]]>(
+    () => Promise.all([
+      db
+        .select({ n: sql<number>`count(distinct ${plugins.slug})` })
+        .from(plugins)
+        .where(baseConditions),
+      // Which local slugs already exist as a DB row (so we don't double-count).
+      uniqueLocal.length
+        ? db
+            .selectDistinct({ slug: plugins.slug })
+            .from(plugins)
+            .where(and(baseConditions, inArray(plugins.slug, uniqueLocal)))
+        : Promise.resolve([] as { slug: string }[]),
+    ]),
+    [[{ n: 0 }], []],
+    `getDistinctActiveCount:${type}`,
+  )
+
+  const dbDistinct = Number(data[0][0]?.n || 0)
+  const localInDb = data[1].length
+  return dbDistinct + (uniqueLocal.length - localInDb)
+}
+
+/**
+ * Get total count of plugins (type='plugin' only) from all sources.
+ * Distinct + rejected-excluded so it matches the /plugins list and /search.
+ */
+export async function getPluginOnlyCount(): Promise<number> {
+  const localSlugs = getLocalBuildWithClaudePlugins()
+    .filter(p => p.type === 'plugin')
+    .map(p => p.slug ?? p.name)
+  return getDistinctActiveCount('plugin', localSlugs)
 }
 
 /**
@@ -967,27 +1000,14 @@ export async function getSkillCategories(): Promise<PluginCategory[]> {
 }
 
 /**
- * Get total count of skills (type='skill' only) from all sources
+ * Get total count of skills (type='skill' only) from all sources.
+ * Distinct + rejected-excluded so it matches the /skills list and /search.
+ * Local skills come from getAllSkills() — the same source the indexer uses
+ * (localSkillsToDocs) — so the local/DB dedupe lines up with the index.
  */
 export async function getSkillOnlyCount(): Promise<number> {
-  // Count local skills
-  const localPlugins = getLocalBuildWithClaudePlugins()
-  const localCount = localPlugins.filter(p => p.type === 'skill').length
-
-  // Count database skills
-  const { data: dbSkillCount } = await safeDbQuery(
-    () => db
-      .select({ count: sql<number>`count(*)` })
-      .from(plugins)
-      .where(and(
-        eq(plugins.active, true),
-        eq(plugins.type, 'skill')
-      )),
-    [{ count: 0 }],
-    'getSkillOnlyCount',
-  )
-
-  return localCount + Number(dbSkillCount[0]?.count || 0)
+  const localSlugs = getAllSkills().map(s => s.slug)
+  return getDistinctActiveCount('skill', localSlugs)
 }
 
 /**
