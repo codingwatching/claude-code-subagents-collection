@@ -1591,6 +1591,30 @@
         "source": "github",
         "repo": "nicolai-bernsen/backlogd"
       }
+    },
+    {
+      "name": "kegg-mcp-server",
+      "description": "Query the KEGG bioinformatics database — pathways, genes, compounds, drugs, enzymes, diseases, reactions, and more via 34 read-only MCP tools. No API key required.",
+      "version": "0.3.0",
+      "author": {
+        "name": "Lucas Servi",
+        "url": "https://github.com/Lucas-Servi"
+      },
+      "homepage": "https://github.com/Lucas-Servi/kegg-mcp-server-python",
+      "repository": "https://github.com/Lucas-Servi/kegg-mcp-server-python",
+      "license": "MIT",
+      "keywords": [
+        "mcp",
+        "kegg",
+        "bioinformatics",
+        "pathways",
+        "genomics",
+        "metabolomics",
+        "systems-biology",
+        "science"
+      ],
+      "category": "mcp-servers",
+      "source": "./plugins/kegg-mcp-server"
     }
   ]
 }
