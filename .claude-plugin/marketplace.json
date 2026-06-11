@@ -100,6 +100,30 @@
       "source": "./plugins/claude-hud"
     },
     {
+      "name": "claude-pager",
+      "description": "Native desktop notifications when Claude Code needs your attention",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bharat Gupta",
+        "url": "https://github.com/bharat7gupta"
+      },
+      "repository": "https://github.com/bharat7gupta/claude-pager",
+      "license": "MIT",
+      "keywords": [
+        "notifications",
+        "alerts",
+        "desktop",
+        "sound",
+        "pager",
+        "idle",
+        "permission",
+        "task-completion",
+        "productivity"
+      ],
+      "category": "hooks",
+      "source": "./plugins/claude-pager"
+    },
+    {
       "name": "slopmop",
       "description": "Quality gates for AI-assisted codebases. Provides refit onboarding, the swab/scour/buff/sail remediation loop, and barnacle friction reporting as a Claude skill and slash commands.",
       "version": "1.1.0",
