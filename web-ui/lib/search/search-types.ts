@@ -4,8 +4,9 @@ import type { Settings } from 'meilisearch'
  * The seven content types BuildWithClaude indexes into Meilisearch. Values are
  * chosen to match the singular detail-route directory names (`app/<type>/[slug]`)
  * so a document's detail URL is derivable as `/<type>/<slug>` for the six types
- * that have detail pages. Marketplaces have no per-item route → link to
- * `/marketplaces` (see `urlForDocument`).
+ * that have detail pages. Marketplaces have no per-item route → they deep-link
+ * into `/marketplaces?q=<name>`, which pre-filters the listing so the clicked
+ * marketplace surfaces as the top result (see `urlForDocument`).
  */
 export type SearchContentType =
   | 'subagent'
@@ -43,10 +44,12 @@ export function makeObjectID(type: SearchContentType, slug: string): string {
 
 /**
  * Detail-page route for a document. Six types map to `app/<type>/[slug]`;
- * marketplaces have no per-item page, so they link to the list.
+ * marketplaces have no per-item page, so they deep-link into the listing
+ * pre-filtered by `name` (falling back to `slug`) so the clicked marketplace
+ * appears as the top result.
  */
-export function urlForDocument(type: SearchContentType, slug: string): string {
-  if (type === 'marketplace') return '/marketplaces'
+export function urlForDocument(type: SearchContentType, slug: string, name?: string): string {
+  if (type === 'marketplace') return `/marketplaces?q=${encodeURIComponent(name ?? slug)}`
   return `/${type}/${slug}`
 }
 

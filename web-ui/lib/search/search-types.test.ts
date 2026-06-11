@@ -36,8 +36,11 @@ describe('urlForDocument', () => {
     assert.equal(urlForDocument('mcp-server', 'x'), '/mcp-server/x')
   })
 
-  it('links marketplaces to the list (no per-item detail route exists)', () => {
-    assert.equal(urlForDocument('marketplace', '@owner/repo'), '/marketplaces')
+  it('deep-links marketplaces into the list, pre-filtered by name (no per-item route exists)', () => {
+    // Falls back to the slug when no display name is supplied.
+    assert.equal(urlForDocument('marketplace', '@owner/repo'), '/marketplaces?q=%40owner%2Frepo')
+    // Prefers the human-readable display name so the listing search surfaces it first.
+    assert.equal(urlForDocument('marketplace', '@owner/repo', 'Agent Skills'), '/marketplaces?q=Agent%20Skills')
   })
 })
 

@@ -374,7 +374,7 @@ export async function marketplacesToDocs(): Promise<SearchDocument[]> {
       stars: m.stars ?? 0,
       installs: m.installs ?? 0,
       updatedAt: epoch(m.updatedAt),
-      url: urlForDocument('marketplace', m.namespace),
+      url: urlForDocument('marketplace', m.namespace, m.displayName),
     }))
   } catch (e) {
     console.warn('[search] marketplacesToDocs failed:', e)

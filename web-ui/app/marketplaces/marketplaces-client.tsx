@@ -18,6 +18,9 @@ import type { SortOption } from '@/lib/marketplace-server'
 interface MarketplacesPageClientProps {
   initialMarketplaces: MarketplaceRegistry[]
   initialHasMore: boolean
+  // Seeds the search box (from a `?q=` deep-link). The server already filtered
+  // the initial list to match, so no refetch is needed on mount.
+  initialQuery?: string
   totals: {
     totalPlugins: number
     totalSkills: number
@@ -36,13 +39,14 @@ const ITEMS_PER_PAGE = 20
 export default function MarketplacesPageClient({
   initialMarketplaces,
   initialHasMore,
+  initialQuery = '',
   totals,
 }: MarketplacesPageClientProps) {
   const [marketplaces, setMarketplaces] = useState<MarketplaceRegistry[]>(initialMarketplaces)
   const [hasMore, setHasMore] = useState(initialHasMore)
   const [isLoading, setIsLoading] = useState(false)
-  const [query, setQuery] = useState('')
-  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const [query, setQuery] = useState(initialQuery)
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery)
   const [sort, setSort] = useState<SortOption>('relevance')
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
