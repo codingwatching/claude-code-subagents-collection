@@ -1615,6 +1615,85 @@
       ],
       "category": "mcp-servers",
       "source": "./plugins/kegg-mcp-server"
+    },
+    {
+      "name": "claude-wayfinder",
+      "description": "Helps Claude make deterministic, auditable choices about which agent and skills to use for a given task — replacing prose-scanning agent/skill selection with a typed scoring kernel that returns one of seven typed decisions with confidence, rationale, and alternatives.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Christopher Beaulieu",
+        "url": "https://github.com/glitchwerks"
+      },
+      "homepage": "https://github.com/glitchwerks/claude-wayfinder",
+      "repository": "https://github.com/glitchwerks/claude-wayfinder",
+      "license": "MIT",
+      "keywords": [
+        "dispatch",
+        "routing",
+        "matcher",
+        "claude-code",
+        "deterministic",
+        "agent-selection",
+        "auditable"
+      ],
+      "category": "orchestration",
+      "source": {
+        "source": "github",
+        "repo": "glitchwerks/claude-wayfinder"
+      }
+    },
+    {
+      "name": "claude-prospector",
+      "description": "Claude Code efficiency and hygiene toolkit. Surfaces token spend across the 5h / 7d / Sonnet-7d billing windows with per-model / per-agent / per-skill attribution, and audits your effective Claude Code configuration (custom + plugin agents and skills) for overlap and conflicts. Ships an interactive dashboard, a conversational usage-analysis skill, and a structured config-audit skill.",
+      "version": "0.10.0",
+      "author": {
+        "name": "Christopher Beaulieu",
+        "url": "https://github.com/glitchwerks"
+      },
+      "homepage": "https://github.com/glitchwerks/claude-prospector",
+      "repository": "https://github.com/glitchwerks/claude-prospector",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "usage",
+        "tokens",
+        "billing",
+        "dashboard",
+        "observability",
+        "audit",
+        "config-hygiene"
+      ],
+      "category": "monitoring",
+      "source": {
+        "source": "github",
+        "repo": "glitchwerks/claude-prospector"
+      }
+    },
+    {
+      "name": "claude-github-tools",
+      "description": "GitHub workflow skills for Claude Code - issue creation, PR review triage, backlog summaries/quick-wins, release status, and GitHub Actions authoring. Seven skills; three pure-LLM, four script-backed via an auto-materialized plugin venv.",
+      "version": "0.3.0",
+      "author": {
+        "name": "Christopher Beaulieu",
+        "url": "https://github.com/glitchwerks"
+      },
+      "homepage": "https://github.com/glitchwerks/claude-github-tools",
+      "repository": "https://github.com/glitchwerks/claude-github-tools",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "github",
+        "issues",
+        "pull-requests",
+        "github-actions",
+        "ci",
+        "workflow"
+      ],
+      "category": "productivity",
+      "source": {
+        "source": "github",
+        "repo": "glitchwerks/claude-github-tools"
+      }
     }
   ]
 }
