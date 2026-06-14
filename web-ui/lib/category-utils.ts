@@ -22,6 +22,9 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'commands': '⌨️',
   'hooks': '🪝',
   'mcp-servers': '🔌',
+  'productivity': '✅',
+  'orchestration': '🎼',
+  'monitoring': '📟',
   // Subagent categories
   'development-architecture': '🏗️',
   'language-specialists': '💻',
