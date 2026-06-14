@@ -74,6 +74,8 @@ function inferCategory(topics: string[], nameDesc: string): string {
     'development-code': ['development', 'dev', 'coding', 'programming', 'developer', 'database', 'sql', 'postgres', 'mongo', 'frontend', 'backend', 'api', 'server', 'rest', 'graphql', 'mobile', 'ios', 'android', 'react', 'css'],
     'research': ['research', 'literature', 'academic', 'scholar', 'citation', 'arxiv'],
     'media-content': ['podcast', 'audio', 'transcription', 'transcribe', 'ocr', 'video', 'subtitle', 'speech', 'whisper'],
+    'observability': ['observability', 'monitoring', 'datadog', 'sentry', 'pagerduty', 'grafana', 'prometheus', 'apm', 'incident', 'on-call'],
+    'infrastructure-cloud': ['vercel', 'cloudflare', 'netlify', 'heroku', 'render', 'serverless', 'cdn', 'paas', 'hosting'],
     'devops': ['devops', 'infrastructure', 'deployment', 'ci-cd', 'docker', 'kubernetes', 'terraform'],
     'security': ['security', 'auth', 'authentication', 'encryption', 'vulnerability', 'pentest'],
     'document-processing': ['documentation', 'docs', 'readme', 'pdf', 'markdown', 'document'],
@@ -89,6 +91,7 @@ function inferCategory(topics: string[], nameDesc: string): string {
     'storage-docs': ['storage', 'cloud', 's3', 'bucket', 'file-storage'],
     'customer-support': ['support', 'helpdesk', 'ticket', 'zendesk'],
     'crm': ['crm', 'customer', 'salesforce', 'hubspot'],
+    'finance': ['finance', 'fintech', 'invoice', 'invoicing', 'accounting', 'billing', 'ledger', 'payroll'],
     'business-productivity': ['productivity', 'spreadsheet', 'office', 'calendar'],
     'creative-collaboration': ['collaboration', 'creative', 'whiteboard', 'brainstorm'],
   }

@@ -66,8 +66,12 @@ const TOPIC_TO_CATEGORY: Record<string, string> = {
   podcast: 'media-content', audio: 'media-content', transcription: 'media-content',
   ocr: 'media-content', video: 'media-content', media: 'media-content',
   'data-engineering': 'data-engineering', etl: 'data-engineering', 'data-pipeline': 'data-engineering',
-  devops: 'devops', deployment: 'devops', infrastructure: 'devops', cloud: 'devops',
+  devops: 'devops', deployment: 'devops', infrastructure: 'devops',
   'ci-cd': 'devops', kubernetes: 'devops', docker: 'devops',
+  cloud: 'infrastructure-cloud', hosting: 'infrastructure-cloud', serverless: 'infrastructure-cloud',
+  vercel: 'infrastructure-cloud', cloudflare: 'infrastructure-cloud',
+  observability: 'observability', monitoring: 'observability', datadog: 'observability',
+  sentry: 'observability', pagerduty: 'observability',
   marketing: 'social-media', social: 'social-media', 'social-media': 'social-media', seo: 'social-media',
   ai: 'ai-ml', 'ai-ml': 'ai-ml', ml: 'ai-ml', llm: 'ai-ml', 'machine-learning': 'ai-ml',
   data: 'analytics', analytics: 'analytics', 'data-science': 'analytics',
@@ -76,7 +80,7 @@ const TOPIC_TO_CATEGORY: Record<string, string> = {
   ecommerce: 'ecommerce', commerce: 'ecommerce', crm: 'crm', email: 'email',
   'project-management': 'project-management', support: 'customer-support',
   'customer-support': 'customer-support', productivity: 'business-productivity',
-  business: 'business-productivity', finance: 'business-productivity',
+  business: 'business-productivity', finance: 'finance', fintech: 'finance', invoicing: 'finance',
 }
 
 function topicToCategory(topic?: string): string | undefined {
