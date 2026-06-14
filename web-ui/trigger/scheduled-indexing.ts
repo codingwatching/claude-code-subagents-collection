@@ -13,6 +13,7 @@ import { indexSkillsFromSkillsSh } from '@/lib/indexer/skills-sh-indexer'
  * - Tuesday & Friday: Marketplaces indexing
  * - Wednesday & Saturday: Plugins indexing
  * - Daily: skills.sh
+ * - Daily: markdown content reindex (agents/commands/hooks)
  *
  * Each task refreshes the Meilisearch index for the type it just synced (see
  * reindexSearch) so search stays in step with the DB.
@@ -105,5 +106,21 @@ export const scheduledMcpStatsSync = schedules.task({
     const result = await syncMCPServerStats()
     await reindexSearch(['mcp-server'])
     return { ...result, scheduledAt: payload.timestamp }
+  },
+})
+
+// Markdown content (agents/commands/hooks) - daily at 5:30 AM UTC.
+// These types are file-based (read from plugins/* at index time) and change only
+// on deploy. No other scheduled task reindexes them, so without this a category
+// rename or new agent never reaches search until a manual full reindex. Offset
+// from the 5:00 batch to avoid piling onto the same admin-endpoint window.
+// Skills are already reindexed daily by scheduledSkillsShIndex, so they're omitted.
+export const scheduledMarkdownContentIndex = schedules.task({
+  id: 'scheduled-markdown-content-index',
+  cron: '30 5 * * *',
+  run: async (payload) => {
+    console.log(`Markdown content reindex started at ${payload.timestamp}`)
+    await reindexSearch(['subagent', 'command', 'hook'])
+    return { reindexed: ['subagent', 'command', 'hook'], scheduledAt: payload.timestamp }
   },
 })
