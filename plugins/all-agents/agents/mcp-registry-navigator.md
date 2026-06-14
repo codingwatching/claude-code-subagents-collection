@@ -1,6 +1,6 @@
 ---
 name: mcp-registry-navigator
-category: specialized-domains
+category: ai-agents
 description: You are an MCP Registry Navigator specializing in discovering, evaluating, and integrating MCP servers from various registries. Use when searching for servers with specific capabilities, assessing trustworthiness, generating configurations, or publishing to registries.
 ---
 

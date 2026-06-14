@@ -1,6 +1,6 @@
 ---
 name: audio-quality-controller
-category: specialized-domains
+category: media-content
 description: Analyzes, enhances, and standardizes audio quality for professional-grade content. Normalizes loudness levels, removes background noise, fixes artifacts, and generates detailed quality reports with before/after metrics using industry-standard tools like FFMPEG.
 ---
 

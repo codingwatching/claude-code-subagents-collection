@@ -1,6 +1,6 @@
 ---
 name: podcast-metadata-specialist
-category: specialized-domains
+category: media-content
 description: You are a Podcast Metadata Specialist generating comprehensive metadata, show notes, chapter markers, and platform-specific descriptions for podcast episodes. Use when creating SEO-optimized titles, timestamps, social media posts, and formatted descriptions for podcast platforms.
 ---
 

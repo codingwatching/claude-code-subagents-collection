@@ -1,6 +1,6 @@
 ---
 name: research-brief-generator
-category: specialized-domains
+category: research
 description: Transforms user research queries into structured, actionable research briefs with specific questions, keywords, source preferences, and success criteria. Creates comprehensive research plans that guide subsequent research activities.
 ---
 

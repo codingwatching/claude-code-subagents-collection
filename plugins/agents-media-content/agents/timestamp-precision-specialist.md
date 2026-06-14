@@ -1,6 +1,6 @@
 ---
 name: timestamp-precision-specialist
-category: specialized-domains
+category: media-content
 description: Extract frame-accurate timestamps from audio/video files for podcast editing. Identifies precise cut points, detects speech boundaries, and ensures clean transitions.
 ---
 

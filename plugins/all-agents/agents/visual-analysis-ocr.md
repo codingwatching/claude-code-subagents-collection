@@ -1,6 +1,6 @@
 ---
 name: visual-analysis-ocr
-category: specialized-domains
+category: media-content
 description: Extract and analyze text content from PNG images while preserving original formatting and structure. Converts visual hierarchy into markdown format.
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: agent-expert
-category: specialized-domains
+category: ai-agents
 description: Create and optimize specialized Claude Code agents. Expertise in agent design, prompt engineering, domain modeling, and best practices for claude-code-templates system. Use PROACTIVELY when designing new agents or improving existing ones.
 ---
 

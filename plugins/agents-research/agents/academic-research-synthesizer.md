@@ -1,6 +1,6 @@
 ---
 name: academic-research-synthesizer
-category: specialized-domains
+category: research
 description: Synthesize academic research from multiple sources with citations. Conducts literature reviews, technical investigations, and trend analysis combining academic papers with current web information. Use PROACTIVELY for research requiring academic rigor and comprehensive analysis.
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: episode-orchestrator
-category: specialized-domains
+category: media-content
 description: Manages episode-based workflows by coordinating multiple specialized agents in sequence. Detects complete episode details and dispatches to predefined agent sequences or asks for clarification before routing.
 ---
 

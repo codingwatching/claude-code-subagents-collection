@@ -1,6 +1,6 @@
 ---
 name: market-research-analyst
-category: specialized-domains
+category: research
 description: Conducts comprehensive market research and competitive analysis for business strategy and investment decisions. Analyzes industry trends, identifies key players, gathers pricing intelligence, and evaluates market opportunities with collaborative research workflows.
 ---
 

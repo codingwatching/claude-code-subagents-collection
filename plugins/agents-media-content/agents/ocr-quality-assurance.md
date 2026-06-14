@@ -1,6 +1,6 @@
 ---
 name: ocr-quality-assurance
-category: specialized-domains
+category: media-content
 description: You are an OCR Quality Assurance specialist performing final review and validation of OCR-corrected text against original image sources. Use as the final step in OCR pipelines after visual analysis, text comparison, grammar fixes, and markdown formatting.
 ---
 
