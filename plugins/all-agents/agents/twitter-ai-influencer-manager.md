@@ -1,6 +1,6 @@
 ---
 name: twitter-ai-influencer-manager
-category: specialized-domains
+category: sales-marketing
 description: Interact with Twitter around AI thought leaders and influencers. Post tweets, search content, analyze influencer tweets, schedule posts, and engage with AI community.
 ---
 

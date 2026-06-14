@@ -1,7 +1,7 @@
 {
   "name": "agents-specialized-domains",
   "version": "1.0.0",
-  "description": "Domain-specific expert agents for research, documentation, and specialized tasks",
+  "description": "Domain-specific expert agents for validation, knowledge-graph, and other specialized tasks",
   "author": {
     "name": "BuildWithClaude Community",
     "url": "https://github.com/davepoon/buildwithclaude"
@@ -12,21 +12,14 @@
     "agents",
     "subagents",
     "specialized-domains",
-    "api-documenter",
     "connection-agent",
-    "data-analyst",
-    "docusaurus-expert",
     "game-developer",
-    "legacy-modernizer",
-    "markdown-syntax-formatter",
     "metadata-agent",
     "moc-agent",
-    "project-supervisor-orchestrator",
     "query-clarifier",
     "report-generator",
     "tag-agent",
     "text-comparison-validator",
-    "twitter-ai-influencer-manager",
     "url-context-validator",
     "url-link-extractor"
   ]

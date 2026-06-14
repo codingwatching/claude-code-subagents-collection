@@ -15,6 +15,7 @@
     "agent-expert",
     "mcp-deployment-orchestrator",
     "mcp-expert",
-    "mcp-registry-navigator"
+    "mcp-registry-navigator",
+    "project-supervisor-orchestrator"
   ]
 }

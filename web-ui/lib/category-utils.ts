@@ -88,6 +88,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'media-content': '🎬',
   'testing-qa': '🧪',
   'data-engineering': '🛢️',
+  'documentation': '📚',
   'uncategorized': '📦',
   // Default icon for unknown categories
   'default': '📦'

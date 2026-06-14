@@ -1,6 +1,6 @@
 ---
 name: docusaurus-expert
-category: specialized-domains
+category: documentation
 description: Configure and troubleshoot Docusaurus documentation sites. Specializes in configuration, theming, content management, sidebar organization, and build issues. Use PROACTIVELY when working with Docusaurus v2/v3 sites, especially in docs_to_claude folder.
 ---
 

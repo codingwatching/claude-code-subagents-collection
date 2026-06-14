@@ -36,7 +36,8 @@
         "blockchain-web3",
         "sales-marketing",
         "research",
-        "media-content"
+        "media-content",
+        "documentation"
       ],
       "description": "Category for organizing the subagent"
     }

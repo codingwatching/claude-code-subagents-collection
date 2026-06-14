@@ -1,6 +1,6 @@
 ---
 name: markdown-syntax-formatter
-category: specialized-domains
+category: documentation
 description: Converts text with visual formatting into proper markdown syntax, fixes markdown formatting issues, and ensures consistent document structure. Handles lists, headings, code blocks, and emphasis markers.
 ---
 
