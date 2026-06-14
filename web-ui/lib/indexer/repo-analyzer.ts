@@ -68,11 +68,16 @@ function inferCategory(topics: string[], nameDesc: string): string {
   const text = nameDesc.toLowerCase()
 
   const categoryMap: Record<string, string[]> = {
-    'development-code': ['development', 'dev', 'coding', 'programming', 'developer', 'testing', 'test', 'qa', 'database', 'sql', 'postgres', 'mongo', 'frontend', 'backend', 'api', 'server', 'rest', 'graphql', 'mobile', 'ios', 'android', 'react', 'css'],
+    'ai-agents': ['multi-agent', 'subagent', 'mcp', 'agent-orchestration', 'agentic', 'autogen', 'crewai', 'langgraph'],
     'ai-ml': ['ai', 'machine-learning', 'ml', 'artificial-intelligence', 'llm', 'deep-learning', 'neural', 'nlp'],
+    'testing-qa': ['testing', 'test', 'qa', 'e2e', 'playwright', 'cypress', 'jest', 'vitest', 'pytest', 'selenium', 'test-automation'],
+    'development-code': ['development', 'dev', 'coding', 'programming', 'developer', 'database', 'sql', 'postgres', 'mongo', 'frontend', 'backend', 'api', 'server', 'rest', 'graphql', 'mobile', 'ios', 'android', 'react', 'css'],
+    'research': ['research', 'literature', 'academic', 'scholar', 'citation', 'arxiv'],
+    'media-content': ['podcast', 'audio', 'transcription', 'transcribe', 'ocr', 'video', 'subtitle', 'speech', 'whisper'],
     'devops': ['devops', 'infrastructure', 'deployment', 'ci-cd', 'docker', 'kubernetes', 'terraform'],
     'security': ['security', 'auth', 'authentication', 'encryption', 'vulnerability', 'pentest'],
     'document-processing': ['documentation', 'docs', 'readme', 'pdf', 'markdown', 'document'],
+    'data-engineering': ['etl', 'data-pipeline', 'data-engineering', 'airflow', 'dbt', 'spark', 'kafka', 'warehouse', 'snowflake', 'databricks'],
     'analytics': ['data', 'analytics', 'visualization', 'data-science', 'dashboard', 'metrics'],
     'automation': ['automation', 'workflow', 'scripting', 'cron', 'pipeline'],
     'design': ['design', 'ui', 'ux', 'figma', 'sketch'],

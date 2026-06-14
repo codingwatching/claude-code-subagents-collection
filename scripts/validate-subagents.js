@@ -65,13 +65,13 @@ subagentFiles.forEach(file => {
           if (isCommand) {
             message = `Category ${error.message}. Valid categories for commands: ci-deployment, code-analysis-testing, context-loading-priming, documentation-changelogs, project-task-management, version-control-git, miscellaneous`;
           } else {
-            message = `Category ${error.message}. Valid categories for subagents: development-architecture, language-specialists, infrastructure-operations, quality-security, data-ai, specialized-domains, crypto-trading`;
+            message = `Category ${error.message}. Valid categories for subagents: development-architecture, language-specialists, infrastructure-operations, quality-security, data-ai, ai-agents, specialized-domains, crypto-trading, business-finance, design-experience, blockchain-web3, sales-marketing, research, media-content`;
           }
         } else if (error.schemaPath.includes('/required') && error.params.missingProperty === 'category') {
           if (isCommand) {
             message = `Missing required field 'category'. Valid categories for commands: ci-deployment, code-analysis-testing, context-loading-priming, documentation-changelogs, project-task-management, version-control-git, miscellaneous`;
           } else {
-            message = `Missing required field 'category'. Valid categories for subagents: development-architecture, language-specialists, infrastructure-operations, quality-security, data-ai, specialized-domains, crypto-trading`;
+            message = `Missing required field 'category'. Valid categories for subagents: development-architecture, language-specialists, infrastructure-operations, quality-security, data-ai, ai-agents, specialized-domains, crypto-trading, business-finance, design-experience, blockchain-web3, sales-marketing, research, media-content`;
           }
         }
         errors.push({

@@ -17,6 +17,7 @@
     "category": {
       "type": "string",
       "enum": [
+        "ai-agents",
         "ai-ml",
         "analytics",
         "automation",
@@ -25,16 +26,20 @@
         "creative-collaboration",
         "crm",
         "customer-support",
+        "data-engineering",
         "design",
         "development-code",
         "devops",
         "document-processing",
         "ecommerce",
         "email",
+        "media-content",
         "project-management",
+        "research",
         "security",
         "social-media",
         "storage-docs",
+        "testing-qa",
         "uncategorized"
       ],
       "description": "Category for organizing the skill"

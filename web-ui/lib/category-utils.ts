@@ -78,11 +78,16 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'devops': '🚀',
   'ecommerce': '🛍️',
   'email': '📧',
+  'ai-agents': '🦾',
   'ai-ml': '🤖',
   'project-management': '📋',
   'social-media': '📱',
   'storage-docs': '☁️',
   'customer-support': '🎧',
+  'research': '🔬',
+  'media-content': '🎬',
+  'testing-qa': '🧪',
+  'data-engineering': '🛢️',
   'uncategorized': '📦',
   // Default icon for unknown categories
   'default': '📦'
@@ -148,6 +153,7 @@ export function generateCategoryMetadata(
  * Valid skill categories (ordered for display)
  */
 export const VALID_SKILL_CATEGORIES = [
+  'ai-agents',
   'ai-ml',
   'analytics',
   'automation',
@@ -156,16 +162,20 @@ export const VALID_SKILL_CATEGORIES = [
   'creative-collaboration',
   'crm',
   'customer-support',
+  'data-engineering',
   'design',
   'development-code',
   'devops',
   'document-processing',
   'ecommerce',
   'email',
+  'media-content',
   'project-management',
+  'research',
   'security',
   'social-media',
   'storage-docs',
+  'testing-qa',
   'uncategorized',
 ] as const;
 
@@ -179,9 +189,23 @@ const SKILL_CATEGORY_ALIASES: Record<string, string> = {
   'coding': 'development-code',
   'frontend': 'development-code',
   'backend': 'development-code',
-  'testing': 'development-code',
   'database': 'development-code',
   'mobile': 'development-code',
+  'testing': 'testing-qa',
+  'test': 'testing-qa',
+  'qa': 'testing-qa',
+  'agents': 'ai-agents',
+  'agent': 'ai-agents',
+  'multi-agent': 'ai-agents',
+  'mcp': 'ai-agents',
+  'research': 'research',
+  'media': 'media-content',
+  'audio': 'media-content',
+  'podcast': 'media-content',
+  'video': 'media-content',
+  'transcription': 'media-content',
+  'etl': 'data-engineering',
+  'data-pipeline': 'data-engineering',
   'documentation': 'document-processing',
   'data': 'analytics',
   'workflow': 'automation',
@@ -214,6 +238,11 @@ export function normalizeSkillCategory(category: string | null): string {
  */
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'security': ['security', 'vulnerability', 'pentest', 'encryption', 'defense in depth'],
+  'ai-agents': ['multi-agent', 'subagent', 'sub-agent', 'mcp server', 'mcp tool', 'agent orchestration', 'agentic', 'agent team', 'tool-calling agent'],
+  'research': ['research', 'literature review', 'systematic review', 'deep research', 'scholarly', 'academic paper', 'survey paper'],
+  'media-content': ['podcast', 'audio', 'transcription', 'transcribe', 'ocr', 'subtitle', 'voiceover', 'speech-to-text', 'text-to-speech', 'captioning', 'video editing'],
+  'testing-qa': ['unit test', 'integration test', 'e2e', 'end-to-end', 'playwright', 'cypress', 'vitest', 'jest', 'pytest', 'test coverage', 'tdd', 'test automation', 'test suite', 'testing'],
+  'data-engineering': ['etl', 'data pipeline', 'data warehouse', 'data lake', 'airflow', 'dbt', 'spark', 'kafka', 'data ingestion', 'data engineering'],
   'ai-ml': ['hallucination', 'prompt engineering', 'llm', 'ai model', 'ai agent', 'confidence', 'uncertainty', 'citation', 'grounding', 'output-audit', 'source-verif', 'cross-check', 'opencode', 'truncation', 'foresight', 'anti-hallucination'],
   'design': ['design', 'ui/ux', 'visual', 'redesign', 'figma', 'high end visual', 'typography', 'fonts', 'spacing', 'animation', 'color scheme', 'premium quality', 'aesthetic', 'pixel perfect', 'agency'],
   'devops': ['ci-cd', 'ci cd', 'deployment', 'deploy', 'docker', 'kubernetes', 'infrastructure', 'port killer', 'smithery'],
@@ -224,7 +253,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'business-productivity': ['venture capital', 'finance', 'sales', 'prospect', 'productivity', 'spreadsheet'],
   'analytics': ['analytics', 'data science', 'metrics', 'dashboard'],
   'document-processing': ['document', 'pdf', 'markdown process'],
-  'development-code': ['code review', 'debug', 'testing', 'tdd', 'test writer', 'refactor', 'github', 'git', 'commit', 'api doc', 'frontend', 'backend', 'typescript', 'javascript', 'php', 'elixir', 'swift', 'nest', 'astro', 'vitest', 'linting', 'web fetch', 'error explain', 'pr analy', 'codebase', 'full-stack', 'full stack', 'coding', 'programmer'],
+  'development-code': ['code review', 'debug', 'refactor', 'github', 'git', 'commit', 'api doc', 'frontend', 'backend', 'typescript', 'javascript', 'php', 'elixir', 'swift', 'nest', 'astro', 'linting', 'web fetch', 'error explain', 'pr analy', 'codebase', 'full-stack', 'full stack', 'coding', 'programmer'],
 };
 
 /**
