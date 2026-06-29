@@ -491,13 +491,17 @@ export async function reindexType(type: SearchContentType): Promise<ReindexTypeR
   return { type, added, durationMs: Date.now() - start }
 }
 
-/** Refresh the four file-based types (subagent/command/hook/skill). Skill keeps DB rows. */
+/**
+ * Refresh deploy-static content. `plugin` includes local Build with Claude
+ * marketplace entries plus DB rows, so new local plugins do not wait for the
+ * external marketplace indexer to make them searchable.
+ */
 export async function reindexMarkdown(): Promise<{ added: number; durationMs: number; byType: Record<string, number>; skipped?: boolean }> {
   const start = Date.now()
   if (!(await ensureContentIndex())) return { added: 0, durationMs: 0, byType: {}, skipped: true }
   const byType: Record<string, number> = {}
   let added = 0
-  for (const type of ['subagent', 'command', 'hook', 'skill'] as SearchContentType[]) {
+  for (const type of ['subagent', 'command', 'hook', 'skill', 'plugin'] as SearchContentType[]) {
     const r = await reindexType(type)
     byType[type] = r.added
     added += r.added

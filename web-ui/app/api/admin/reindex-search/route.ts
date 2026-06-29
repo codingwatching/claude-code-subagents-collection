@@ -10,13 +10,13 @@ export const maxDuration = 300 // 5 minutes max
  * POST /api/admin/reindex-search
  *
  * Rebuilds the Meilisearch `bwc_content` index from the source of truth
- * (markdown files + Postgres). This is the canonical post-deploy rebuild and the
- * way to (re)index the markdown-sourced content (agents/commands/hooks/local
- * skills), which the daily cron rotation never touches.
+ * (repo files + Postgres). This is the canonical post-deploy rebuild and the way
+ * to (re)index deploy-static content (agents/commands/hooks/local plugins/local
+ * skills), which can otherwise lag behind deployed file changes.
  *
  * Query params:
  *   ?mode=full      (default) full rebuild of all 7 types
- *   ?mode=markdown  refresh only the file-based types (subagent/command/hook/skill)
+ *   ?mode=markdown  refresh deploy-static types (subagent/command/hook/skill/plugin)
  *   ?mode=type&type=<t>  refresh a single type
  *
  * Auth: Authorization: Bearer ${ADMIN_API_TOKEN}
