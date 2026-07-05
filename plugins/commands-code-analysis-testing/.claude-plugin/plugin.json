@@ -29,6 +29,7 @@
     "test-changelog-automation",
     "test-coverage",
     "testing_plan_integration",
-    "write-tests"
+    "write-tests",
+    "agent-preflight"
   ]
 }
