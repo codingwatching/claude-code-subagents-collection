@@ -1842,6 +1842,33 @@
         "source": "github",
         "repo": "tonmoy007/forge-plugins"
       }
+    },
+    {
+      "name": "codex-orchestrator",
+      "description": "Orchestrate OpenAI Codex from Claude through supervised checkpoint slices, server-enforced quality gates, persistent plans and hypotheses, worktree isolation, and per-task model and effort control.",
+      "version": "1.5.2",
+      "author": {
+        "name": "Tom Werner",
+        "url": "https://github.com/tomtastisch"
+      },
+      "homepage": "https://github.com/tomtastisch/codex-orchestrator",
+      "repository": "https://github.com/tomtastisch/codex-orchestrator",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "codex",
+        "mcp",
+        "orchestration",
+        "multi-agent",
+        "checkpoint",
+        "worktrees",
+        "quality-gates"
+      ],
+      "category": "orchestration",
+      "source": {
+        "source": "github",
+        "repo": "tomtastisch/codex-orchestrator"
+      }
     }
   ]
 }
