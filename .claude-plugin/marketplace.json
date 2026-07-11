@@ -1933,6 +1933,27 @@
       ],
       "category": "mcp-servers",
       "source": "./plugins/fabler-relay"
+    },
+    {
+      "name": "fabler-x402-tools",
+      "description": "Nine MCP tools for security audits, web scraping, OG rendering, and funding spreads. Default setup is inspect-only and requires no wallet key. Optional x402 auto-payment requires X402_BUYER_PRIVATE_KEY; use only a dedicated low-balance wallet funded with what you are willing to spend.",
+      "version": "1.0.7",
+      "author": {
+        "name": "Fabler Labs",
+        "url": "https://github.com/fablerlabs"
+      },
+      "homepage": "https://fablerlabs.com/x402/",
+      "repository": "https://github.com/fablerlabs/x402-tools",
+      "license": "MIT",
+      "keywords": [
+        "mcp",
+        "x402",
+        "usdc",
+        "security",
+        "ai-agents"
+      ],
+      "category": "mcp-servers",
+      "source": "./plugins/fabler-x402-tools"
     }
   ]
 }
