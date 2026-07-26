@@ -9,7 +9,8 @@ import { isSearchEnabled } from '@/lib/search/meilisearch-client'
 
 export const dynamic = 'force-dynamic'
 
-// Whether to use trigger.dev for plugin indexing (background processing)
+// Prefer Trigger.dev only when explicitly configured. Production indexing runs
+// on the Railway cron service `bwc-indexer` (see web-ui/scripts/run-indexer.js).
 const USE_TRIGGER_DEV = process.env.TRIGGER_SECRET_KEY ? true : false
 
 /**
