@@ -2137,6 +2137,39 @@
         "repo": "ridelink0/claude-computer-use"
       },
       "strict": false
+    },
+    {
+      "name": "suede-skills",
+      "description": "74 skills for Claude Code and Codex. A build DAG researches your repo, fans out disjoint lanes, and refutes its own review before anything lands. A blunt A-F ship grade blocks the bad merge instead of complimenting it. The same folder designs the page, writes the copy, and ships native iOS and Android builds.",
+      "version": "0.16.0",
+      "author": {
+        "name": "Jason Colapietro",
+        "url": "https://github.com/JasonColapietro"
+      },
+      "homepage": "https://skills.suedeai.ai/",
+      "repository": "https://github.com/JasonColapietro/suede-creator-skills",
+      "license": "MIT AND BSD-3-Clause",
+      "keywords": [
+        "agent-skills",
+        "multi-agent",
+        "agent-orchestration",
+        "code-review",
+        "ship-gate",
+        "ci",
+        "ai-eval",
+        "design",
+        "seo",
+        "ios",
+        "android",
+        "claude-code",
+        "codex"
+      ],
+      "category": "orchestration",
+      "source": {
+        "source": "github",
+        "repo": "JasonColapietro/suede-creator-skills"
+      },
+      "strict": false
     }
   ]
 }
