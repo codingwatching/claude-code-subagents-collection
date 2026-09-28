@@ -2455,6 +2455,30 @@
         "path": "plugin",
         "ref": "main"
       }
+    },
+    {
+      "name": "production-fast-api-template",
+      "description": "Production-ready standards for a scalable, unified FastAPI + RAG + Agentic AI backend on AWS ECS Fargate: project structure, async execution, Pydantic and structured outputs, API conventions, guardrails, AI evaluation (DeepEval, Ragas), API security and LLM/agent security.",
+      "version": "0.1.0",
+      "author": {
+        "name": "TrishamBP",
+        "url": "https://github.com/TrishamBP"
+      },
+      "license": "MIT",
+      "keywords": [
+        "fastapi",
+        "rag",
+        "agents",
+        "pydantic",
+        "ecs-fargate",
+        "evaluation",
+        "deepeval",
+        "ragas",
+        "security",
+        "owasp"
+      ],
+      "category": "development",
+      "source": "./plugins/production-fast-api-template"
     }
   ]
 }
